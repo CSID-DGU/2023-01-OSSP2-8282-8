@@ -10,12 +10,17 @@ const Input = styled.TextInput`
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	font-weight: 400;
 	font-size: 12px;
-	color: #cdcdcd;
+	color: #000;
 `;
 
 const CommunityInput = ({ typo, changeHandler, textInputRef }) => {
 	return (
-		<Input placeholder={typo} onChangeText={changeHandler} ref={textInputRef} />
+		<Input
+			placeholder={typo}
+			placeholderTextColor={"#cdcdcd"}
+			onChangeText={changeHandler}
+			ref={textInputRef}
+		/>
 	);
 };
 
