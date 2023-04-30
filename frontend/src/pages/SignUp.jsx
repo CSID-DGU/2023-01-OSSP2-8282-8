@@ -109,10 +109,7 @@ const SignUp = () => {
 				<PDFCampusTypo>PDFCampus</PDFCampusTypo>
 			</PDFCampusTypoWrapper>
 			<SignUpForm>
-				<CommunityInputContainer
-					inputList={inputList}
-					textInputRef={textInputRef}
-				/>
+				<CommunityInputContainer inputList={inputList} />
 				<CommunityButton typo="회원가입" onPress={signUpOnClick} />
 			</SignUpForm>
 		</Container>
