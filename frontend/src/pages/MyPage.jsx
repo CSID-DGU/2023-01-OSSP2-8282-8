@@ -4,7 +4,6 @@ import { Text, Alert } from "react-native";
 import styled from "styled-components";
 
 import CommunityButton from "../organisms/CommunityButton";
-import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
 const TitleContainer = styled.View`
 	width: 30%;
