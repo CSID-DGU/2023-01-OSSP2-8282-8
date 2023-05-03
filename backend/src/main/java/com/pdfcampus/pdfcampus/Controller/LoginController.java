@@ -1,7 +1,7 @@
 package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.LoginDTO;
-import com.pdfcampus.pdfcampus.entity.LoginEntity;
+//import com.pdfcampus.pdfcampus.entity.LoginEntity;
 import com.pdfcampus.pdfcampus.service.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

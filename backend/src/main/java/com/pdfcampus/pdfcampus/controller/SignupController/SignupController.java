@@ -1,4 +1,4 @@
-package com.pdfcampus.pdfcampus.controller.SignupController;
+package com.pdfcampus.pdfcampus.Controller.SignupController;
 
 
 import com.pdfcampus.pdfcampus.dto.SignupDto;
