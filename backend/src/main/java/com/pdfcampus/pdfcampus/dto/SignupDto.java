@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 @Setter
 @Getter
-public class UserForm {
+public class SignupDto {
     private int uid;
     private String userid;
     private String password;
@@ -21,6 +21,7 @@ public class UserForm {
     private LocalDate subscribeDate;
     private LocalDate joinedDate;
     private String refreshToken;
+    private String accessToken;
 
     public User toEntity() {
         return new User(uid, userid, password, username, isSubscribed, productName, subscribeDate, joinedDate, refreshToken);
