@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.SignupDto;
 import com.pdfcampus.pdfcampus.repository.SignupRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
