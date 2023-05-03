@@ -1,6 +1,7 @@
 package com.pdfcampus.pdfcampus.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.*;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Table(name = "User")
 public class User {
     @Id
@@ -43,5 +45,4 @@ public class User {
 
     @Column(name = "refreshToken")
     private String refreshToken;
-
 }
