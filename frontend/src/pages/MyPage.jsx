@@ -3,7 +3,7 @@ import { Text, Alert } from "react-native";
 
 import styled from "styled-components";
 
-import SubButton from "../organisms/CommunityButton";
+import CommunityButton from "../organisms/CommunityButton";
 import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
 const TitleContainer = styled.View`
@@ -95,6 +95,12 @@ const SubIntro = styled.View`
 	align-items : flex-start;
 `;
 
+const ButtonIntro = styled.View`
+	width: 650px;
+	height: 10px;
+	justify-content: center;
+`;
+
 const SubOnClick = () => {
 	Alert.alert("구독하러");
 };
@@ -124,7 +130,9 @@ const MyPage = () => {
 						<Typotwo>현재 구독 정보가 없습니다. {'\n'}서비스를 구독하고 더 많은 서비스를 이용해보세요!</Typotwo>
 					</SubIntro>
 				</SubInfoContainer>
-				<SubButton typo="구독 하러 가기" onPress={SubOnClick} />
+				<ButtonIntro>
+				<CommunityButton typo="구독 하러 가기" onPress={SubOnClick} />
+				</ButtonIntro>
 			</Container>
 		</>
 	);
