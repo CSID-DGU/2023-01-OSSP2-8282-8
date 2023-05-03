@@ -5,10 +5,7 @@ import com.pdfcampus.pdfcampus.entity.LoginEntity;
 import com.pdfcampus.pdfcampus.service.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +20,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Object> login(@RequestBody LoginDTO loginDTO, @RequestHeader(value = "Content-Type", defaultValue = "application/json") String contentType) {
         boolean isLoginSuccess = loginService.login(loginDTO);
         if (isLoginSuccess) {
             Map<String, Object> response = new HashMap<>();
