@@ -1,6 +1,7 @@
 package com.pdfcampus.pdfcampus.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.*;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Getter
 @AllArgsConstructor //모든 필드를 매개변수로 받는 생성자 자동으로 생성
 @NoArgsConstructor //매개변수가 없는 디폴트 생성자를 자동으로 생성
 @Table(name = "User")
@@ -21,7 +23,7 @@ public class User {
     private int uid;
 
     @Column(name = "userid", nullable = false)
-    private String userid;
+    private String userId;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -43,5 +45,4 @@ public class User {
 
     @Column(name = "refreshToken")
     private String refreshToken;
-
 }
