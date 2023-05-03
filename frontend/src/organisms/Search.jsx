@@ -58,9 +58,9 @@ const CommunityInput = ({ typo, changeHandler, textInputRef }) => {
 	);
 };
 
-const SearchButton =()=>{
+const SearchButton =({press})=>{
 	return(
-		<TouchableOpacity>
+		<TouchableOpacity onPress={press}>
 			<ButtonWrapper>
 				<ButtonTypo>검색</ButtonTypo>
 			</ButtonWrapper>
@@ -69,12 +69,12 @@ const SearchButton =()=>{
 }
 
 
-const Search =()=>{
+const Search =({press, changeHandler})=>{
     return(
         <Container>
             <SearchWeapper>
-                <CommunityInput typo="검색"/>
-				<SearchButton />
+                <CommunityInput typo="검색" changeHandler={changeHandler}/>
+				<SearchButton press={press}/>
             </SearchWeapper>
         </Container>
     )

@@ -47,13 +47,23 @@ const TitleButton = ({typo, onPress}) =>{
 }
 
 const ClickHandelMyPage =() => {
-    return(Alert.alert("마이페이지로 이동"))
+
+    return(
+        //마이페이지로 이동 
+        Alert.alert("마이페이지로 이동")
+    )
 }
 const ClickHandelMyLibrary =() => {
-    return(Alert.alert("나의서재로 이동"))
+    return(
+        //나의 서재로 이동
+        Alert.alert("나의서재로 이동")
+    )
 }
 const ClickHandelLogout =() => {
-    return(Alert.alert("로그아웃"))
+    return(
+        //로그아웃 기능 구현
+        Alert.alert("로그아웃 기능")
+    )
 }
 
 

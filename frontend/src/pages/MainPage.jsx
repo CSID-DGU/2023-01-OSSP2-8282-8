@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import {  useState } from "react";
+import { TouchableOpacity, Image, Alert } from 'react-native';
+
 import CommunityHeader from "../organisms/CommunityHeader";
 import Search from "../organisms/Search";
 import ListContainer from "../organisms/ListContainer";
-import { useRef, useState } from "react";
-import { TouchableOpacity, View, Image } from 'react-native';
 
 const Container =styled.View`
 width:100%;
@@ -165,10 +166,11 @@ const books=[
   ]
 
 const MainPage = () => {
-    let [pnum1,setPnum1]=useState(0);
-  let [pnum2,setPnum2]=useState(5);
-  let [pnum3,setPnum3]=useState(0);
-  let [pnum4,setPnum4]=useState(5);
+    const [pnum1,setPnum1]=useState(0);
+  const [pnum2,setPnum2]=useState(5);
+  const [pnum3,setPnum3]=useState(0);
+  const [pnum4,setPnum4]=useState(5);
+  const [SearchContent,setSearchContent]=useState("");//검색 키워드 저장
   function handleClickBookNext(){
     if(pnum1===0){
       setPnum1(5);
@@ -193,10 +195,16 @@ const MainPage = () => {
         setPnum4(5);
     }
   };
+  SearchClick = () => {
+    Alert.alert(SearchContent);
+  }
+  HandleSearch = (text) =>{
+    setSearchContent("검색: "+text);
+  }
     return (
         <Container>
             <CommunityHeader />
-            <Search />
+            <Search press={SearchClick} changeHandler={HandleSearch}/>
             <ListTitle typo="신규 도서 컨텐츠"/>
             <ListWrapper>
                 <MainButtonLeft press={handleClickBookPrior}/>
