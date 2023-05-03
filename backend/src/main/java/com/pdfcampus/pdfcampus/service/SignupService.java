@@ -16,7 +16,8 @@ public class SignupService {
     @Transactional
     public boolean joinUser(SignupDto signupDto){ //데이터베이스에 회원정보를 저장하는 과정
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+
+        signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword())); // 비밀번호를 salt값과 같이 저장, 동일 비밀번호에 대한 노출 위험 방지
 
         signupRepository.save(signupDto.toEntity());
 
