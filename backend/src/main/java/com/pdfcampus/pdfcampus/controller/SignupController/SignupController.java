@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.controller.SignupController;
 
 import com.pdfcampus.pdfcampus.dto.SignupDto;
 import com.pdfcampus.pdfcampus.service.SignupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
