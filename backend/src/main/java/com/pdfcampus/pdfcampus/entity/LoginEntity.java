@@ -11,7 +11,7 @@ public class LoginEntity {
     private int uid;
 
     @Column(nullable = false)
-    private String userid;
+    private String userId;
 
     @Column(nullable = false)
     private String password;
@@ -43,11 +43,11 @@ public class LoginEntity {
     }
 
     public String getUserid() {
-        return userid;
+        return userId;
     }
 
     public void setUserid(String userid) {
-        this.userid = userid;
+        this.userId = userid;
     }
 
     public String getPassword() {
@@ -110,7 +110,7 @@ public class LoginEntity {
     public String toString() {
         return "User{" +
                 "uid=" + uid +
-                ", userid='" + userid + '\'' +
+                ", userid='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
                 ", isSubscribed=" + isSubscribed +
