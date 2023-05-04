@@ -27,22 +27,18 @@ public class LoginService {
         this.loginRepository = loginRepository;
     }
 
+
     public boolean checkLogin(String id, String password) {
-        if (id == null || id.isEmpty()) { // id가 null 또는 빈 문자열인 경우 처리
-            return false;
-        }
-        try {
-            Integer userId = Integer.parseInt(id); // id를 Integer형으로 변환
-            Optional<User> optionalUser = loginRepository.findById(userId);
-            User userObj = optionalUser.orElse(null);
-            return userObj != null && BCrypt.checkpw(password, userObj.getPassword());
-        } catch (NumberFormatException e) { // id가 숫자가 아닌 경우 처리
+        User user = loginRepository.findByUserId(id);
+        if (user != null && user.getPassword().equals(password)) {
+            return true;
+        } else {
             return false;
         }
     }
 
     public Map<String, String> issueTokens(String id) {
-        Optional<User> optionalUser = loginRepository.findById(Integer.valueOf(id));
+        Optional<User> optionalUser = Optional.ofNullable(loginRepository.findByUserId(String.valueOf(Integer.valueOf(id))));
         User userObj = optionalUser.orElse(null);
 
         if (userObj != null) {
