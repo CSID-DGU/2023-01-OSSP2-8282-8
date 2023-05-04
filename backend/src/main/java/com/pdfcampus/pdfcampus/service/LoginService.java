@@ -4,11 +4,14 @@ import com.pdfcampus.pdfcampus.entity.User;
 import com.pdfcampus.pdfcampus.repository.LoginRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +36,8 @@ public class LoginService {
         if (user != null && user.getPassword().equals(password)) {
             return true;
         } else {
+            assert user != null;
+            System.out.print(user.getPassword());
             return false;
         }
     }
@@ -44,16 +49,18 @@ public class LoginService {
         if (userObj != null) {
             Map<String, String> tokens = new HashMap<>();
 
+            Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
             String accessToken = Jwts.builder()
                     .setSubject(userObj.getUserId())
                     .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)))
-                    .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                    .signWith(key)
                     .compact();
 
             String refreshToken = Jwts.builder()
                     .setSubject(userObj.getUserId())
                     .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
-                    .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                    .signWith(key)
                     .compact();
 
             tokens.put("accessToken", accessToken);

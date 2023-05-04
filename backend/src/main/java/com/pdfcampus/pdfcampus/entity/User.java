@@ -39,7 +39,7 @@ public class User {
     @Column(name = "productName")
     private String productName;
 
-    @Column(name = "subcribeDate")
+    @Column(name = "subcribeDate") // 스펠링 올바르게 고치면 오류 생김, run은 정상적으로 작동
     private LocalDate subscribeDate;
 
     @Column(name = "joinedDate")
