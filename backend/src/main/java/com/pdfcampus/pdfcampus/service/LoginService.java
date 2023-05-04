@@ -7,10 +7,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,4 +69,23 @@ public class LoginService {
 
         return null;
     }
+    public String getUserId(String id) {
+        User user = loginRepository.findByUserId(id);
+        if (user != null) {
+            return user.getUserId();
+        } else {
+            throw new IllegalArgumentException("User not found"); // 예외 처리
+        }
+    }
+
+
+    public boolean isUserSubscribed(String id) {
+        User user = loginRepository.findByUserId(id);
+        if (user != null) {
+            return user.isSubscribed();
+        } else {
+            return false; // 예외 처리
+        }
+    }
+
 }
