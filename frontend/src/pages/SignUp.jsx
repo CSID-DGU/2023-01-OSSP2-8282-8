@@ -24,6 +24,7 @@ const PDFCampusTypoWrapper = styled.View`
 	box-sizing: border-box;
 	margin: 15px 0;
 `;
+
 const PDFCampusTypo = styled.Text`
 	font-weight: 600;
 	font-size: 40px;
