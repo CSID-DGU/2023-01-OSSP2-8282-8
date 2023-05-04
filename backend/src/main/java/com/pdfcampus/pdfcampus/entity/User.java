@@ -47,4 +47,5 @@ public class User {
 
     @Column(name = "refreshToken")
     private String refreshToken;
+
 }

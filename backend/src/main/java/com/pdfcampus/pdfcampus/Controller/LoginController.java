@@ -1,7 +1,6 @@
 package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.LoginDTO;
-//import com.pdfcampus.pdfcampus.entity.LoginEntity;
 import com.pdfcampus.pdfcampus.service.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +19,35 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginDTO loginDTO, @RequestHeader(value = "Content-Type", defaultValue = "application/json") String contentType) {
-        boolean isLoginSuccess = loginService.login(loginDTO);
-        if (isLoginSuccess) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {
+        // 로그인 정보를 검증하고 결과를 반환하는 로직
+        boolean isLoginValid = loginService.checkLogin(loginDTO.getUserId(), loginDTO.getPassword());
+        if (isLoginValid) {
+            // 로그인 정보가 올바르면 accessToken과 refreshToken을 발급받아 반환
+            Map<String, String> tokens = loginService.issueTokens(loginDTO.getUserId());
+            String accessToken = tokens.get("accessToken");
+            String refreshToken = tokens.get("refreshToken");
+
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("accessToken", accessToken);
+            responseData.put("refreshToken", refreshToken);
+            responseData.put("userId", 1); // 실제 사용자 ID로 변경해야 함
+            responseData.put("isSubscribed", true); // 실제 구독 여부로 변경해야 함
+
             Map<String, Object> response = new HashMap<>();
-            Map<String, Object> data = new HashMap<>();
-            data.put("accessToken", loginDTO.getAccessToken());
-            data.put("refreshToken", loginDTO.getRefreshToken());
-            data.put("userId", loginDTO.getUserId());
-            data.put("isSubscribed", loginDTO.isSubscribed());
-            response.put("data", data);
-            response.put("apiStatus", null);
-            return ResponseEntity.ok().body(response);
+            response.put("data", responseData);
+
+            return ResponseEntity.ok(response);
         } else {
-            Map<String, Object> response = new HashMap<>();
+            // 로그인 정보가 올바르지 않으면 에러 메시지를 반환
             Map<String, Object> apiStatus = new HashMap<>();
-            apiStatus.put("errorCode", "E400");
             apiStatus.put("errorMessage", "로그인 정보 불일치");
-            response.put("data", null);
+            apiStatus.put("errorCode", "E400");
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", new HashMap<>());
             response.put("apiStatus", apiStatus);
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

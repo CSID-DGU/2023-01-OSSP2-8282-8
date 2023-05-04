@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,7 +15,19 @@ import java.util.Arrays;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception{
+        http
+                .authorizeRequests()
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/signup").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .csrf().disable();
+    }
+
     @Bean
     public ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry filterChain (HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.cors()
