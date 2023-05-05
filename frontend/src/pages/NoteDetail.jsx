@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { View, Alert } from "react-native";
 
 import CommunityHeader from "../organisms/CommunityHeader";
-import UpperDetail from "../organisms/UpperDetail";
+import NoteUpperDetail from "../organisms/NoteUpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
 
 const Container =styled.View`
@@ -30,9 +30,9 @@ height:60%;
 flex-direction:column;
 `
 
-const BookInfo={
-    bookTitle:"운영체제",
-    bookCover:"https://image.yes24.com/goods/89496122/XL",
+const NoteInfo={
+    bookTitle:"운영체제 필기자료",
+    bookCover:'https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg',
     isStored:false,
     publicationDate:"0000년0월0일 오후 00:00",
     modifiedDate:"0000년0월0일 오후 00:00",
@@ -42,13 +42,13 @@ const BookInfo={
 
 const Move2Library = () => {
     return(
-        Alert.alert("나의 서재로 이동")
+        Alert.alert("나의 필기로 이동")
     )
 }
 
 const AddBookLibrary = () => {
     return(
-        Alert.alert("나의 서재에 추가")
+        Alert.alert("나의 필기에 추가")
     )
 }
 
@@ -57,21 +57,21 @@ const BookDetail = () =>{
         <Container>
             <CommunityHeader/>
             <BookTitleContainer>
-                <BookTitleTypo>{BookInfo.bookTitle}</BookTitleTypo>
+                <BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
             </BookTitleContainer>
             <ContentContainer>
-                <UpperDetail img={BookInfo.bookCover}
-                PublicationDate={BookInfo.publicationDate} 
-                ModifiedDate={BookInfo.modifiedDate}
-                isStored={BookInfo.isStored} 
+                <NoteUpperDetail img={ NoteInfo.bookCover}
+                PublicationDate={NoteInfo.publicationDate} 
+                ModifiedDate={NoteInfo.modifiedDate}
+                isStored={NoteInfo.isStored} 
                 truepress={Move2Library}
                 falsepress={AddBookLibrary}
                 />
                 <LowerDetail 
-                img1={BookInfo.bookCover}
-                img2={BookInfo.bookCover}
-                img3={BookInfo.bookCover}
-                bookDetailContent={BookInfo.DetailInfo}/>
+                img1={NoteInfo.bookCover}
+                img2={NoteInfo.bookCover}
+                img3={NoteInfo.bookCover}
+                bookDetailContent={NoteInfo.DetailInfo}/>
             </ContentContainer>
         </Container>
     )
