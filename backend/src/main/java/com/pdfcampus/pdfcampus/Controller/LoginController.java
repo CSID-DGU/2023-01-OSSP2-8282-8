@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -28,11 +29,12 @@ public class LoginController {
             String accessToken = tokens.get("accessToken");
             String refreshToken = tokens.get("refreshToken");
 
-            Map<String, Object> responseData = new HashMap<>();
+            Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("accessToken", accessToken);
             responseData.put("refreshToken", refreshToken);
-            responseData.put("userId", loginService.getUid(loginDto.getId())); // uid
+            responseData.put("userId", loginService.getUid(loginDto.getId())); //uid
             responseData.put("isSubscribed", loginService.isUserSubscribed(loginDto.getId()));
+
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", responseData);
