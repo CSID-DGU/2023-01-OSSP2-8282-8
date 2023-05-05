@@ -104,66 +104,82 @@ const SubOnClick = () => {
 	Alert.alert("구독하러");
 };
 
+const UserInfo = {
+	name:"이현정",
+	userIntro:"안녕하세요 자기소개입니다",
+	isSubscribed:true,
+	startDate:"2023-01-01",
+	subDate:"2023-05-01",
+	subItem:"6개월",
+	period:"160일"
+}
+
 const MyPage = () => {
-	//const isSubscribed = false;
+	if(UserInfo.isSubscribed = true)
+	{
+		return (
+			<>
+				<TitleContainer>
+					<PDFCampusTypo>마이페이지</PDFCampusTypo>
+				</TitleContainer>
+				<Container>
+					<UserInfoContainer>
+					<UserPic>
+						<UserPicture></UserPicture>
+					</UserPic>
+					<UserIntro>
+						<Typoone>{UserInfo.name}</Typoone>
+						<Typotwo>{UserInfo.userIntro}</Typotwo>
+						</UserIntro>
+					</UserInfoContainer>
 	
-	return (
-		<>
-			<TitleContainer>
-				<PDFCampusTypo>마이페이지</PDFCampusTypo>
-			</TitleContainer>
-			<Container>
-				<UserInfoContainer>
-				<UserPic>
-					<UserPicture></UserPicture>
-				</UserPic>
-				<UserIntro>
-					<Typoone>이름</Typoone>
-					<Typotwo>안녕하세요 자기소개...</Typotwo>
-					</UserIntro>
-				</UserInfoContainer>
+					<SubInfoContainer>
+						<Typoone>구독정보</Typoone>
+						<SubIntro>
+						<Typotwo>가입일 : {UserInfo.startDate}</Typotwo>
+						<Typotwo>구독일 : {UserInfo.subDate}</Typotwo>
+						<Typotwo>상품 : {UserInfo.subItem}</Typotwo>
+						<Typotwo>남은 기간 : {UserInfo.period}</Typotwo>
+						</SubIntro>
+					</SubInfoContainer>
+				</Container>
+			</>
+				);
 
-				<SubInfoContainer>
-					<Typoone>구독정보</Typoone>
-					<SubIntro>
-						<Typotwo>현재 구독 정보가 없습니다. {'\n'}서비스를 구독하고 더 많은 서비스를 이용해보세요!</Typotwo>
-					</SubIntro>
-				</SubInfoContainer>
-				<ButtonIntro>
-				<CommunityButton typo="구독 하러 가기" onPress={SubOnClick} />
-				</ButtonIntro>
-			</Container>
-		</>
-	);
-
-
-	/*구독정보있을때
-	return (
-		<>
-			<TitleContainer>
-				<PDFCampusTypo>마이페이지</PDFCampusTypo>
-			</TitleContainer>
-			<Container>
-				<UserInfoContainer>
-				<UserPic>
-					<UserPicture></UserPicture>
-				</UserPic>
-				<UserIntro>
-					<Typoone>이름</Typoone>
-					<Typotwo>안녕하세요 자기소개...</Typotwo>
-					</UserIntro>
-				</UserInfoContainer>
-
-				<SubInfoContainer>
-					<Typoone>구독정보</Typoone>
-					<SubIntro>
-					<Typotwo>가입일{'\n'}구독일{'\n'}상품{'\n'}남은 기간</Typotwo>
-					</SubIntro>
-				</SubInfoContainer>
-			</Container>
-		</>
-	);
-	*/
+	}
+	
+	else 
+	{
+		return (
+			<>
+				<TitleContainer>
+					<PDFCampusTypo>마이페이지</PDFCampusTypo>
+				</TitleContainer>
+				<Container>
+					<UserInfoContainer>
+					<UserPic>
+						<UserPicture></UserPicture>
+					</UserPic>
+					<UserIntro>
+						<Typoone>{UserInfo.name}</Typoone>
+						<Typotwo>{UserInfo.userIntro}</Typotwo>
+						</UserIntro>
+					</UserInfoContainer>
+	
+					<SubInfoContainer>
+						<Typoone>구독정보</Typoone>
+						<SubIntro>
+							<Typotwo>현재 구독 정보가 없습니다. {'\n'}서비스를 구독하고 더 많은 서비스를 이용해보세요!</Typotwo>
+						</SubIntro>
+					</SubInfoContainer>
+					<ButtonIntro>
+					<CommunityButton typo="구독 하러 가기" onPress={SubOnClick} />
+					</ButtonIntro>
+				</Container>
+			</>
+				);
+	}
+	
 };
 
 export default MyPage;
