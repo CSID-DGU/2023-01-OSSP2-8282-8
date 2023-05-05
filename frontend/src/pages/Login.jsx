@@ -24,15 +24,14 @@ const PDFCampusTypoWrapper = styled.View`
 	box-sizing: border-box;
 	margin: 15px 0;
 `;
-
 const PDFCampusTypo = styled.Text`
 	font-weight: 600;
 	font-size: 40px;
 `;
 
-const SignUpForm = styled.View`
+const LoginForm = styled.View`
 	width: 303px;
-	height: 356px;
+	height: 250px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -44,24 +43,16 @@ const SignUpForm = styled.View`
 	border-radius: 15px;
 `;
 
-const SignUp = () => {
+const LogIn = () => {
 	const onChangeId = (e) => {
 		setId(e);
-	};
-	const onChangeNickname = (e) => {
-		setNickname(e);
 	};
 	const onChangePw = (e) => {
 		setPw(e);
 	};
-	const onChangePwCheck = (e) => {
-		setPwCheck(e);
-	};
 
 	const idInputRef = useRef();
-	const nicknameInputRef = useRef();
 	const pwInputRef = useRef();
-	const pwCheckInputRef = useRef();
 
 	const inputList = [
 		{
@@ -69,39 +60,23 @@ const SignUp = () => {
 			changeHandler: onChangeId,
 			textInputRef: idInputRef,
 		},
-		{
-			typo: "닉네임 입력하세요",
-			changeHandler: onChangeNickname,
-			textInputRef: nicknameInputRef,
-		},
+		
 		{
 			typo: "비밀번호를 입력하세요",
 			changeHandler: onChangePw,
 			textInputRef: pwInputRef,
 		},
-		{
-			typo: "비밀번호 확인",
-			changeHandler: onChangePwCheck,
-			textInputRef: pwCheckInputRef,
-		},
+		
 	];
 
 	const [id, setId] = useState("");
-	const [nickname, setNickname] = useState("");
 	const [pw, setPw] = useState("");
-	const [pwCheck, setPwCheck] = useState("");
 
-	const signUpOnClick = () => {
+	const LogInClick = () => {
 		setId("");
-		setNickname("");
 		setPw("");
-		setPwCheck("");
 		idInputRef.current.clear();
-		nicknameInputRef.current.clear();
 		pwInputRef.current.clear();
-		pwCheckInputRef.current.clear();
-		if (pw !== pwCheck)
-			Alert.alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
 	};
 
 	return (
@@ -109,12 +84,12 @@ const SignUp = () => {
 			<PDFCampusTypoWrapper>
 				<PDFCampusTypo>PDFCampus</PDFCampusTypo>
 			</PDFCampusTypoWrapper>
-			<SignUpForm>
+			<LoginForm>
 				<CommunityInputContainer inputList={inputList} />
-				<CommunityButton typo="회원가입" onPress={signUpOnClick} />
-			</SignUpForm>
+				<CommunityButton typo="로그인" onPress={LogInClick} />
+			</LoginForm>
 		</Container>
 	);
 };
 
-export default SignUp;
+export default LogIn;
