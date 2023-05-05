@@ -126,6 +126,14 @@ const SubOnClick = () => {
 	Alert.alert("필기관리창");
 };
 
+const ViewAllNotesOnClick = () => {
+	Alert.alert("필기 전체보기");
+};
+
+const ViewAllPDFOnClick = () => {
+	Alert.alert("도서 전체보기");
+};
+
 const MyLibrary = () => {
 
     return (
@@ -141,20 +149,15 @@ const MyLibrary = () => {
             <ListContainer>
 				<LIST1>
 					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title><Text>operating systems1</Text></LIST1_Title>
+					<LIST1_Title><Text>operating system1</Text></LIST1_Title>
 				</LIST1>
 				<LIST1>
 					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title><Text>operating systems2</Text></LIST1_Title>
+					<LIST1_Title><Text>operating system2</Text></LIST1_Title>
 				</LIST1>
-				<LIST1>
-					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title></LIST1_Title>
-				</LIST1>
-				<LIST1>
-					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title></LIST1_Title>
-				</LIST1>
+				<LIST1></LIST1>
+				<LIST1></LIST1>
+				
 			</ListContainer>
                 <Line></Line>
 
@@ -164,28 +167,29 @@ const MyLibrary = () => {
             <ListContainer>
 				<LIST2>
 					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating systems1</Text></LIST2_Title>
+					<LIST2_Title><Text>operating system1</Text></LIST2_Title>
 				</LIST2>
 				<LIST2>
 					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating systems2</Text></LIST2_Title>
+					<LIST2_Title><Text>operating system2</Text></LIST2_Title>
 				</LIST2>
 				<LIST2>
 					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating systems3</Text></LIST2_Title>
+					<LIST2_Title><Text>operating system3</Text></LIST2_Title>
 				</LIST2>
 				<LIST2>
 					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating systems4</Text></LIST2_Title>
+					<LIST2_Title><Text>operating system4</Text></LIST2_Title>
 				</LIST2>
 			</ListContainer>
 		</Container1>
 		<Container2>
 			<ButtonIntro2>
-			<ViewAllButton typo="필기 전체보기" onPress={SubOnClick} />
+			<ViewAllButton typo="필기 전체보기" onPress={ViewAllNotesOnClick} />
 			</ButtonIntro2>
+			
 			<ButtonIntro2>
-			<ViewAllButton typo="도서 전체보기" onPress={SubOnClick} />
+			<ViewAllButton typo="도서 전체보기" onPress={ViewAllPDFOnClick} />
 			</ButtonIntro2>
 		</Container2>
 	</Container>
