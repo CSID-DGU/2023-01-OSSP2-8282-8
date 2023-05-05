@@ -41,7 +41,7 @@ public class LoginService {
     }
 
     public Map<String, String> issueTokens(String id) {
-        Optional<User> optionalUser = Optional.ofNullable(loginRepository.findByUserId(String.valueOf(Integer.valueOf(id))));
+        Optional<User> optionalUser = Optional.ofNullable(loginRepository.findByUserId(String.valueOf(id)));
         User userObj = optionalUser.orElse(null);
 
         if (userObj != null) {
@@ -69,10 +69,10 @@ public class LoginService {
 
         return null;
     }
-    public String getUserId(String id) {
+    public int getUid(String id) {
         User user = loginRepository.findByUserId(id);
         if (user != null) {
-            return user.getUserId();
+            return user.getUid();
         } else {
             throw new IllegalArgumentException("User not found"); // 예외 처리
         }

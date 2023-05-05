@@ -31,8 +31,8 @@ public class LoginController {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("accessToken", accessToken);
             responseData.put("refreshToken", refreshToken);
-            responseData.put("userId", loginService.getUserId(loginDto.getId())); // 실제 사용자 ID로 변경해야 함
-            responseData.put("isSubscribed", loginService.isUserSubscribed(loginDto.getId())); // 실제 구독 여부로 변경해야 함
+            responseData.put("userId", loginService.getUid(loginDto.getId())); // uid
+            responseData.put("isSubscribed", loginService.isUserSubscribed(loginDto.getId()));
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", responseData);
