@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Setter
 @AllArgsConstructor //모든 필드를 매개변수로 받는 생성자 자동으로 생성
 @NoArgsConstructor //매개변수가 없는 디폴트 생성자를 자동으로 생성
-@Table(name = "User")
+@Table(name = "user")
 public class User {
     @Id //기본키 매핑
     @GeneratedValue(strategy = GenerationType.IDENTITY) //기본키 생성
@@ -39,7 +39,7 @@ public class User {
     @Column(name = "productName")
     private String productName;
 
-    @Column(name = "subcribeDate")
+    @Column(name = "subcribeDate") // 스펠링 올바르게 고치면 오류 생김, run은 정상적으로 작동
     private LocalDate subscribeDate;
 
     @Column(name = "joinedDate")
@@ -47,4 +47,5 @@ public class User {
 
     @Column(name = "refreshToken")
     private String refreshToken;
+
 }
