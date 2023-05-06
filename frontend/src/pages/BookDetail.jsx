@@ -21,7 +21,7 @@ const BookTitleContainer = styled.View`
 `;
 const BookTitleTypo = styled.Text`
 	font-size: 50px;
-	fontweight: 800;
+	font-weight: 800;
 	margin-left: 40px;
 `;
 const ContentContainer = styled.View`
@@ -56,10 +56,7 @@ const BookDetail = () => {
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					img={BookInfo.bookCover}
-					PublicationDate={BookInfo.publicationDate}
-					ModifiedDate={BookInfo.modifiedDate}
-					isStored={BookInfo.isStored}
+					contentInfo={BookInfo}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
 				/>

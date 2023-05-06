@@ -4,22 +4,30 @@ import ImageBlock from "../molecules/ImageBlcok";
 import DateBlock from "../molecules/DateBlock";
 import BookButtonBlock from "../molecules/BookButtonBlock";
 
-const Container =styled.View`
-width:100%;
-display: flex;
-align-Items:center;
-flex-direction:row;
-margin-bottom:30px;
-`
+const Container = styled.View`
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	margin-bottom: 30px;
+`;
 
-const UpperDetail = ({img, PublicationDate, ModifiedDate, isStored, truepress, falsepress}) => {
-    return(
-        <Container>
-            <ImageBlock img={img}/>
-            <DateBlock PublicationDate={PublicationDate} ModifiedDate={ModifiedDate} />
-            <BookButtonBlock isStored={isStored} truepress={truepress} falsepress={falsepress}/>
-        </Container>
-    )
-}
+const UpperDetail = ({ contentInfo, truepress, falsepress }) => {
+	const { bookCover, publicationDate, modifiedDate, isStored } = contentInfo;
+	return (
+		<Container>
+			<ImageBlock img={bookCover} />
+			<DateBlock
+				PublicationDate={publicationDate}
+				ModifiedDate={modifiedDate}
+			/>
+			<BookButtonBlock
+				isStored={isStored}
+				truepress={truepress}
+				falsepress={falsepress}
+			/>
+		</Container>
+	);
+};
 
 export default UpperDetail;
