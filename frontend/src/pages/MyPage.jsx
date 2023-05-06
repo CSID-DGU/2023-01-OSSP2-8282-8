@@ -39,12 +39,12 @@ const Typotwo = styled.Text`
 	line-height: 30px;
 `;
 
-const UserPicture = styled.View`	
+const UserPicture = styled.View`
 	width: 150px;
 	height: 150px;
 	display: flex;
 
-	background: #D9D9D9;
+	background: #d9d9d9;
 	border-radius: 100px;
 `;
 
@@ -53,21 +53,21 @@ const UserInfoContainer = styled.View`
 	height: 205px;
 
 	display: flex;
-	flex-direction:row;
+	flex-direction: row;
 	//justify-content: center;
 	align-items: center;
-	
+
 	border: 2px solid #000000;
-//	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	//	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 20px;
 `;
 
 const SubInfoContainer = styled.View`
 	width: 650px;
 	height: 205px;
-	
+
 	display: flex;
-	flex-direction:row;
+	flex-direction: row;
 	justify-content: flex-start;
 	align-items: flex-start;
 `;
@@ -76,22 +76,22 @@ const UserPic = styled.View`
 	width: 200px;
 	height: 205px;
 	justify-content: center;
-	align-items : center;
+	align-items: center;
 `;
 
 const UserIntro = styled.View`
 	width: 450px;
 	height: 205px;
-	flex-direction:row;
+	flex-direction: row;
 	justify-content: space-around;
-	align-items : center;
+	align-items: center;
 `;
 
 const SubIntro = styled.View`
 	width: 650px;
 	height: 205px;
 	justify-content: center;
-	align-items : flex-start;
+	align-items: flex-start;
 `;
 
 const ButtonIntro = styled.View`
@@ -105,8 +105,8 @@ const SubOnClick = () => {
 };
 
 const MyPage = () => {
-	//const isSubscribed = false;
-	
+	const [subscribed, setSubscribed] = useState(false);
+
 	return (
 		<>
 			<TitleContainer>
@@ -114,28 +114,40 @@ const MyPage = () => {
 			</TitleContainer>
 			<Container>
 				<UserInfoContainer>
-				<UserPic>
-					<UserPicture></UserPicture>
-				</UserPic>
-				<UserIntro>
-					<Typoone>이름</Typoone>
-					<Typotwo>안녕하세요 자기소개...</Typotwo>
+					<UserPic>
+						<UserPicture></UserPicture>
+					</UserPic>
+					<UserIntro>
+						<Typoone>이름</Typoone>
+						<Typotwo>안녕하세요 자기소개...</Typotwo>
 					</UserIntro>
 				</UserInfoContainer>
 
 				<SubInfoContainer>
 					<Typoone>구독정보</Typoone>
 					<SubIntro>
-						<Typotwo>현재 구독 정보가 없습니다. {'\n'}서비스를 구독하고 더 많은 서비스를 이용해보세요!</Typotwo>
+						{subscribed ? (
+							<SubIntro>
+								<Typotwo>
+									가입일{"\n"}구독일{"\n"}상품{"\n"}남은 기간
+								</Typotwo>
+							</SubIntro>
+						) : (
+							<Typotwo>
+								현재 구독 정보가 없습니다. {"\n"}서비스를 구독하고 더 많은
+								서비스를 이용해보세요!
+							</Typotwo>
+						)}
 					</SubIntro>
 				</SubInfoContainer>
-				<ButtonIntro>
-				<CommunityButton typo="구독 하러 가기" onPress={SubOnClick} />
-				</ButtonIntro>
+				{subscribed ? null : (
+					<ButtonIntro>
+						<CommunityButton typo="구독 하러 가기" onPress={SubOnClick} />
+					</ButtonIntro>
+				)}
 			</Container>
 		</>
 	);
-
 
 	/*구독정보있을때
 	return (
@@ -155,10 +167,7 @@ const MyPage = () => {
 				</UserInfoContainer>
 
 				<SubInfoContainer>
-					<Typoone>구독정보</Typoone>
-					<SubIntro>
-					<Typotwo>가입일{'\n'}구독일{'\n'}상품{'\n'}남은 기간</Typotwo>
-					</SubIntro>
+					
 				</SubInfoContainer>
 			</Container>
 		</>
