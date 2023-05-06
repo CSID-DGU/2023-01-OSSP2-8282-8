@@ -6,6 +6,8 @@ import styled from "styled-components";
 import CommunityButton from "../organisms/CommunityButton";
 import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
+import postSignUp from "../../api/postSignUp";
+
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
@@ -92,6 +94,10 @@ const SignUp = () => {
 	const [pwCheck, setPwCheck] = useState("");
 
 	const signUpOnClick = () => {
+		postSignUp(
+			{ id: id, nickname: nickname, password: pw, passwordCheck: pwCheck },
+			() => {}
+		);
 		setId("");
 		setNickname("");
 		setPw("");
