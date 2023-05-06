@@ -69,6 +69,7 @@ const BookDetail = () => {
 					contentInfo={BookInfo}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
+					isBook={true}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
