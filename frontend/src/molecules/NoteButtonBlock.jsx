@@ -35,8 +35,9 @@ const PriceWrapper = styled.View`
 	border-bottom-left-radius: 8px;
 `;
 const ButtonTypo = styled.Text`
-	font-size: 20px;
-	color: white;
+	font-size: 18px;
+	color: #fff;
+	font-weight: 600;
 	margin-top: 8px;
 	margin-bottom: 8px;
 	margin-left: 10px;
