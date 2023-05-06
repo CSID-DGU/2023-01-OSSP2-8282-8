@@ -9,7 +9,7 @@ const Container = styled.View`
 `;
 const HeaderContainer = styled.View`
 	width: 100%;
-	height: 50px;
+	height: 60px;
 	background-color: #56aaf6;
 	display: flex;
 	margin-top: 20px;
@@ -17,7 +17,8 @@ const HeaderContainer = styled.View`
 	align-items: center;
 	justify-content: space-between;
 	box-sizing: border-box;
-	padding: 15px;
+	margin: 0;
+	padding: 24px 15px 15px 15px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 const ButtonContainer = styled.View`
