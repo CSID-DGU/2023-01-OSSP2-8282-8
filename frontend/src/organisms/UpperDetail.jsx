@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ImageBlock from "../molecules/ImageBlcok";
 import DateBlock from "../molecules/DateBlock";
 import BookButtonBlock from "../molecules/BookButtonBlock";
+import NoteButtonBlock from "../molecules/NoteButtonBlock";
 
 const Container = styled.View`
 	width: 100%;
@@ -19,7 +20,7 @@ const InfoWrapper = styled.View`
 	align-items: center;
 `;
 
-const UpperDetail = ({ contentInfo, truepress, falsepress }) => {
+const UpperDetail = ({ contentInfo, truepress, falsepress, isBook }) => {
 	const { bookCover, publicationDate, modifiedDate, isStored } = contentInfo;
 	return (
 		<Container>
@@ -30,11 +31,19 @@ const UpperDetail = ({ contentInfo, truepress, falsepress }) => {
 					ModifiedDate={modifiedDate}
 				/>
 			</InfoWrapper>
-			<BookButtonBlock
-				isStored={isStored}
-				truepress={truepress}
-				falsepress={falsepress}
-			/>
+			{isBook ? (
+				<BookButtonBlock
+					isStored={isStored}
+					truepress={truepress}
+					falsepress={falsepress}
+				/>
+			) : (
+				<NoteButtonBlock
+					isStored={isStored}
+					truepress={truepress}
+					falsepress={falsepress}
+				/>
+			)}
 		</Container>
 	);
 };
