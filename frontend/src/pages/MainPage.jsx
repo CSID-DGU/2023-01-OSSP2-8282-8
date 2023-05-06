@@ -77,121 +77,22 @@ const ListTitle = ({ typo }) => {
 	);
 };
 
-const books = [
-	{
-		id: 1,
-		name: "운영체제1",
+const books = [...Array(10).keys()].map((id) => {
+	return {
+		id: id + 1,
+		name: `운영체제${id + 1}`,
 		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 2,
-		name: "운영체제2",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 3,
-		name: "운영체제3",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 4,
-		name: "운영체제4",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 5,
-		name: "운영체제5",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 6,
-		name: "운영체제6",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 7,
-		name: "운영체제7",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 8,
-		name: "운영체제8",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 9,
-		name: "운영체제9",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-	{
-		id: 10,
-		name: "운영체제10",
-		image: "https://image.yes24.com/goods/89496122/XL",
-	},
-];
+	};
+});
 
-const notes = [
-	{
-		id: 1,
-		name: "필기자료1",
+const notes = [...Array(10).keys()].map((id) => {
+	return {
+		id: id + 1,
+		name: `필기자료${id + 1}`,
 		image:
 			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 2,
-		name: "필기자료2",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 3,
-		name: "필기자료3",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 4,
-		name: "필기자료4",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 5,
-		name: "필기자료5",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 6,
-		name: "필기자료6",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 7,
-		name: "필기자료7",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 8,
-		name: "필기자료8",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 9,
-		name: "필기자료9",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-	{
-		id: 10,
-		name: "필기자료10",
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	},
-];
+	};
+});
 
 const MainPage = () => {
 	const [pnum1, setPnum1] = useState(0);
