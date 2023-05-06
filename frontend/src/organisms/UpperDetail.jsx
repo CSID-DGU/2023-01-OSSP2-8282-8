@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ImageBlock from "../molecules/ImageBlcok";
+import ImageBlock from "../molecules/ImageBlock";
 import DateBlock from "../molecules/DateBlock";
 import BookButtonBlock from "../molecules/BookButtonBlock";
 import NoteButtonBlock from "../molecules/NoteButtonBlock";

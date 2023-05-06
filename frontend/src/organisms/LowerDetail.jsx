@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ImageBlock from "../molecules/ImageBlcok";
+import ImageBlock from "../molecules/ImageBlock";
 
 const Container = styled.View`
 	display: flex;
