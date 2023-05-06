@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
-import CommunityHeader from "../organisms/Header";
-import NoteUpperDetail from "../organisms/NoteUpperDetail";
+import Header from "../organisms/Header";
+import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
 
 const Container = styled.View`
@@ -17,17 +17,27 @@ const BookTitleContainer = styled.View`
 	height: auto;
 	display: flex;
 	justify-content: flex-start;
-	margin-bottom: 20px;
+	margin: 34px 0;
 `;
 const BookTitleTypo = styled.Text`
 	font-size: 50px;
-	fontweight: 800;
+	font-weight: 800;
 	margin-left: 40px;
 `;
 const ContentContainer = styled.View`
 	width: 80%;
 	height: 60%;
 	flex-direction: column;
+	box-sizing: border-box;
+	margin: 24px 0;
+`;
+
+const DetailInfoDivider = styled.View`
+	width: 100%;
+	height: 2px;
+	background: #bebebe;
+	box-sizing: border-box;
+	margin-bottom: 17px;
 `;
 
 const NoteInfo = {
@@ -35,35 +45,34 @@ const NoteInfo = {
 	bookCover:
 		"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
 	isStored: false,
-	publicationDate: "0000년0월0일 오후 00:00",
-	modifiedDate: "0000년0월0일 오후 00:00",
+	publicationDate: "0000년 0월 0일 오후 00:00",
+	modifiedDate: "0000년 0월 0일 오후 00:00",
 	DetailInfo: "상세정보입니다~~~~~",
 };
 
 const Move2Library = () => {
-	return Alert.alert("나의 필기로 이동");
+	return Alert.alert("나의 서재로 이동");
 };
 
 const AddBookLibrary = () => {
-	return Alert.alert("나의 필기에 추가");
+	return Alert.alert("나의 서재에 추가");
 };
 
-const BookDetail = () => {
+const NoteDetail = () => {
 	return (
 		<Container>
-			<CommunityHeader />
+			<Header />
 			<BookTitleContainer>
 				<BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
-				<NoteUpperDetail
-					img={NoteInfo.bookCover}
-					PublicationDate={NoteInfo.publicationDate}
-					ModifiedDate={NoteInfo.modifiedDate}
-					isStored={NoteInfo.isStored}
+				<UpperDetail
+					contentInfo={NoteInfo}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
+					isBook={false}
 				/>
+				<DetailInfoDivider />
 				<LowerDetail
 					img1={NoteInfo.bookCover}
 					img2={NoteInfo.bookCover}
@@ -75,4 +84,4 @@ const BookDetail = () => {
 	);
 };
 
-export default BookDetail;
+export default NoteDetail;
