@@ -102,7 +102,7 @@ const SubOnClick = () => {
 };
 
 const MyPage = () => {
-	const [subscribed, setSubscribed] = useState(true);
+	const [subscribed, setSubscribed] = useState(false);
 	const [subscribeInfo, setSubscribeInfo] = useState({
 		joinedDate: "2022. 12. 13",
 		subscribedDate: "2022. 12. 25",
