@@ -4,36 +4,37 @@ import { Text, Alert } from "react-native";
 import styled from "styled-components";
 
 import CommunityButton from "../organisms/CommunityButton";
-
-const TitleContainer = styled.View`
-	width: 30%;
-	height: 20%;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	align-items: center;
-`;
+import Header from "../organisms/Header";
 
 const Container = styled.View`
-	width: 100%;
-	height: 70%;
 	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
+	box-sizing: border-box;
+	margin: 0 auto;
 `;
 
-const PDFCampusTypo = styled.Text`
+const MyPageTypo = styled.Text`
+	box-sizing: border-box;
+	margin: 60px 0 0 0;
 	font-weight: 600;
 	font-size: 40px;
 `;
 
-const Typoone = styled.Text`
+const SubTitleTypo = styled.Text`
 	font-weight: 600;
 	font-size: 35px;
 `;
 
-const Typotwo = styled.Text`
+const SelfIntroWrapper = styled.View`
+	box-sizing: border-box;
+	margin: 0 25px;
+`;
+
+const SelfIntroTypo = styled.Text`
+	font-size: 15px;
+	color: #555;
+`;
+
+const ContentTypo = styled.Text`
 	font-weight: 300;
 	font-size: 25px;
 	line-height: 30px;
@@ -51,23 +52,21 @@ const UserPicture = styled.View`
 const UserInfoContainer = styled.View`
 	width: 650px;
 	height: 205px;
-
 	display: flex;
 	flex-direction: row;
-	//justify-content: center;
 	align-items: center;
-
+	background: #fff;
 	border: 2px solid #000000;
-	//	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 20px;
+	box-sizing: border-box;
+	margin: 42px 0;
 `;
 
 const SubInfoContainer = styled.View`
 	width: 650px;
 	height: 205px;
-
 	display: flex;
-	flex-direction: row;
 	justify-content: flex-start;
 	align-items: flex-start;
 `;
@@ -80,7 +79,6 @@ const UserPic = styled.View`
 `;
 
 const UserIntro = styled.View`
-	width: 450px;
 	height: 205px;
 	flex-direction: row;
 	justify-content: space-around;
@@ -90,8 +88,8 @@ const UserIntro = styled.View`
 const SubIntro = styled.View`
 	width: 650px;
 	height: 205px;
-	justify-content: center;
-	align-items: flex-start;
+	box-sizing: border-box;
+	margin: 28px 0;
 `;
 
 const ButtonIntro = styled.View`
@@ -109,36 +107,38 @@ const MyPage = () => {
 
 	return (
 		<>
-			<TitleContainer>
-				<PDFCampusTypo>마이페이지</PDFCampusTypo>
-			</TitleContainer>
+			<Header />
 			<Container>
+				<MyPageTypo>마이페이지</MyPageTypo>
 				<UserInfoContainer>
 					<UserPic>
 						<UserPicture></UserPicture>
 					</UserPic>
 					<UserIntro>
-						<Typoone>이름</Typoone>
-						<Typotwo>안녕하세요 자기소개...</Typotwo>
+						<SubTitleTypo>이름</SubTitleTypo>
+						<SelfIntroWrapper>
+							<SelfIntroTypo>안녕하세요 자기소개...</SelfIntroTypo>
+						</SelfIntroWrapper>
 					</UserIntro>
 				</UserInfoContainer>
 
 				<SubInfoContainer>
-					<Typoone>구독정보</Typoone>
-					<SubIntro>
-						{subscribed ? (
-							<SubIntro>
-								<Typotwo>
-									가입일{"\n"}구독일{"\n"}상품{"\n"}남은 기간
-								</Typotwo>
-							</SubIntro>
-						) : (
-							<Typotwo>
+					<SubTitleTypo>구독정보</SubTitleTypo>
+
+					{subscribed ? (
+						<SubIntro>
+							<ContentTypo>
+								가입일{"\n"}구독일{"\n"}상품{"\n"}남은 기간
+							</ContentTypo>
+						</SubIntro>
+					) : (
+						<SubIntro>
+							<ContentTypo>
 								현재 구독 정보가 없습니다. {"\n"}서비스를 구독하고 더 많은
 								서비스를 이용해보세요!
-							</Typotwo>
-						)}
-					</SubIntro>
+							</ContentTypo>
+						</SubIntro>
+					)}
 				</SubInfoContainer>
 				{subscribed ? null : (
 					<ButtonIntro>
@@ -148,31 +148,6 @@ const MyPage = () => {
 			</Container>
 		</>
 	);
-
-	/*구독정보있을때
-	return (
-		<>
-			<TitleContainer>
-				<PDFCampusTypo>마이페이지</PDFCampusTypo>
-			</TitleContainer>
-			<Container>
-				<UserInfoContainer>
-				<UserPic>
-					<UserPicture></UserPicture>
-				</UserPic>
-				<UserIntro>
-					<Typoone>이름</Typoone>
-					<Typotwo>안녕하세요 자기소개...</Typotwo>
-					</UserIntro>
-				</UserInfoContainer>
-
-				<SubInfoContainer>
-					
-				</SubInfoContainer>
-			</Container>
-		</>
-	);
-	*/
 };
 
 export default MyPage;
