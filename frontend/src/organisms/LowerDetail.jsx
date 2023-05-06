@@ -17,33 +17,29 @@ const DetailContainer = styled.View`
 	width: 29%;
 	display: flex;
 `;
-const ImageContainer = styled.View`
-	width: 100%;
-	display: flex;
-	background: #d9d9d9;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-`;
+
 const TextContainer = styled.View`
 	width: 100%;
 	height: 250px;
 	display: flex;
 	background: #d9d9d9;
+	box-sizing: border-box;
+	padding: 20px;
 `;
 const ImageListContainer = styled.View`
 	width: 100%;
 	height: 250px;
 	background: #d9d9d9;
-	flex-direction: row;
 	display: flex;
-	justify-content: space-around;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
 `;
 
 const Titletypo = styled.Text`
 	font-size: 20px;
 	font-weight: 800;
-	margin-bottom: 10px;
+	margin-bottom: 17px;
 `;
 const Detailtypo = styled.Text`
 	font-size: 15px;
@@ -56,13 +52,11 @@ const LowerDetail = ({ img1, img2, img3, bookDetailContent }) => {
 		<Container>
 			<PreviewContainer>
 				<Titletypo>미리보기</Titletypo>
-				<ImageContainer>
-					<ImageListContainer>
-						<ImageBlock img={img1} />
-						<ImageBlock img={img2} />
-						<ImageBlock img={img3} />
-					</ImageListContainer>
-				</ImageContainer>
+				<ImageListContainer>
+					<ImageBlock img={img1} />
+					<ImageBlock img={img2} />
+					<ImageBlock img={img3} />
+				</ImageListContainer>
 			</PreviewContainer>
 			<DetailContainer>
 				<Titletypo>상세정보</Titletypo>
