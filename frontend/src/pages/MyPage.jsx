@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, Alert } from "react-native";
 
 import styled from "styled-components";
@@ -37,7 +37,6 @@ const SelfIntroTypo = styled.Text`
 const ContentTypo = styled.Text`
 	font-weight: 300;
 	font-size: 25px;
-	line-height: 30px;
 `;
 
 const UserPicture = styled.View`
@@ -103,7 +102,13 @@ const SubOnClick = () => {
 };
 
 const MyPage = () => {
-	const [subscribed, setSubscribed] = useState(false);
+	const [subscribed, setSubscribed] = useState(true);
+	const [subscribeInfo, setSubscribeInfo] = useState({
+		joinedDate: "2022. 12. 13",
+		subscribedDate: "2022. 12. 25",
+		productName: "PDF 구독 (6개월)",
+		remainDate: "165일",
+	});
 
 	return (
 		<>
@@ -127,9 +132,10 @@ const MyPage = () => {
 
 					{subscribed ? (
 						<SubIntro>
-							<ContentTypo>
-								가입일{"\n"}구독일{"\n"}상품{"\n"}남은 기간
-							</ContentTypo>
+							<ContentTypo>가입일: {subscribeInfo.joinedDate}</ContentTypo>
+							<ContentTypo>구독일: {subscribeInfo.subscribedDate}</ContentTypo>
+							<ContentTypo>상품: {subscribeInfo.productName}</ContentTypo>
+							<ContentTypo>남은 기간: {subscribeInfo.remainDate}</ContentTypo>
 						</SubIntro>
 					) : (
 						<SubIntro>
