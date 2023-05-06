@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
-import CommunityHeader from "../organisms/Header";
+import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
 
@@ -17,7 +17,7 @@ const BookTitleContainer = styled.View`
 	height: auto;
 	display: flex;
 	justify-content: flex-start;
-	margin-bottom: 20px;
+	margin: 34px 0;
 `;
 const BookTitleTypo = styled.Text`
 	font-size: 50px;
@@ -28,14 +28,24 @@ const ContentContainer = styled.View`
 	width: 80%;
 	height: 60%;
 	flex-direction: column;
+	box-sizing: border-box;
+	margin: 24px 0;
+`;
+
+const DetailInfoDivider = styled.View`
+	width: 100%;
+	height: 2px;
+	background: #bebebe;
+	box-sizing: border-box;
+	margin-bottom: 17px;
 `;
 
 const BookInfo = {
 	bookTitle: "운영체제",
 	bookCover: "https://image.yes24.com/goods/89496122/XL",
 	isStored: false,
-	publicationDate: "0000년0월0일 오후 00:00",
-	modifiedDate: "0000년0월0일 오후 00:00",
+	publicationDate: "0000년 0월 0일 오후 00:00",
+	modifiedDate: "0000년 0월 0일 오후 00:00",
 	DetailInfo: "상세정보입니다~~~~~",
 };
 
@@ -50,7 +60,7 @@ const AddBookLibrary = () => {
 const BookDetail = () => {
 	return (
 		<Container>
-			<CommunityHeader />
+			<Header />
 			<BookTitleContainer>
 				<BookTitleTypo>{BookInfo.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
@@ -60,6 +70,7 @@ const BookDetail = () => {
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
 				/>
+				<DetailInfoDivider />
 				<LowerDetail
 					img1={BookInfo.bookCover}
 					img2={BookInfo.bookCover}

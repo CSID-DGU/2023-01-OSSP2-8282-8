@@ -1,23 +1,21 @@
 import React from "react";
 import styled from "styled-components";
-import {Image} from "react-native";
 
-const Container =styled.View`
-width:20%;
-display: flex;
-justify-content: center;
-align-items:center;
-`
+const Img = styled.Image`
+	width: 140px;
+	height: 190px;
+	resize: contain;
+	box-sizing: border-box;
+	margin: 0 35px;
+`;
 
-const ImageBlock = ({img}) => {
-    return(
-        <Container>
-            <Image
-        source={{uri: img}}
-        style={{ width: 130, height: 190, resizeMode: 'contain' }}
-      />
-        </Container>
-    )
-}
+const ImageBlock = ({ img }) => {
+	return (
+		<Img
+			source={{ uri: img }}
+			style={{ width: 140, height: 190, resizeMode: "contain" }}
+		/>
+	);
+};
 
 export default ImageBlock;
