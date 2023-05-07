@@ -19,6 +19,6 @@ export default function App() {
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
 
-		<MyLibrary />
+		<LogIn />
 	);
 }
