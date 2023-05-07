@@ -7,6 +7,8 @@ import CommunityButton from "../organisms/CommunityButton";
 import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
 import postLogin from "../../api/postLogin";
+import { useSetRecoilState } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	width: 100%;
@@ -73,11 +75,19 @@ const LogIn = () => {
 	const [id, setId] = useState("");
 	const [pw, setPw] = useState("");
 
+	const setUserInfo = useSetRecoilState(UserInfoState);
+	const handleUserInfo = (info) => {
+		setUserInfo(info);
+	};
+
 	const LogInClick = () => {
-		postLogin({
-			id: id,
-			password: pw,
-		});
+		postLogin(
+			{
+				id: id,
+				password: pw,
+			},
+			handleUserInfo
+		);
 		setId("");
 		setPw("");
 		idInputRef.current.clear();
