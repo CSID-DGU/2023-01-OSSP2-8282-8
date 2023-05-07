@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.controller.SignupController;
 
 import com.pdfcampus.pdfcampus.dto.SignupDto;
 import com.pdfcampus.pdfcampus.service.SignupService;
+import com.pdfcampus.pdfcampus.util.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping
 public class SignupController {
-    private SignupService signupService;
+    private final SignupService signupService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTo
 
     @PostMapping("/signup")
     public ResponseEntity<Object> execSignup(@RequestBody SignupDto signupDto){

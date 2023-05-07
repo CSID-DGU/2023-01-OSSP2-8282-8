@@ -1,37 +1,60 @@
 package com.pdfcampus.pdfcampus.util.jwt;
 
 import com.pdfcampus.pdfcampus.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 
+import java.security.SignatureException;
 import java.util.*;
 
 @Component
 public class JwtTokenProvider {
-    // JWT 시크릿 키
+
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
-    // JWT 유효 시간 (30분)
-    @Value("${app.jwtExpirationInMs}")
-    private int jwtExpirationInMs;
+    private int jwtExpirationInMs = 600000; //10분
 
-    public String generateToken(User user) {
-        // JWT 페이로드에 저장될 정보
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", user.getUid());
+    private int refreshTokenExpirationInMs = 604800000; //7일
+
+    public String generateAccessToken(User user) {
+
+        Map<String, Object> claims = new HashMap<>(); // payload에 저장될 정보들
+        claims.put("sub", user.getUserId());
+        claims.put("name", user.getUsername());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(user.getUserId())
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+
+    public String generateRefreshToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getUserId())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + refreshTokenExpirationInMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException ex) {
+            return false;
+        }
+    }
+
 }
