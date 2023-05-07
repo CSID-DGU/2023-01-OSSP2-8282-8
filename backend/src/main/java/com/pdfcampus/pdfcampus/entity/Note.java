@@ -38,4 +38,7 @@ public class Note {
 
     @Column(name = "modifiedAt", nullable = false)
     private LocalDate modifiedAt;
+
+    public Note(Integer nid, String noteTitle, byte[] bookCover) {
+    }
 }
