@@ -21,14 +21,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/signup").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers().permitAll()
+                .anyRequest().permitAll()
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .cors().and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Bean
+    /*@Bean
     public ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry filterChain (HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.cors()
                 .and()
@@ -44,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**").authenticated()
                 .antMatchers("*").permitAll()
                 .anyRequest().permitAll();
-    }
+    }*/
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
