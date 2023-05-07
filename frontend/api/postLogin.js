@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Axios } from "./axios";
 
 export default postLogin = async (loginDTO, handleUserInfo) => {
@@ -5,10 +6,13 @@ export default postLogin = async (loginDTO, handleUserInfo) => {
 		const res = await Axios.post("/login", loginDTO);
 		const data = res.data.data;
 		const { accessToken, refreshToken, isSubscribed, userId } = data;
-		console.log(accessToken);
-		console.log(refreshToken);
-		console.log(isSubscribed);
-		console.log(userId);
+		AsyncStorage.setItem("accessToken", accessToken);
+		AsyncStorage.setItem("refreshToken", refreshToken);
+
+		handleUserInfo({
+			userId: userId,
+			isSubscribed: isSubscribed,
+		});
 	} catch (e) {
 		console.log(e);
 	}
