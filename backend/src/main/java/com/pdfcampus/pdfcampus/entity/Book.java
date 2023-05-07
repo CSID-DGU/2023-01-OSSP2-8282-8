@@ -33,4 +33,7 @@ public class Book {
     @Column(name = "bookCover")
     @Lob
     private byte[] bookCover;
+
+    public Book(Integer bid, String bookTitle, byte[] bookCover) {
+    }
 }
