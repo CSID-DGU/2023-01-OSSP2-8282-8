@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { RecoilRoot } from "recoil";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/pages/SignUp";
@@ -18,7 +19,8 @@ export default function App() {
 		// 		<Stack.Screen name="SignUp" component={SignUp} />
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
-
-		<MyLibrary />
+		<RecoilRoot>
+			<LogIn />
+		</RecoilRoot>
 	);
 }
