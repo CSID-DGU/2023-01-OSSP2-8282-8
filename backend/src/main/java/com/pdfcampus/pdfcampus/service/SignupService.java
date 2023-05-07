@@ -25,7 +25,7 @@ public class SignupService {
         return true;
     }
 
-    public boolean isUserIdDuplicated(String userId) { //아이디 중복검사
-        return signupRepository.findByUserId(userId).isPresent();
+    public boolean isUserIdDuplicated(String Id) { //아이디 중복검사
+        return signupRepository.findByUserId(Id).isPresent();
     }
 }
