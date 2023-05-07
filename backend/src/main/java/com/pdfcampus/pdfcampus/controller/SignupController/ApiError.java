@@ -1,4 +1,4 @@
-package com.pdfcampus.pdfcampus.Controller.SignupController;
+package com.pdfcampus.pdfcampus.controller.SignupController;
 
 public class ApiError {
     private String errorCode;

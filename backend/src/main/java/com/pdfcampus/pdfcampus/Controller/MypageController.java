@@ -1,2 +1,4 @@
-package com.pdfcampus.pdfcampus.controller;public class MypageController {
+package com.pdfcampus.pdfcampus.controller;
+
+public class MypageController {
 }

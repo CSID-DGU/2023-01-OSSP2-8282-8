@@ -1,9 +1,10 @@
-package com.pdfcampus.pdfcampus.Controller.SignupController;
+package com.pdfcampus.pdfcampus.controller.SignupController;
 
 
 import com.pdfcampus.pdfcampus.dto.SignupDto;
 import com.pdfcampus.pdfcampus.service.SignupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pdfcampus.pdfcampus.controller.SignupController.SignupResponse;
+import com.pdfcampus.pdfcampus.controller.SignupController.ApiError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("")
 public class SignupController {
     private SignupService signupService;
 
