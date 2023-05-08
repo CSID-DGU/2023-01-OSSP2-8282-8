@@ -1,8 +1,8 @@
 package com.pdfcampus.pdfcampus.service;
 
 import com.pdfcampus.pdfcampus.dto.MylibDto;
-import com.pdfcampus.pdfcampus.dto.MylibDto.MylibBookDto;
-import com.pdfcampus.pdfcampus.dto.MylibDto.MylibNoteDto;
+import com.pdfcampus.pdfcampus.dto.MylibBookDto;
+import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Mylib;
 import com.pdfcampus.pdfcampus.entity.Note;
@@ -11,6 +11,7 @@ import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,36 +34,43 @@ public class MylibService {
 
     public MylibDto getMylibData(String uid) {
         Integer uidInt = Integer.parseInt(uid);
-        List<Mylib> mylibList = mylibRepository.findByUid(uidInt);
-
-        List<MylibNoteDto> noteList = new ArrayList<>();
-        List<MylibBookDto> bookList = new ArrayList<>();
-
-        for (Mylib mylib : mylibList) {
-            if (mylib.getNid() != null && mylib.getBid() != null) {
-                Note note = noteRepository.findByNid(mylib.getNid()).stream()
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Note not found"));
-               /* if (note == null) {
-                    throw new IllegalArgumentException("Note not found");
-                }*/
-                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover()));
-            }
-            else if (mylib.getNid() == null && mylib.getBid() != null) {
-                Book book = bookRepository.findByBid(mylib.getBid()).stream()
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Note not found"));
-               /* if (book == null) {
-                    throw new IllegalArgumentException("Book not found");
-                }*/
-                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover()));
-            }
+        Mylib[] mylibArray = mylibRepository.findByUid(uidInt).toArray(new Mylib[0]);
+        for (Mylib mylib : mylibArray) {
+            System.out.println("mid: " + mylib.getMid());
+            System.out.println("uid: " + mylib.getUid());
+            System.out.println("nid: " + mylib.getNid());
+            System.out.println("bid: " + mylib.getBid());
         }
 
         MylibDto mylibData = new MylibDto();
         mylibData.setUid(Integer.parseInt(uid));
-        mylibData.setNoteList(noteList);
-        mylibData.setBookList(bookList);
+
+        MylibNoteDto[] noteArray = Arrays.stream(mylibArray)
+                .filter(mylib -> mylib.getNid() != null && mylib.getBid() != null)
+                .map(mylib -> {
+                    Note note = noteRepository.findByNid(mylib.getNid()).get(0);
+                    Book book = bookRepository.findByBid(mylib.getBid()).get(0);
+                    return new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover());
+                })
+                .toArray(MylibNoteDto[]::new);
+        for (MylibNoteDto note : noteArray) {
+            System.out.println("Note Id: " + note.getNoteId());
+            System.out.println("Note Title: " + note.getNoteTitle());
+            System.out.println("Book Cover: " + note.getBookCover());
+        }
+
+
+        MylibBookDto[] bookArray = Arrays.stream(mylibArray)
+                .filter(mylib -> mylib.getNid() == null && mylib.getBid() != null)
+                .map(mylib -> {
+                    Book book = bookRepository.findByBid(mylib.getBid()).get(0);
+                    return new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover());
+                })
+                .toArray(MylibBookDto[]::new);
+
+        mylibData.setNoteList(Arrays.asList(noteArray));
+        mylibData.setBookList(Arrays.asList(bookArray));
         return mylibData;
+
     }
 }
