@@ -73,4 +73,29 @@ public class MylibService {
         return mylibData;
 
     }
+    public List<MylibNoteDto> getMylibNoteData(String uid) {
+        Integer uidInt = Integer.parseInt(uid);
+        List<Mylib> mylibList = mylibRepository.findByUid(uidInt);
+        List<MylibNoteDto> noteList = new ArrayList<>();
+        for (Mylib mylib : mylibList) {
+            if (mylib.getNid() != null && mylib.getBid() != null) {
+                Note note = noteRepository.findByNid(mylib.getNid()).get(0);
+                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover()));
+            }
+        }
+        return noteList;
+    }
+
+    public List<MylibBookDto> getMylibBookData(String uid) {
+        Integer uidInt = Integer.parseInt(uid);
+        List<Mylib> mylibList = mylibRepository.findByUid(uidInt);
+        List<MylibBookDto> bookList = new ArrayList<>();
+        for (Mylib mylib : mylibList) {
+            if (mylib.getNid() == null && mylib.getBid() != null) {
+                Book book = bookRepository.findByBid(mylib.getBid()).get(0);
+                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover()));
+            }
+        }
+        return bookList;
+    }
 }
