@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Book")
+@Table(name = "book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +33,7 @@ public class Book {
     @Column(name = "bookCover")
     @Lob
     private byte[] bookCover;
+
+    public Book(Integer bid, String bookTitle, byte[] bookCover) {
+    }
 }

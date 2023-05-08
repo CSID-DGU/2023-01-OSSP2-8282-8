@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping
 public class LoginController {
     private final LoginService loginService;
 

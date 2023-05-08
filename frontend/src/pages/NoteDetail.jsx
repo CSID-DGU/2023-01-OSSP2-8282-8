@@ -40,9 +40,10 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const BookInfo = {
-	bookTitle: "운영체제",
-	bookCover: "https://image.yes24.com/goods/89496122/XL",
+const NoteInfo = {
+	bookTitle: "운영체제 필기자료",
+	bookCover:
+		"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
 	isStored: false,
 	publicationDate: "0000년 0월 0일 오후 00:00",
 	modifiedDate: "0000년 0월 0일 오후 00:00",
@@ -57,30 +58,30 @@ const AddBookLibrary = () => {
 	return Alert.alert("나의 서재에 추가");
 };
 
-const BookDetail = () => {
+const NoteDetail = () => {
 	return (
 		<Container>
 			<Header />
 			<BookTitleContainer>
-				<BookTitleTypo>{BookInfo.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={BookInfo}
+					contentInfo={NoteInfo}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
-					isBook={true}
+					isBook={false}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={BookInfo.bookCover}
-					img2={BookInfo.bookCover}
-					img3={BookInfo.bookCover}
-					bookDetailContent={BookInfo.DetailInfo}
+					img1={NoteInfo.bookCover}
+					img2={NoteInfo.bookCover}
+					img3={NoteInfo.bookCover}
+					bookDetailContent={NoteInfo.DetailInfo}
 				/>
 			</ContentContainer>
 		</Container>
 	);
 };
 
-export default BookDetail;
+export default NoteDetail;

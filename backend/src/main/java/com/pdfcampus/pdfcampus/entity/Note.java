@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Note")
+@Table(name = "note")
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +38,7 @@ public class Note {
 
     @Column(name = "modifiedAt", nullable = false)
     private LocalDate modifiedAt;
+
+    public Note(Integer nid, String noteTitle, byte[] bookCover) {
+    }
 }
