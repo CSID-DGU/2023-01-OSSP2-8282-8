@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.*;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @Getter
 @Table(name = "User")
 public class User {

@@ -14,18 +14,17 @@ import java.util.*;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${app.jwtSecret}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     private int jwtExpirationInMs = 600000; //10분
 
     private int refreshTokenExpirationInMs = 604800000; //7일
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(User user) { //access 토큰 생성 메서드
 
         Map<String, Object> claims = new HashMap<>(); // payload에 저장될 정보들
         claims.put("sub", user.getUserId());
-        claims.put("name", user.getUsername());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
@@ -39,7 +38,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken(User user) { // refresh 토큰 생성 메서드
         return Jwts.builder()
                 .setSubject(user.getUserId())
                 .setIssuedAt(new Date())
@@ -52,7 +51,7 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        } catch (MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException ex) {
+        } catch (MalformedJwtException |  ExpiredJwtException | IllegalArgumentException ex) { //SignatureException |
             return false;
         }
     }
