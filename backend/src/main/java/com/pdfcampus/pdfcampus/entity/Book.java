@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer bid;
+    private int bid;
 
     @Column(name = "bookTitle", nullable = false)
     private String bookTitle;
