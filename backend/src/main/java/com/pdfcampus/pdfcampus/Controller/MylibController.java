@@ -24,8 +24,8 @@ public class MylibController {
     }
 
     @GetMapping("/mylib/{userId}")
-    public ResponseEntity<Map<String, Object>> getMylibData(@PathVariable int userId) {
-        List<Mylib> mylibList = mylibService.getMylibList(userId);
+    public ResponseEntity<Map<String, Object>> getMylibData(@PathVariable String userId) {
+        List<Mylib> mylibList = (List<Mylib>) mylibService.getMylibData(userId);
 
         // Note와 Book을 분리해서 리스트로 저장
         List<Note> noteList = mylibList.stream()
