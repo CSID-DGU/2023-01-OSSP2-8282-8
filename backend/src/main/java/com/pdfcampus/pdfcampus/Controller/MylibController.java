@@ -59,5 +59,64 @@ public class MylibController {
             return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/mylib/bookAll/{userId}")
+    public ResponseEntity<Map<String, Object>> getMylibBookData(@PathVariable String userId) {
+        try {
+            List<MylibBookDto> bookList = mylibService.getMylibBookData(userId);
 
+            // Response Body 구성
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("data", Map.of("bookList", bookList));
+
+            // API Status 구성
+            Map<String, String> apiStatus = new HashMap<>();
+            apiStatus.put("errorMessage", "");
+            apiStatus.put("errorCode", "N200");
+            responseBody.put("apiStatus", apiStatus);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        } catch (Exception e) {
+            // 기타 예외가 발생한 경우
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("data", Map.of("bookList", List.of()));
+
+            // API Status 구성
+            Map<String, String> apiStatus = new HashMap<>();
+            apiStatus.put("errorMessage", "서버 오류가 발생했습니다.");
+            apiStatus.put("errorCode", "N500");
+            responseBody.put("apiStatus", apiStatus);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/mylib/noteAll/{userId}")
+    public ResponseEntity<Map<String, Object>> getMylibNoteData(@PathVariable String userId) {
+        try {
+            List<MylibNoteDto> noteList = mylibService.getMylibNoteData(userId);
+
+            // Response Body 구성
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("data", Map.of("noteList", noteList));
+
+            // API Status 구성
+            Map<String, String> apiStatus = new HashMap<>();
+            apiStatus.put("errorMessage", "");
+            apiStatus.put("errorCode", "N200");
+            responseBody.put("apiStatus", apiStatus);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        } catch (Exception e) {
+            // 기타 예외가 발생한 경우
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+            responseBody.put("data", Map.of("noteList", List.of()));
+
+            // API Status 구성
+            Map<String, String> apiStatus = new HashMap<>();
+            apiStatus.put("errorMessage", "서버 오류가 발생했습니다.");
+            apiStatus.put("errorCode", "N500");
+            responseBody.put("apiStatus", apiStatus);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
