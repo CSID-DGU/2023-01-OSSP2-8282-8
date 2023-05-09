@@ -94,10 +94,12 @@ const SignUp = () => {
 	const [pwCheck, setPwCheck] = useState("");
 
 	const signUpOnClick = () => {
-		postSignUp(
-			{ id: id, nickname: nickname, password: pw, passwordCheck: pwCheck },
-			() => {}
-		);
+		const signUpDTO = {
+			id: id,
+			password: pw,
+			username: nickname,
+		};
+		postSignUp(signUpDTO, () => {});
 		setId("");
 		setNickname("");
 		setPw("");
