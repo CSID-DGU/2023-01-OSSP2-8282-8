@@ -49,16 +49,16 @@ public class SignupController {
         String accessToken = jwtTokenProvider.generateAccessToken(signupDto.toEntity());
         String refreshToken = jwtTokenProvider.generateRefreshToken(signupDto.toEntity());
 
+        signupDto.setRefreshToken(refreshToken);
+
+
         Map<String, Object> responseData = new LinkedHashMap<>();
         responseData.put("accessToken", accessToken);
         responseData.put("refreshToken", refreshToken);
-        responseData.put("userId", signupDto.getUid()); //uid
+        responseData.put("userId", signupService.createUser(signupDto).getUid()); //uid
 
         Map<String, Object> response = new HashMap<>();
         response.put("data", responseData);
-
-        signupDto.setRefreshToken(refreshToken);
-        signupService.createUser(signupDto);
 
         return ResponseEntity.ok(response);
     }
