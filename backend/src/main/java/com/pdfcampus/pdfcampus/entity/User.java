@@ -11,13 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-<<<<<<< HEAD
-=======
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
-@Setter
->>>>>>> feature/api/signup
 @Getter
 @Setter
 @AllArgsConstructor //모든 필드를 매개변수로 받는 생성자 자동으로 생성
