@@ -1,9 +1,6 @@
 package com.pdfcampus.pdfcampus.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.*;
 import javax.persistence.Column;
@@ -16,13 +13,14 @@ import javax.persistence.Table;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Setter
 @Getter
 @Table(name = "User")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int uid;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer uid;
 
     @Column(name = "userid", nullable = false)
     private String userId;
