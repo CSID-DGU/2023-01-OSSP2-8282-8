@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -31,6 +32,10 @@ public class SignupService {
         user.setUserId(signupDto.getId());
         user.setUsername(signupDto.getUsername());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+        user.setSubscribed(false);
+        user.setJoinedDate(LocalDate.now());
+
+        System.out.println(user.toString());
 
         return signupRepository.save(user);
     }

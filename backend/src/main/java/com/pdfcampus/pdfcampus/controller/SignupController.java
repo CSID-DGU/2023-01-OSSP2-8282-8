@@ -35,7 +35,6 @@ public class SignupController {
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signUp(@RequestBody SignupDto signupDto) {
-        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         if(signupService.existsByUserId(signupDto.getId())) { // 중복되는 아이디
             Map<String, Object> apiStatus = new HashMap<>();
             apiStatus.put("errorMessage", "중복되는 아이디");
@@ -57,6 +56,9 @@ public class SignupController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("data", responseData);
+
+        signupDto.setRefreshToken(refreshToken);
+        signupService.createUser(signupDto);
 
         return ResponseEntity.ok(response);
     }
