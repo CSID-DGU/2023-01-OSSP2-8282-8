@@ -20,7 +20,8 @@ export default function App() {
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
 		<RecoilRoot>
-			<LogIn />
+			{/* <LogIn /> */}
+			<MyPage />
 		</RecoilRoot>
 	);
 }
