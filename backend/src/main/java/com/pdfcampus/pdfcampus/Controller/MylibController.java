@@ -36,6 +36,8 @@ public class MylibController {
             Map<String, Object> dataMap = new LinkedHashMap<>();
             dataMap.put("noteList", noteList);
             dataMap.put("bookList", bookList);
+            dataMap.put("isNoteMore", mylibData.getIsNoteMore()); // note 개수 5개 초과
+            dataMap.put("isBookMore", mylibData.getIsBookMore()); // book 개수 5개 초과
             responseBody.put("data", dataMap);
 
             // 200
@@ -48,7 +50,7 @@ public class MylibController {
         } catch (Exception e) {
             // 기타 예외가 발생한 경우
             Map<String, Object> responseBody = new LinkedHashMap<>();
-            responseBody.putIfAbsent("data", Map.of("noteList", List.of(), "bookList", List.of()));
+            responseBody.putIfAbsent("data", Map.of("noteList", List.of(), "bookList", List.of(), "isNoteMore", false, "isBookMore", false));
 
             // 500
             Map<String, String> apiStatus = new HashMap<>();
