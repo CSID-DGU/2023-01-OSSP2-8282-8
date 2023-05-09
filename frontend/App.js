@@ -21,7 +21,8 @@ export default function App() {
 		// </NavigationContainer>
 		<RecoilRoot>
 			{/* <LogIn /> */}
-			<MyPage />
+			{/* <MyPage /> */}
+			<MyLibrary />
 		</RecoilRoot>
 	);
 }
