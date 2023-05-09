@@ -26,7 +26,6 @@ const ListContainer = ({ products, type }) => {
 	return (
 		<Container>
 			{products.map((product) => {
-				console.log(product);
 				return (
 					<Container2 key={product[type + "Id"]}>
 						<Image
