@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, Alert } from "react-native";
 
 import styled from "styled-components";
@@ -7,6 +7,10 @@ import CommunityButton from "../organisms/CommunityButton";
 import ViewAllButton from "../organisms/ViewAllButton";
 import Header from "../organisms/Header";
 import ListContainer from "../organisms/ListContainer";
+
+import getMyLib from "../../api/getMyLib";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	width: 100%;
@@ -70,24 +74,21 @@ const SubOnClick = () => {
 	Alert.alert("필기관리창");
 };
 
-const books = [...Array(4).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `운영체제${id + 1}`,
-		image: "https://image.yes24.com/goods/89496122/XL",
-	};
-});
-
-const notes = [...Array(4).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `필기자료${id + 1}`,
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	};
-});
-
 const MyLibrary = () => {
+	const [books, setBooks] = useState([]);
+	const [notes, setNotes] = useState([]);
+	const [bookMore, setBookMore] = useState(false);
+	const [noteMore, setNoteMore] = useState(false);
+	const handleContents = (books, notes, bookMore, noteMore) => {
+		setBooks(books);
+		setNotes(notes);
+		setBookMore(bookMore);
+		setNoteMore(noteMore);
+	};
+	const userInfo = useRecoilValue(UserInfoState);
+	useEffect(() => {
+		getMyLib(userInfo.userId, handleContents);
+	}, []);
 	return (
 		<>
 			<Header />
@@ -101,7 +102,7 @@ const MyLibrary = () => {
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={books} />
+						<ListContainer products={books} type="book" />
 					</ListWrapper>
 					<ViewAllButtonWrapper>
 						<ViewAllButton typo="필기 전체보기" onPress={SubOnClick} />
@@ -113,7 +114,7 @@ const MyLibrary = () => {
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={notes} />
+						<ListContainer products={notes} type="note" />
 					</ListWrapper>
 					<ViewAllButtonWrapper>
 						<ViewAllButton typo="도서 전체보기" onPress={SubOnClick} />
