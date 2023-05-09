@@ -5,6 +5,10 @@ import styled from "styled-components";
 
 import CommunityButton from "../organisms/CommunityButton";
 import Header from "../organisms/Header";
+import getMyPage from "../../api/getMyPage";
+
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	display: flex;
@@ -102,6 +106,12 @@ const SubOnClick = () => {
 };
 
 const MyPage = () => {
+	const userInfo = useRecoilValue(UserInfoState);
+	useEffect(() => {
+		console.log("user info: ", userInfo);
+		getMyPage(userInfo.userId);
+	}, []);
+
 	const [subscribed, setSubscribed] = useState(false);
 	const [subscribeInfo, setSubscribeInfo] = useState({
 		joinedDate: "2022. 12. 13",
