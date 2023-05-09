@@ -20,20 +20,26 @@ const Container2 = styled.View`
 const Nametypo = styled.Text`
 	font-size: 20;
 `;
-const ListContainer = ({ products }) => {
+const ListContainer = ({ products, type }) => {
 	return (
 		<Container>
-			{products.map((product) => (
-				<Container2 key={product.id}>
-					<Image
-						source={{ uri: product.image }}
-						style={{ width: 130, height: 190 }}
-					/>
-					<Container2>
-						<Nametypo>{product.name}</Nametypo>
+			{products.map((product) => {
+				console.log(product);
+				return (
+					<Container2 key={product[type + "Id"]}>
+						<Image
+							source={{
+								uri: "https://image.yes24.com/goods/89496122/XL",
+								// product.bookCover
+							}}
+							style={{ width: 130, height: 190 }}
+						/>
+						<Container2>
+							<Nametypo>{product[type + "Title"]}</Nametypo>
+						</Container2>
 					</Container2>
-				</Container2>
-			))}
+				);
+			})}
 		</Container>
 	);
 };
