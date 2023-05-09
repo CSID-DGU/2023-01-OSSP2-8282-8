@@ -1,5 +1,6 @@
 package com.pdfcampus.pdfcampus.Controller;
 
+import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.MypageDto;
 import com.pdfcampus.pdfcampus.service.DetailService;
 import com.pdfcampus.pdfcampus.service.MypageService;
@@ -22,7 +23,7 @@ public class DetailController {
     @GetMapping("/book/detail/{bookId}")
     public ResponseEntity<Map<String, Object>> getDetailBookData(@PathVariable String bookId) {
         try {
-            MypageDto DetailBookData = DetailService.getBookData(bookId);
+            DetailBookDto DetailBookData = DetailService.getBookData(bookId);
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> apiStatus = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
