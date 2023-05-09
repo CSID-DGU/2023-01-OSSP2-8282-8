@@ -10,10 +10,7 @@ import com.pdfcampus.pdfcampus.repository.BookRepository;
 import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -35,12 +32,13 @@ public class MylibService {
     public MylibDto getMylibData(String uid) {
         Integer uidInt = Integer.parseInt(uid);
         Mylib[] mylibArray = mylibRepository.findByUid(uidInt).toArray(new Mylib[0]);
-        for (Mylib mylib : mylibArray) {
+        /*for (Mylib mylib : mylibArray) {
             System.out.println("mid: " + mylib.getMid());
             System.out.println("uid: " + mylib.getUid());
             System.out.println("nid: " + mylib.getNid());
             System.out.println("bid: " + mylib.getBid());
-        }
+        } 테스트용 */
+        Arrays.sort(mylibArray, Comparator.comparing(Mylib::getMid).reversed());
 
         MylibDto mylibData = new MylibDto();
         mylibData.setUid(Integer.parseInt(uid));
@@ -83,6 +81,7 @@ public class MylibService {
                 noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover()));
             }
         }
+        Collections.sort(noteList, Comparator.comparing(MylibNoteDto::getNoteId).reversed());
         return noteList;
     }
 
@@ -96,6 +95,7 @@ public class MylibService {
                 bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover()));
             }
         }
+        Collections.sort(bookList, Comparator.comparing(MylibBookDto::getBookId).reversed());
         return bookList;
     }
 }
