@@ -1,9 +1,6 @@
 package com.pdfcampus.pdfcampus.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.*;
 import javax.persistence.Column;
@@ -14,14 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+<<<<<<< HEAD
+=======
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Setter
+>>>>>>> feature/api/signup
 @Getter
 @Setter
 @AllArgsConstructor //모든 필드를 매개변수로 받는 생성자 자동으로 생성
 @NoArgsConstructor //매개변수가 없는 디폴트 생성자를 자동으로 생성
 @Table(name = "user")
 public class User {
-    @Id //기본키 매핑
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //기본키 생성
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int uid;
 
     @Column(name = "userid", nullable = false)
