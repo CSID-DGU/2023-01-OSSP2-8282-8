@@ -1,10 +1,14 @@
 import { AxiosToken } from "./axios";
 
-export default getMyPage = async (userId) => {
+export default getMyPage = async (userId, handleSubscribeInfo) => {
 	try {
-		console.log("userid: ", userId);
 		const res = await AxiosToken.get(`/mypage/${userId}`);
-		console.log("res", res);
+		const data = res.data.data;
+
+		handleSubscribeInfo(data.isSubscribed, data.subscribedInfo, {
+			joinedDate: data.joinedDate,
+			username: data.username,
+		});
 	} catch (e) {
 		console.log(e);
 	}
