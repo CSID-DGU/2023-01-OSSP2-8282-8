@@ -1,6 +1,7 @@
 package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
+import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.dto.MypageDto;
 import com.pdfcampus.pdfcampus.service.DetailService;
 import com.pdfcampus.pdfcampus.service.MypageService;
@@ -23,21 +24,55 @@ public class DetailController {
     @GetMapping("/book/detail/{bookId}")
     public ResponseEntity<Map<String, Object>> getDetailBookData(@PathVariable String bookId) {
         try {
-            DetailBookDto DetailBookData = DetailService.getBookData(bookId);
+            DetailBookDto detailBookData = detailService.getBookData(bookId);
             Map<String, Object> response = new HashMap<>();
-            Map<String, Object> apiStatus = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
-            Map<String, Object> subscribeInfo = new LinkedHashMap<>();
 
-            if(mypageData.isSubscribed()){ //구독한 사용자에 경우 subscribeInfo 구성
-                subscribeInfo.put("productName", mypageData.getProductName());
-                subscribeInfo.put("subscribeDate", mypageData.getSubscribeDate());
-            }
+            responseData.put("bookTitle", detailBookData.getBookTitle());
+            responseData.put("author", detailBookData.getAuthor());
+            responseData.put("publisher", detailBookData.getPublisher());
+            responseData.put("publicationYear", detailBookData.getPublicationYear());
+            responseData.put("bookCover", detailBookData.getBookCover());
+            responseData.put("isStored", true);
 
-            responseData.put("username", mypageData.getUsername());
-            responseData.put("isSubscribed", mypageData.isSubscribed());
-            responseData.put("joinedDate", mypageData.getJoinedDate());
-            responseData.put("subscribedInfo", subscribeInfo);
+            response.put("data", responseData);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // 기타 예외가 발생한 경우
+            Map<String, Object> responseBody = new LinkedHashMap<>();
+
+            // 500
+            Map<String, String> apiStatus = new HashMap<>();
+            apiStatus.put("errorMessage", "서버 오류가 발생했습니다.");
+            apiStatus.put("errorCode", "N500");
+            responseBody.put("apiStatus", apiStatus);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/book/detail/{noteId}")
+    public ResponseEntity<Map<String, Object>> getDetailNoteData(@PathVariable String noteId) {
+        try {
+            DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
+            Map<String, Object> response = new HashMap<>();
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            Map<String, Object> bookInfo = new LinkedHashMap<>();
+
+            bookInfo.put("author", detailNoteData.getBookAuthor());
+            bookInfo.put("authorId", detailNoteData.getAuthorId());
+            bookInfo.put("publisher", detailNoteData.getPublisher());
+            bookInfo.put("publicationYear", detailNoteData.getPublicationYear());
+            bookInfo.put("bookCover", detailNoteData.getBookCover());
+
+            responseData.put("noteTitle", detailNoteData.getNoteTitle());
+            responseData.put("author", detailNoteData.getNoteAuthor());
+            responseData.put("createdAt", detailNoteData.getCreatedAt());
+            responseData.put("modifiedAt", detailNoteData.getModifiedAt());
+            responseData.put("price", detailNoteData.getPrice());
+            responseData.put("isBought", detailNoteData.isBought());
+            responseData.put("bookInfo", bookInfo);
 
             response.put("data", responseData);
 
