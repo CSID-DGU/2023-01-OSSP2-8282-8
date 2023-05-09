@@ -1,31 +1,37 @@
 package com.pdfcampus.pdfcampus.service;
 
 import com.pdfcampus.pdfcampus.dto.SignupDto;
+import com.pdfcampus.pdfcampus.entity.User;
 import com.pdfcampus.pdfcampus.repository.SignupRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @Service
-@AllArgsConstructor
 public class SignupService {
-    private SignupRepository signupRepository;
+    private final SignupRepository signupRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public boolean joinUser(SignupDto signupDto){ //데이터베이스에 회원정보를 저장하는 과정
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword())); // 비밀번호를 salt값과 같이 저장, 동일 비밀번호에 대한 노출 위험 방지
-
-        signupRepository.save(signupDto.toEntity());
-
-        return true;
+    public SignupService(SignupRepository signupRepository, PasswordEncoder passwordEncoder) {
+        this.signupRepository = signupRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean isUserIdDuplicated(String userId) { //아이디 중복검사
-        return signupRepository.findByUserId(userId).isPresent();
+    public boolean existsByUserId(String userId) {
+        return signupRepository.existsByUserId(userId);
+    }
+
+    public User createUser(SignupDto signupDto) {
+        User user = new User();
+        user.setUserId(signupDto.getId());
+        user.setUsername(signupDto.getUsername());
+        user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+
+        return signupRepository.save(user);
     }
 }

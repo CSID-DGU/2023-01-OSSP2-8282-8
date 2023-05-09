@@ -1,6 +1,5 @@
 package com.pdfcampus.pdfcampus.dto;
 
-import com.pdfcampus.pdfcampus.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,19 +10,12 @@ import java.time.LocalDate;
 @ToString
 @Setter
 @Getter
-public class SignupDto {
+public class MypageDto {
     private int uid;
-    private String id;
-    private String password;
     private String username;
     private boolean isSubscribed;
     private String productName;
     private LocalDate subscribeDate;
     private LocalDate joinedDate;
-    private String refreshToken;
-    private String accessToken;
 
-    public User toEntity() {
-        return new User(uid, id, password, username, isSubscribed, productName, subscribeDate, joinedDate, refreshToken);
-    }
 }

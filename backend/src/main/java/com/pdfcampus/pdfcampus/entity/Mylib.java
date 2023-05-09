@@ -23,25 +23,51 @@ public class Mylib {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mid")
-    private int mid;
+    private Integer mid;
 
     @Column(name = "uid")
-    private int uid;
+    private Integer uid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nid")
+    @Column(name = "nid")
+    private Integer nid;
+
+    @Column(name = "bid")
+    private Integer bid;
+
+    @Transient
     private Note note;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bid")
+    @Transient
     private Book book;
 
-    public Mylib(int uid, Note note) {
+    @PostLoad
+    private void onLoad() {
+        if (nid != null) {
+            note = new Note();
+            note.setNid(nid);
+        }
+        if (bid != null) {
+            book = new Book();
+            book.setBid(bid);
+        }
+    }
+
+    @PrePersist
+    private void onSave() {
+        if (note != null) {
+            nid = note.getNid();
+        }
+        if (book != null) {
+            bid = book.getBid();
+        }
+    }
+
+    public Mylib(Integer uid, Note note) {
         this.uid = uid;
         this.note = note;
     }
 
-    public Mylib(int uid, Book book) {
+    public Mylib(Integer uid, Book book) {
         this.uid = uid;
         this.book = book;
     }

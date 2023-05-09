@@ -10,5 +10,4 @@ public interface LoginRepository extends JpaRepository<User, Integer>{
     User findByUserIdAndPassword(String userid, String password);
     User findByRefreshToken(String refreshToken);
 
-
 }
