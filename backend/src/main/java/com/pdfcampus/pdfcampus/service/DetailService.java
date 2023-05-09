@@ -4,17 +4,22 @@ import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
-import com.pdfcampus.pdfcampus.repository.DetailRepository;
+import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
+import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DetailService {
-    private final DetailRepository detailRepository;
-    public DetailService(DetailRepository detailRepository) {
-        this.detailRepository = detailRepository;
+    private final DetailBookRepository detailBookRepository;
+    private final DetailNoteRepository detailNoteRepository;
+    public DetailService(DetailBookRepository detailBookRepository, DetailNoteRepository detailNoteRepository) {
+        this.detailBookRepository = detailBookRepository;
+        this.detailNoteRepository = detailNoteRepository;
     }
 
     public DetailBookDto getBookData(String bid) { // 데이터베이스에서 책에 대한 데이터를 가져오도록 레포지토리 호출
         Integer bidInt = Integer.parseInt(bid);
-        Book book = detailRepository.findByBid(bidInt);
+        Book book = detailBookRepository.findByBid(bidInt);
         return new DetailBookDto(
                 book.getBid(),
                 book.getBookTitle(),
@@ -27,7 +32,7 @@ public class DetailService {
 
     public DetailNoteDto getNoteData(String nid) { // 데이터베이스에서 책에 대한 데이터를 가져오도록 레포지토리 호출
         Integer nidInt = Integer.parseInt(nid);
-        Note note = detailRepository.findByNid(nidInt);
+        Note note = detailNoteRepository.findByNid(nidInt);
         return new DetailNoteDto(
                 note.getNid(),
                 note.getNoteTitle(),

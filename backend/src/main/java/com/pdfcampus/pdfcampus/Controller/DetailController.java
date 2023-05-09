@@ -2,18 +2,20 @@ package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
-import com.pdfcampus.pdfcampus.dto.MypageDto;
 import com.pdfcampus.pdfcampus.service.DetailService;
-import com.pdfcampus.pdfcampus.service.MypageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@RestController
+@RequestMapping
 public class DetailController {
     private final DetailService detailService;
 
@@ -52,7 +54,7 @@ public class DetailController {
         }
     }
 
-    @GetMapping("/book/detail/{noteId}")
+    @GetMapping("/note/detail/{noteId}")
     public ResponseEntity<Map<String, Object>> getDetailNoteData(@PathVariable String noteId) {
         try {
             DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
