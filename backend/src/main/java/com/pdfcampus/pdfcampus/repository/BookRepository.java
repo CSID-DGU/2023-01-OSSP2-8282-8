@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> findByBid(Integer bid);
+
+    List<Book> findTop10ByOrderByBidDesc();
 }
