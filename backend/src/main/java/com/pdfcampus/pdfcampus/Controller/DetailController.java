@@ -30,7 +30,7 @@ public class DetailController {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
 
-            responseData.put("bookTitle", detailBookData.getBookTitle());
+            responseData.put("bookTitle", detailBookData.getBookTitle()); // response body 구성
             responseData.put("author", detailBookData.getAuthor());
             responseData.put("publisher", detailBookData.getPublisher());
             responseData.put("publicationYear", detailBookData.getPublicationYear());
@@ -62,12 +62,12 @@ public class DetailController {
             Map<String, Object> responseData = new LinkedHashMap<>();
             Map<String, Object> bookInfo = new LinkedHashMap<>();
 
-            bookInfo.put("author", detailNoteData.getBookAuthor());
+            bookInfo.put("author", detailNoteData.getBookAuthor()); // bookInfo body 구성
             bookInfo.put("publisher", detailNoteData.getPublisher());
             bookInfo.put("publicationYear", detailNoteData.getPublicationYear());
             bookInfo.put("bookCover", detailNoteData.getBookCover());
 
-            responseData.put("noteTitle", detailNoteData.getNoteTitle());
+            responseData.put("noteTitle", detailNoteData.getNoteTitle()); // response body 구성
             responseData.put("author", detailNoteData.getNoteAuthor());
             responseData.put("authorId", detailNoteData.getAuthorId());
             responseData.put("createdAt", detailNoteData.getCreatedAt());
