@@ -1,25 +1,27 @@
 package com.pdfcampus.pdfcampus.Controller;
 
+import com.pdfcampus.pdfcampus.dto.DetailBookDto;
+import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.dto.MylibBookDto;
 import com.pdfcampus.pdfcampus.dto.MylibDto;
 import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
+import com.pdfcampus.pdfcampus.service.DetailService;
 import com.pdfcampus.pdfcampus.service.MylibService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping
 public class MylibController {
     private final MylibService mylibService;
+    private final DetailService detailService;
 
-    public MylibController(MylibService mylibService) {
+    public MylibController(MylibService mylibService, DetailService detailService) {
         this.mylibService = mylibService;
+        this.detailService = detailService;
     }
 
     @GetMapping("/mylib/{userId}")
@@ -68,7 +70,22 @@ public class MylibController {
 
             // Response Body 구성
             Map<String, Object> responseBody = new LinkedHashMap<>();
-            responseBody.put("data", Map.of("bookList", bookList));
+
+            // 각각의 MylibBookDto 객체에 대한 DetailBookDto 정보를 구해서 Map에 추가
+            List<Map<String, Object>> bookDataList = new ArrayList<>();
+            for(MylibBookDto book : bookList) {
+                Map<String, Object> bookData = new LinkedHashMap<>();
+                DetailBookDto detailBookData = detailService.getBookData(String.valueOf(book.getBookId()));
+                bookData.put("bookId", book.getBookId());
+                bookData.put("bookTitle", detailBookData.getBookTitle());
+                bookData.put("author", detailBookData.getAuthor());
+                bookData.put("publisher", detailBookData.getPublisher());
+                bookData.put("publicationYear", detailBookData.getPublicationYear());
+                bookData.put("bookCover", detailBookData.getBookCover());
+                bookDataList.add(bookData);
+            }
+
+            responseBody.put("data", Map.of("bookList", bookDataList));
 
             // API Status 구성
             Map<String, String> apiStatus = new HashMap<>();
@@ -98,7 +115,30 @@ public class MylibController {
 
             // Response Body 구성
             Map<String, Object> responseBody = new LinkedHashMap<>();
-            responseBody.put("data", Map.of("noteList", noteList));
+
+            // 각각의 MylibNoteDto 객체에 대한 DetailNoteDto 정보를 구해서 Map에 추가
+            List<Map<String, Object>> noteDataList = new ArrayList<>();
+            for(MylibNoteDto note : noteList) {
+                Map<String, Object> noteData = new LinkedHashMap<>();
+
+                DetailNoteDto detailNoteData = detailService.getNoteData(String.valueOf(note.getNoteId()));
+                noteData.put("noteId", note.getNoteId());
+                noteData.put("noteTitle", detailNoteData.getNoteTitle());
+                noteData.put("author", detailNoteData.getNoteAuthor());
+                noteData.put("createdAt", detailNoteData.getCreatedAt());
+                noteData.put("modifiedAt", detailNoteData.getModifiedAt());
+                noteData.put("isSale", false);
+                // bookInfo
+                Map<String, Object> bookInfo = new LinkedHashMap<>();
+                bookInfo.put("author", detailNoteData.getBookAuthor());
+                bookInfo.put("publisher", detailNoteData.getPublisher());
+                bookInfo.put("publicationYear", detailNoteData.getPublicationYear());
+                bookInfo.put("bookCover", detailNoteData.getBookCover());
+                noteData.put("bookInfo", bookInfo);
+                noteDataList.add(noteData);
+            }
+
+            responseBody.put("data", Map.of("noteList", noteDataList));
 
             // API Status 구성
             Map<String, String> apiStatus = new HashMap<>();
