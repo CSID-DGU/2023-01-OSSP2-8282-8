@@ -23,7 +23,7 @@ public class DetailController {
         this.detailService = detailService;
     }
 
-    @GetMapping("/book/detail/{bookId}")
+    @GetMapping("/book/detail/{bookId}") // 도서 상세정보를 get
     public ResponseEntity<Map<String, Object>> getDetailBookData(@PathVariable String bookId) {
         try {
             DetailBookDto detailBookData = detailService.getBookData(bookId);
@@ -54,7 +54,7 @@ public class DetailController {
         }
     }
 
-    @GetMapping("/note/detail/{noteId}")
+    @GetMapping("/note/detail/{noteId}") // 필기 상세 정보를 get
     public ResponseEntity<Map<String, Object>> getDetailNoteData(@PathVariable String noteId) {
         try {
             DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
@@ -63,13 +63,13 @@ public class DetailController {
             Map<String, Object> bookInfo = new LinkedHashMap<>();
 
             bookInfo.put("author", detailNoteData.getBookAuthor());
-            bookInfo.put("authorId", detailNoteData.getAuthorId());
             bookInfo.put("publisher", detailNoteData.getPublisher());
             bookInfo.put("publicationYear", detailNoteData.getPublicationYear());
             bookInfo.put("bookCover", detailNoteData.getBookCover());
 
             responseData.put("noteTitle", detailNoteData.getNoteTitle());
             responseData.put("author", detailNoteData.getNoteAuthor());
+            responseData.put("authorId", detailNoteData.getAuthorId());
             responseData.put("createdAt", detailNoteData.getCreatedAt());
             responseData.put("modifiedAt", detailNoteData.getModifiedAt());
             responseData.put("price", detailNoteData.getPrice());
