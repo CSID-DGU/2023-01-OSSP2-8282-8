@@ -28,7 +28,6 @@ public class MypageController {
         try {
             MypageDto mypageData = mypageService.getMypageData(userId);
             Map<String, Object> response = new HashMap<>();
-            Map<String, Object> apiStatus = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
             Map<String, Object> subscribeInfo = new LinkedHashMap<>();
 
