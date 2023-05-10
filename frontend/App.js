@@ -9,6 +9,8 @@ import MyPage from "./src/pages/MyPage";
 import MyLibrary from "./src/pages/MyLibrary";
 import BookDetail from "./src/pages/BookDetail";
 import NoteDetail from "./src/pages/NoteDetail";
+import MyNotes from "./src/pages/MyNotes";
+import NoteHandle from "./src/organisms/NoteHandle";
 
 const Stack = createStackNavigator();
 
@@ -19,8 +21,9 @@ export default function App() {
 		// 		<Stack.Screen name="SignUp" component={SignUp} />
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
-		<RecoilRoot>
-			<LogIn />
-		</RecoilRoot>
+		//<RecoilRoot>
+			//<LogIn />
+		//</RecoilRoot>
+		<MyNotes />
 	);
 }

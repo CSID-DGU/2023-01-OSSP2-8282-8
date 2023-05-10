@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
+
+
 const Container = styled.View`
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	flex-direction: column;
+	background:green;
 `;
 const DateContainer = styled.View`
 	display: flex;
