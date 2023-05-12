@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 public class BookDto {
+    private int bid;
     private String bookTitle;
     private String author;
     private String publisher;
@@ -24,5 +25,8 @@ public class BookDto {
 
     public BookDto() {
         this.bookdtoList = new ArrayList<>();
+    }
+
+    public BookDto(String author, String publisher, int publicationYear, byte[] bookCover) {
     }
 }
