@@ -8,6 +8,7 @@ import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.repository.BookRepository;
 import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,6 +26,7 @@ public class MainService {
     private final NoteRepository noteRepository;
     private final BookRepository bookRepository;
 
+    @Autowired
     public MainService(MylibRepository mylibRepository, NoteRepository noteRepository, BookRepository bookRepository) {
         this.mylibRepository = mylibRepository;
         this.noteRepository = noteRepository;
