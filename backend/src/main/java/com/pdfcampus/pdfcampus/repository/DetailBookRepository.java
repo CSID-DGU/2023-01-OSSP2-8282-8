@@ -7,10 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer> {
-    List<Book> findByBid(Integer bid);
-
-    List<Book> findTop10ByOrderByBidDesc();
+public interface DetailBookRepository extends JpaRepository<Book, Integer> {
+    Book findByBid(Integer bookId);
 
     List<Book> findByBookTitleContainingIgnoreCase(String keyword);
 }

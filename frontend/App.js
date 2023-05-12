@@ -21,9 +21,11 @@ export default function App() {
 		// 		<Stack.Screen name="SignUp" component={SignUp} />
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
-		//<RecoilRoot>
-			//<LogIn />
-		//</RecoilRoot>
-		<MyNotes />
+		<RecoilRoot>
+			{/* <LogIn /> */}
+			{/* <MyPage /> */}
+   		{/*	<MyLibrary />*/}
+		  <MyNotes />
+		</RecoilRoot>
 	);
 }

@@ -13,37 +13,37 @@ import java.util.List;
 @Setter
 @Getter
 public class MylibDto {
-    private Integer mid;
+    private int mid;
     private int uid; //userId임에 주의
+    private int nid;
+    private int bid;
+
     private List<MylibNoteDto> noteList;
     private List<MylibBookDto> bookList;
+    private Boolean isNoteMore;
+    private Boolean isBookMore;
 
     public MylibDto() {
         this.noteList = new ArrayList<>();
         this.bookList = new ArrayList<>();
     }
-
-    public static class MylibNoteDto {
-        private Integer noteId;
-        private String noteTitle;
-        private byte[] bookCover;
-
-        public MylibNoteDto(Integer noteId, String noteTitle, byte[] bookCover) {
-            this.noteId = noteId;
-            this.noteTitle = noteTitle;
-            this.bookCover = bookCover;
+    public void setNoteList(List<MylibNoteDto> noteList) {
+        if (noteList.size() > 5) {
+            this.noteList = noteList.subList(0, 5);
+            this.isNoteMore = true;
+        } else {
+            this.noteList = noteList;
+            this.isNoteMore = false;
         }
     }
 
-    public static class MylibBookDto {
-        private Integer bookId;
-        private String bookTitle;
-        private byte[] bookCover;
-
-        public MylibBookDto(Integer bookId, String bookTitle, byte[] bookCover) {
-            this.bookId = bookId;
-            this.bookTitle = bookTitle;
-            this.bookCover = bookCover;
+    public void setBookList(List<MylibBookDto> bookList) {
+        if (bookList.size() > 5) {
+            this.bookList = bookList.subList(0, 5);
+            this.isBookMore = true;
+        } else {
+            this.bookList = bookList;
+            this.isBookMore = false;
         }
     }
 

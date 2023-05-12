@@ -7,11 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NoteRepository extends JpaRepository<Note, Integer> {
-    List<Note> findByNid(Integer nid);
-
-    List<Note> findTop10ByOrderByNidDesc();
-
-    List<Note> findByNoteTitleContainingIgnoreCase(String keyword);
-
+public interface MynoteRepository extends JpaRepository<Note, Integer> {
+    List<Note> findByUserUid(Integer uid);
 }
