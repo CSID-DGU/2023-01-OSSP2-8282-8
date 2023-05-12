@@ -2,17 +2,15 @@ package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
+import com.pdfcampus.pdfcampus.dto.MylibDto;
+import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
 import com.pdfcampus.pdfcampus.service.DetailService;
+import com.pdfcampus.pdfcampus.service.MylibService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping
@@ -24,9 +22,10 @@ public class DetailController {
     }
 
     @GetMapping("/book/detail/{bookId}") // 도서 상세정보를 get
-    public ResponseEntity<Map<String, Object>> getDetailBookData(@PathVariable String bookId) {
+    public ResponseEntity<Map<String, Object>> getDetailBookData(@RequestParam("userId") String userId, @RequestParam("bookId") String bookId) {
         try {
             DetailBookDto detailBookData = detailService.getBookData(bookId);
+
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
 
@@ -35,7 +34,7 @@ public class DetailController {
             responseData.put("publisher", detailBookData.getPublisher());
             responseData.put("publicationYear", detailBookData.getPublicationYear());
             responseData.put("bookCover", detailBookData.getBookCover());
-            responseData.put("isStored", true);
+            responseData.put("isStored", detailService.isStored(userId, bookId));
 
             response.put("data", responseData);
 
@@ -55,9 +54,10 @@ public class DetailController {
     }
 
     @GetMapping("/note/detail/{noteId}") // 필기 상세 정보를 get
-    public ResponseEntity<Map<String, Object>> getDetailNoteData(@PathVariable String noteId) {
+    public ResponseEntity<Map<String, Object>> getDetailNoteData(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
         try {
             DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
+
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
             Map<String, Object> bookInfo = new LinkedHashMap<>();
@@ -73,7 +73,7 @@ public class DetailController {
             responseData.put("createdAt", detailNoteData.getCreatedAt());
             responseData.put("modifiedAt", detailNoteData.getModifiedAt());
             responseData.put("price", detailNoteData.getPrice());
-            responseData.put("isBought", detailNoteData.isBought());
+            responseData.put("isBought", detailService.isBought(userId, noteId));
             responseData.put("bookInfo", bookInfo);
 
             response.put("data", responseData);
