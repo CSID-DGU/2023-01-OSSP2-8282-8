@@ -12,7 +12,7 @@ margin-top:20px;
 margin-bottom:30px;
 `
 const SearchWeapper=styled.View`
-    width: 70%;
+    width: 60%;
     height: 50px;
     border-radius: 11px;
     background: #D9D9D9;
@@ -21,12 +21,12 @@ const SearchWeapper=styled.View`
     flex-direction:row;
 `
 const ButtonWrapper=styled.View`
-width:60px;
-height:38px;
-border-radius:11px;
-background: #848484;
-align-items: center;
-justify-content: center;
+	width:60px;
+	height:38px;
+	border-radius:11px;
+	background: #848484;
+	align-items: center;
+	justify-content: center;
 `
 const Input = styled.TextInput`
 	width: 70%;
@@ -43,7 +43,12 @@ const Input = styled.TextInput`
 const ButtonTypo = styled.Text`
     font-size:20px;
     color: white;
-`
+`;
+
+const CommunityInputCon=styled.View`
+	width:80%;
+	height:100%;
+`;
 
 const SearchButton =({press})=>{
 	return(
@@ -60,8 +65,11 @@ const Search =({press, changeHandler})=>{
     return(
         <Container>
             <SearchWeapper>
-                <CommunityInput typo="검색" changeHandler={changeHandler}/>
-				<SearchButton press={press}/>
+				<CommunityInputCon>
+                	<CommunityInput typo="검색" changeHandler={changeHandler}/>
+				</CommunityInputCon>
+					<SearchButton press={press}/>
+
             </SearchWeapper>
         </Container>
     )
