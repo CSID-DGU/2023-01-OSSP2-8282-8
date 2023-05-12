@@ -5,6 +5,7 @@ import SignUp from "./src/pages/SignUp";
 import LogIn from "./src/pages/Login";
 import MyPage from "./src/pages/MyPage";
 import MyLibrary from "./src/pages/MyLibrary";
+import SearchResult from "./src/pages/SearchResult";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,6 @@ export default function App() {
 		// 		<Stack.Screen name="SignUp" component={SignUp} />
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
-		<MyPage />
+		<SearchResult />
 	);
 }

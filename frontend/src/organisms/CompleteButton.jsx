@@ -17,7 +17,7 @@ const ButtonTypo = styled.Text`
 	color: #fff;
 `;
 
-const ViewAllButton = ({ typo, onPress }) => {
+const CompleteButton = ({ typo, onPress }) => {
 	return (
 		<Container onPress={onPress}>
 			<ButtonTypo>{typo}</ButtonTypo>

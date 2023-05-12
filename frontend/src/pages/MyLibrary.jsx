@@ -134,6 +134,14 @@ const ViewAllPDFOnClick = () => {
 	Alert.alert("도서 전체보기");
 };
 
+const LIST1Info = {
+	name:"operating system"
+}
+
+const LIST2Info = {
+	name:"operating system"
+}
+
 const MyLibrary = () => {
 
     return (
@@ -149,7 +157,7 @@ const MyLibrary = () => {
             <ListContainer>
 				<LIST1>
 					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title><Text>operating system1</Text></LIST1_Title>
+					<LIST1_Title><Text>{LIST1Info.name}</Text></LIST1_Title>
 				</LIST1>
 				<LIST1>
 					<LIST1_Pic></LIST1_Pic>
