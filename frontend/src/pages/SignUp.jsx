@@ -6,6 +6,11 @@ import styled from "styled-components";
 import CommunityButton from "../organisms/CommunityButton";
 import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
+import postSignUp from "../../api/postSignUp";
+
+import { useSetRecoilState } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
@@ -91,7 +96,18 @@ const SignUp = () => {
 	const [pw, setPw] = useState("");
 	const [pwCheck, setPwCheck] = useState("");
 
+	const setUserInfo = useSetRecoilState(UserInfoState);
+	const handleUserInfo = (info) => {
+		setUserInfo(info);
+	};
+
 	const signUpOnClick = () => {
+		const signUpDTO = {
+			id: id,
+			password: pw,
+			username: nickname,
+		};
+		postSignUp(signUpDTO, handleUserInfo);
 		setId("");
 		setNickname("");
 		setPw("");

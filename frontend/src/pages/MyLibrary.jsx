@@ -1,113 +1,60 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, Alert } from "react-native";
 
 import styled from "styled-components";
 
 import CommunityButton from "../organisms/CommunityButton";
 import ViewAllButton from "../organisms/ViewAllButton";
+import Header from "../organisms/Header";
+import ListContainer from "../organisms/ListContainer";
+
+import getMyLib from "../../api/getMyLib";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
 	display: flex;
-	flex-direction: row;
-	justify-content: flex-first;
-	align-items: center;
-`;
-
-const Container1 = styled.View`
-	width: 80%;
-	height: 100%;
-	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
+	box-sizing: border-box;
+	padding: 40px 0 0 0;
 `;
 
-const Container2 = styled.View`
-	width: 15%;
-	height: 80%;
-	justify-content: flex-end;
-`;
-
-const ButtonIntro = styled.View`
-
-	width: 25%;
-	height: 100%;
-	justify-content: center;
-	align-items: center;
-`;
-
-const ButtonIntro2 = styled.View`
+const ContentWrapper = styled.View`
 	width: 100%;
-	height: 50%;
-	justify-content: flex-end;
-`;
-
-const TitleContainer = styled.View`
-	width:  80%;
-	height: 100px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
 `;
 
-const ListContainer = styled.View`
+const ButtonWrapper = styled.View`
+	width: 210px;
+	height: 45px;
+	box-sizing: border-box;
+	margin: 0 0 8px 30px;
+`;
+
+const ViewAllButtonWrapper = styled.View`
+	box-sizing: border-box;
+	margin: 150px 150px 0 0;
+`;
+
+const TitleContainer = styled.View`
 	width: 80%;
-    height: 250px;
+	height: 100px;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
-	align-items: flex-first;
-`;
-
-const LIST1 = styled.View`
-	box-sizing: border-box;
-	width: 140px;
-	height: 190px;
-`;
-
-const LIST1_Pic = styled.View`
-	box-sizing: border-box;
-	width: 140px;
-	height: 190px;
-
-	background: #FFFFFF;
-	border: 1px solid #000000;
-`;
-
-const LIST1_Title = styled.View`
-	box-sizing: border-box;
-	width: 140px;
-	height: 30px;
-
-	justify-content: center;
 	align-items: center;
 `;
 
-const LIST2 = styled.View`
+const ListWrapper = styled.View`
+	width: 65%;
+	display: flex;
+	flex-direction: row;
 	box-sizing: border-box;
-	width: 140px;
-	height: 190px;
-`;
-
-const LIST2_Pic = styled.View`
-	box-sizing: border-box;
-	width: 140px;
-	height: 190px;
-
-	background: #FFFFFF;
-	border: 1px solid #000000;
-`;
-
-const LIST2_Title = styled.View`
-	box-sizing: border-box;
-	width: 140px;
-	height: 30px;
-
-	justify-content: center;
-	align-items: center;
+	margin: 0 0 0 30px;
 `;
 
 const PDFCampusTypo = styled.Text`
@@ -115,11 +62,12 @@ const PDFCampusTypo = styled.Text`
 	font-size: 40px;
 `;
 
-const Line = styled.View`	
+const Line = styled.View`
 	width: 80%;
-	height: 0px;
-
-	border: 1.5px solid #BEBEBE;
+	height: 2px;
+	background: #bebebe;
+	box-sizing: border-box;
+	margin: 25px 0 0 0;
 `;
 
 const SubOnClick = () => {
@@ -143,64 +91,52 @@ const LIST2Info = {
 }
 
 const MyLibrary = () => {
-
-    return (
+	const [books, setBooks] = useState([]);
+	const [notes, setNotes] = useState([]);
+	const [bookMore, setBookMore] = useState(false);
+	const [noteMore, setNoteMore] = useState(false);
+	const handleContents = (books, notes, bookMore, noteMore) => {
+		setBooks(books);
+		setNotes(notes);
+		setBookMore(bookMore);
+		setNoteMore(noteMore);
+	};
+	const userInfo = useRecoilValue(UserInfoState);
+	useEffect(() => {
+		getMyLib(userInfo.userId, handleContents);
+	}, []);
+	return (
 		<>
-	<Container>
-        <Container1>
-            <TitleContainer>
-			    <PDFCampusTypo>내가 구매한 필기</PDFCampusTypo>
-				<ButtonIntro>
-				<CommunityButton typo="나의 필기 관리" onPress={SubOnClick} />
-				</ButtonIntro>
-            </TitleContainer>
-            <ListContainer>
-				<LIST1>
-					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title><Text>{LIST1Info.name}</Text></LIST1_Title>
-				</LIST1>
-				<LIST1>
-					<LIST1_Pic></LIST1_Pic>
-					<LIST1_Title><Text>operating system2</Text></LIST1_Title>
-				</LIST1>
-				<LIST1></LIST1>
-				<LIST1></LIST1>
-				
-			</ListContainer>
-                <Line></Line>
+			<Header />
 
-            <TitleContainer>
-                <PDFCampusTypo>나의 서재 리스트</PDFCampusTypo>
-            </TitleContainer>
-            <ListContainer>
-				<LIST2>
-					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating system1</Text></LIST2_Title>
-				</LIST2>
-				<LIST2>
-					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating system2</Text></LIST2_Title>
-				</LIST2>
-				<LIST2>
-					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating system3</Text></LIST2_Title>
-				</LIST2>
-				<LIST2>
-					<LIST2_Pic></LIST2_Pic>
-					<LIST2_Title><Text>operating system4</Text></LIST2_Title>
-				</LIST2>
-			</ListContainer>
-		</Container1>
-		<Container2>
-			<ButtonIntro2>
-			<ViewAllButton typo="필기 전체보기" onPress={ViewAllNotesOnClick} />
-			</ButtonIntro2>
-			
-			<ButtonIntro2>
-			<ViewAllButton typo="도서 전체보기" onPress={ViewAllPDFOnClick} />
-			</ButtonIntro2>
-		</Container2>
-	</Container>
+			<Container>
+				<TitleContainer>
+					<PDFCampusTypo>내가 구매한 필기</PDFCampusTypo>
+					<ButtonWrapper>
+						<CommunityButton typo="나의 필기 관리" onPress={SubOnClick} />
+					</ButtonWrapper>
+				</TitleContainer>
+				<ContentWrapper>
+					<ListWrapper>
+						<ListContainer products={books} type="book" />
+					</ListWrapper>
+					<ViewAllButtonWrapper>
+						<ViewAllButton typo="필기 전체보기" onPress={SubOnClick} />
+					</ViewAllButtonWrapper>
+				</ContentWrapper>
+				<Line />
+				<TitleContainer>
+					<PDFCampusTypo>나의 서재 리스트</PDFCampusTypo>
+				</TitleContainer>
+				<ContentWrapper>
+					<ListWrapper>
+						<ListContainer products={notes} type="note" />
+					</ListWrapper>
+					<ViewAllButtonWrapper>
+						<ViewAllButton typo="도서 전체보기" onPress={SubOnClick} />
+					</ViewAllButtonWrapper>
+				</ContentWrapper>
+			</Container>
 		</>
 	);
 };

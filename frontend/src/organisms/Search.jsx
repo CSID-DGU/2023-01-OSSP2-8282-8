@@ -40,6 +40,7 @@ const Input = styled.TextInput`
 	font-size: 12px;
 	color: #000;
 `;
+
 const ButtonTypo = styled.Text`
     font-size:20px;
     color: white;
@@ -52,6 +53,7 @@ const CommunityInputCon=styled.View`
 
 const SearchButton =({press})=>{
 	return(
+
 		<TouchableOpacity onPress={press}>
 			<ButtonWrapper>
 				<ButtonTypo>검색</ButtonTypo>

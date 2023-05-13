@@ -6,6 +6,10 @@ import styled from "styled-components";
 import CommunityButton from "../organisms/CommunityButton";
 import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
+import postLogin from "../../api/postLogin";
+import { useSetRecoilState } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
@@ -60,19 +64,30 @@ const LogIn = () => {
 			changeHandler: onChangeId,
 			textInputRef: idInputRef,
 		},
-		
+
 		{
 			typo: "비밀번호를 입력하세요",
 			changeHandler: onChangePw,
 			textInputRef: pwInputRef,
 		},
-		
 	];
 
 	const [id, setId] = useState("");
 	const [pw, setPw] = useState("");
 
+	const setUserInfo = useSetRecoilState(UserInfoState);
+	const handleUserInfo = (info) => {
+		setUserInfo(info);
+	};
+
 	const LogInClick = () => {
+		postLogin(
+			{
+				id: id,
+				password: pw,
+			},
+			handleUserInfo
+		);
 		setId("");
 		setPw("");
 		idInputRef.current.clear();
