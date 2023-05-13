@@ -74,6 +74,22 @@ const SubOnClick = () => {
 	Alert.alert("필기관리창");
 };
 
+const ViewAllNotesOnClick = () => {
+	Alert.alert("필기 전체보기");
+};
+
+const ViewAllPDFOnClick = () => {
+	Alert.alert("도서 전체보기");
+};
+
+const LIST1Info = {
+	name:"operating system"
+}
+
+const LIST2Info = {
+	name:"operating system"
+}
+
 const MyLibrary = () => {
 	const [books, setBooks] = useState([]);
 	const [notes, setNotes] = useState([]);
