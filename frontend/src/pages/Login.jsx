@@ -9,6 +9,7 @@ import CommunityInputContainer from "../organisms/CommunityInputContainer";
 import postLogin from "../../api/postLogin";
 import { useSetRecoilState } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
+import CommunityRoute from "../organisms/CommunityRoute";
 
 const Container = styled.View`
 	width: 100%;
@@ -104,6 +105,7 @@ const LogIn = ({ navigation }) => {
 				<CommunityInputContainer inputList={inputList} />
 				<CommunityButton typo="로그인" onPress={LogInClick} />
 			</LoginForm>
+			<CommunityRoute typo="회원가입" navigation={navigation} />
 		</Container>
 	);
 };
