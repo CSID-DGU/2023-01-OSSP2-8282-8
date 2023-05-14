@@ -47,7 +47,7 @@ const LoginForm = styled.View`
 	border-radius: 15px;
 `;
 
-const LogIn = () => {
+const LogIn = ({ navigation }) => {
 	const onChangeId = (e) => {
 		setId(e);
 	};
@@ -86,7 +86,8 @@ const LogIn = () => {
 				id: id,
 				password: pw,
 			},
-			handleUserInfo
+			handleUserInfo,
+			() => navigation.navigate("MainPage")
 		);
 		setId("");
 		setPw("");
