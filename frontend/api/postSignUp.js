@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Axios } from "./axios";
 
-export default postSignUp = async (signUpDTO, handleUserInfo) => {
+export default postSignUp = async (signUpDTO, handleUserInfo, navigation) => {
 	try {
 		const res = await Axios.post("/signup", signUpDTO);
 		const data = res.data.data;
@@ -13,6 +13,8 @@ export default postSignUp = async (signUpDTO, handleUserInfo) => {
 			userId: userId,
 			isSubscribed: false,
 		});
+
+		navigation();
 	} catch (e) {
 		console.log(e);
 	}

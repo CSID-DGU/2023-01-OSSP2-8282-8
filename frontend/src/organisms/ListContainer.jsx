@@ -30,13 +30,14 @@ const ListContainer = ({ products, type }) => {
 					<Container2 key={product[type + "Id"]}>
 						<Image
 							source={{
-								uri: "https://image.yes24.com/goods/89496122/XL",
+								uri: "https://image.yes24.com/goods/89496122/XL"
+								//uri: {product.bookCover}
 								// product.bookCover
 							}}
 							style={{ width: 130, height: 190 }}
 						/>
 						<Container2>
-							<Nametypo>{product[type + "Title"]}</Nametypo>
+							<Nametypo>{product[type + "Title"]/*{product.title} */}</Nametypo> 
 						</Container2>
 					</Container2>
 				);
