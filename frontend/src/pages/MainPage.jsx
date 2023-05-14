@@ -94,7 +94,7 @@ const notes = [...Array(10).keys()].map((id) => {
 	};
 });
 
-const MainPage = () => {
+const MainPage = ({ navigation }) => {
 	const [pnum1, setPnum1] = useState(0);
 	const [pnum2, setPnum2] = useState(5);
 	const [pnum3, setPnum3] = useState(0);
@@ -132,7 +132,7 @@ const MainPage = () => {
 	};
 	return (
 		<Container>
-			<CommunityHeader />
+			<CommunityHeader navigation={navigation} />
 			<Search press={SearchClick} changeHandler={HandleSearch} />
 			<ListTitle typo="신규 도서 컨텐츠" />
 			<ListWrapper>

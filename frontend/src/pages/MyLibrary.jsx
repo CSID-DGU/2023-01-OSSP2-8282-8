@@ -83,14 +83,14 @@ const ViewAllPDFOnClick = () => {
 };
 
 const LIST1Info = {
-	name:"operating system"
-}
+	name: "operating system",
+};
 
 const LIST2Info = {
-	name:"operating system"
-}
+	name: "operating system",
+};
 
-const MyLibrary = () => {
+const MyLibrary = ({ navigation }) => {
 	const [books, setBooks] = useState([]);
 	const [notes, setNotes] = useState([]);
 	const [bookMore, setBookMore] = useState(false);
@@ -107,7 +107,7 @@ const MyLibrary = () => {
 	}, []);
 	return (
 		<>
-			<Header />
+			<Header navigation={navigation} />
 
 			<Container>
 				<TitleContainer>
