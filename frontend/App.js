@@ -7,8 +7,6 @@ import LogIn from "./src/pages/Login";
 import MainPage from "./src/pages/MainPage";
 import MyPage from "./src/pages/MyPage";
 import MyLibrary from "./src/pages/MyLibrary";
-
-import SearchResult from "./src/pages/SearchResult";
 import BookDetail from "./src/pages/BookDetail";
 import NoteDetail from "./src/pages/NoteDetail";
 import MyNotes from "./src/pages/MyNotes";
@@ -24,10 +22,8 @@ export default function App() {
 		// 	</Stack.Navigator>
 		// </NavigationContainer>
 		<RecoilRoot>
-			{/* <LogIn /> */}
-			{/* <MyPage /> */}
-   		{/*	<MyLibrary />*/}
-		  <MyNotes />
+			<LogIn />
 		</RecoilRoot>
+		
 	);
 }
