@@ -30,7 +30,7 @@ public class DetailService {
 
     public DetailBookDto getBookData(String bid) { // 데이터베이스에서 책에 대한 데이터를 가져오도록 레포지토리 호출
         Integer bidInt = Integer.parseInt(bid);
-        Book book = detailBookRepository.findByBid(bidInt).orElse(null); // bookId를 통해 레포지토리를 호출하여 엔티티 받기
+        Book book = detailBookRepository.findByBid(bidInt).orElseThrow(() -> new NullPointerException("Book not found")); // bookId를 통해 레포지토리를 호출하여 엔티티 받기
         return new DetailBookDto( //form 형태에 맞는 dto 반환
                 book.getBid(),
                 book.getBookTitle(),
@@ -43,7 +43,7 @@ public class DetailService {
 
     public DetailNoteDto getNoteData(String nid) { // 데이터베이스에서 필기에 대한 데이터를 가져오도록 =1&bookId=2레포지토리 호출
         Integer nidInt = Integer.parseInt(nid);
-        Note note = detailNoteRepository.findByNid(nidInt).orElse(null); // noteId를 통해 레포지토리를 호출하여 엔티티 받기
+        Note note = detailNoteRepository.findByNid(nidInt).orElseThrow(() -> new NullPointerException("Note not found")); // noteId를 통해 레포지토리를 호출하여 엔티티 받기
 
         Sale sale = saleRepository.findByNote(note).orElse(null);
 
