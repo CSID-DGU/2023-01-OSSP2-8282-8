@@ -73,7 +73,7 @@ public class DetailController {
             responseData.put("createdAt", detailNoteData.getCreatedAt());
             responseData.put("modifiedAt", detailNoteData.getModifiedAt());
             responseData.put("price", detailNoteData.getPrice());
-            responseData.put("isBought", detailService.isBought(userId, noteId));
+            responseData.put("isBought", detailNoteData.isBought());
             responseData.put("bookInfo", bookInfo);
 
             response.put("data", responseData);
