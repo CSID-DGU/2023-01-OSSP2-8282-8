@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.*;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -27,6 +28,9 @@ public class Note {
     @JoinColumn(name = "uid", nullable = false)
     private User user;
 
+    //@OneToMany(mappedBy = "note", fetch = FetchType.LAZY)
+    //private List<Sale> sales; // Sale 엔티티와의 일대다 관계
+
     @Column(name = "noteTitle", nullable = false)
     private String noteTitle;
 
@@ -41,4 +45,8 @@ public class Note {
 
     public Note(Integer nid, String noteTitle, byte[] bookCover) {
     }
+
+    //public boolean isSale() {
+    //    return sales != null && !sales.isEmpty();
+    //}
 }

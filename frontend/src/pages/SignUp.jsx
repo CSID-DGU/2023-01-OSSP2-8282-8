@@ -8,6 +8,10 @@ import CommunityInputContainer from "../organisms/CommunityInputContainer";
 
 import postSignUp from "../../api/postSignUp";
 
+import { useSetRecoilState } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import CommunityRoute from "../organisms/CommunityRoute";
+
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
@@ -46,7 +50,7 @@ const SignUpForm = styled.View`
 	border-radius: 15px;
 `;
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
 	const onChangeId = (e) => {
 		setId(e);
 	};
@@ -93,10 +97,19 @@ const SignUp = () => {
 	const [pw, setPw] = useState("");
 	const [pwCheck, setPwCheck] = useState("");
 
+	const setUserInfo = useSetRecoilState(UserInfoState);
+	const handleUserInfo = (info) => {
+		setUserInfo(info);
+	};
+
 	const signUpOnClick = () => {
-		postSignUp(
-			{ id: id, nickname: nickname, password: pw, passwordCheck: pwCheck },
-			() => {}
+		const signUpDTO = {
+			id: id,
+			password: pw,
+			username: nickname,
+		};
+		postSignUp(signUpDTO, handleUserInfo, () =>
+			navigation.navigate("MainPage")
 		);
 		setId("");
 		setNickname("");
@@ -119,6 +132,7 @@ const SignUp = () => {
 				<CommunityInputContainer inputList={inputList} />
 				<CommunityButton typo="회원가입" onPress={signUpOnClick} />
 			</SignUpForm>
+			<CommunityRoute typo="로그인" navigation={navigation} />
 		</Container>
 	);
 };

@@ -28,3 +28,4 @@ public class Sale {
     @Column(name = "price")
     private Integer price;
 }
+

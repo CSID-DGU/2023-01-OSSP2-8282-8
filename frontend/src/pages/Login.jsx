@@ -9,6 +9,7 @@ import CommunityInputContainer from "../organisms/CommunityInputContainer";
 import postLogin from "../../api/postLogin";
 import { useSetRecoilState } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
+import CommunityRoute from "../organisms/CommunityRoute";
 
 const Container = styled.View`
 	width: 100%;
@@ -47,7 +48,7 @@ const LoginForm = styled.View`
 	border-radius: 15px;
 `;
 
-const LogIn = () => {
+const LogIn = ({ navigation }) => {
 	const onChangeId = (e) => {
 		setId(e);
 	};
@@ -86,7 +87,8 @@ const LogIn = () => {
 				id: id,
 				password: pw,
 			},
-			handleUserInfo
+			handleUserInfo,
+			() => navigation.navigate("MainPage")
 		);
 		setId("");
 		setPw("");
@@ -103,6 +105,7 @@ const LogIn = () => {
 				<CommunityInputContainer inputList={inputList} />
 				<CommunityButton typo="로그인" onPress={LogInClick} />
 			</LoginForm>
+			<CommunityRoute typo="회원가입" navigation={navigation} />
 		</Container>
 	);
 };

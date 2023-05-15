@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Input = styled.TextInput`
 	width: 100%;
-	height: 48px;
+	height: 40px;
 	background: #fff;
 	border-radius: 10px;
 	margin: 5.5px 0;

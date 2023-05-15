@@ -5,6 +5,10 @@ import styled from "styled-components";
 
 import CommunityButton from "../organisms/CommunityButton";
 import Header from "../organisms/Header";
+import getMyPage from "../../api/getMyPage";
+
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	display: flex;
@@ -101,18 +105,34 @@ const SubOnClick = () => {
 	Alert.alert("구독하러");
 };
 
-const MyPage = () => {
+const UserInfo = {
+	name: "이현정",
+	userIntro: "안녕하세요 자기소개입니다",
+	isSubscribed: true,
+	startDate: "2023-01-01",
+	subDate: "2023-05-01",
+	subItem: "6개월",
+	period: "160일",
+};
+
+const MyPage = ({ navigation }) => {
+	const userId = useRecoilValue(UserInfoState).userId;
+	const handleSubscribeInfo = (subscribed, subscribeInfo, userInfo) => {
+		setSubscribed(subscribed);
+		setSubscribeInfo(subscribeInfo);
+		setUserInfo(userInfo);
+	};
+	useEffect(() => {
+		getMyPage(userId, handleSubscribeInfo);
+	}, []);
+
 	const [subscribed, setSubscribed] = useState(false);
-	const [subscribeInfo, setSubscribeInfo] = useState({
-		joinedDate: "2022. 12. 13",
-		subscribedDate: "2022. 12. 25",
-		productName: "PDF 구독 (6개월)",
-		remainDate: "165일",
-	});
+	const [userInfo, setUserInfo] = useState({});
+	const [subscribeInfo, setSubscribeInfo] = useState({});
 
 	return (
 		<>
-			<Header />
+			<Header navigation={navigation} />
 			<Container>
 				<MyPageTypo>마이페이지</MyPageTypo>
 				<UserInfoContainer>
@@ -120,9 +140,11 @@ const MyPage = () => {
 						<UserPicture></UserPicture>
 					</UserPic>
 					<UserIntro>
-						<SubTitleTypo>이름</SubTitleTypo>
+						<SubTitleTypo>{userInfo.username}</SubTitleTypo>
 						<SelfIntroWrapper>
-							<SelfIntroTypo>안녕하세요 자기소개...</SelfIntroTypo>
+							<SelfIntroTypo>
+								안녕하세요. {userInfo.username}입니다!
+							</SelfIntroTypo>
 						</SelfIntroWrapper>
 					</UserIntro>
 				</UserInfoContainer>
@@ -132,10 +154,10 @@ const MyPage = () => {
 
 					{subscribed ? (
 						<SubIntro>
-							<ContentTypo>가입일: {subscribeInfo.joinedDate}</ContentTypo>
-							<ContentTypo>구독일: {subscribeInfo.subscribedDate}</ContentTypo>
+							<ContentTypo>가입일: {userInfo.joinedDate}</ContentTypo>
+							<ContentTypo>구독일: {subscribeInfo.subscribeDate}</ContentTypo>
 							<ContentTypo>상품: {subscribeInfo.productName}</ContentTypo>
-							<ContentTypo>남은 기간: {subscribeInfo.remainDate}</ContentTypo>
+							{/* <ContentTypo>남은 기간: {subscribeInfo.remainDate}</ContentTypo> */}
 						</SubIntro>
 					) : (
 						<SubIntro>
