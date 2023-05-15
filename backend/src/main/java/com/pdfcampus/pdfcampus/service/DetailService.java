@@ -3,7 +3,6 @@ package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.dto.MylibBookDto;
-import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.entity.Sale;
