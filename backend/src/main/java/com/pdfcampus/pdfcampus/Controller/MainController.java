@@ -2,9 +2,7 @@ package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.MylibBookDto;
 import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
-import com.pdfcampus.pdfcampus.service.DetailService;
 import com.pdfcampus.pdfcampus.service.MainService;
-import com.pdfcampus.pdfcampus.service.MylibService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
