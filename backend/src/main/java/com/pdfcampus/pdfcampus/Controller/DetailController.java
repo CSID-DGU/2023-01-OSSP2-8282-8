@@ -25,6 +25,7 @@ public class DetailController {
 
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
+            Map<String, String> apiStatus = new HashMap<>();
 
             responseData.put("bookTitle", detailBookData.getBookTitle()); // response body 구성
             responseData.put("author", detailBookData.getAuthor());
@@ -34,6 +35,12 @@ public class DetailController {
             responseData.put("isStored", detailService.isStored(userId, bookId));
 
             response.put("data", responseData);
+
+            response.put("data", responseData);
+
+            apiStatus.put("errorMessage", "");
+            apiStatus.put("errorCode", "N200");
+            response.put("apiStatus", apiStatus);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -55,9 +62,10 @@ public class DetailController {
         try {
             DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
 
-            Map<String, Object> response = new HashMap<>();
+            Map<String, Object> response = new LinkedHashMap<>();
             Map<String, Object> responseData = new LinkedHashMap<>();
             Map<String, Object> bookInfo = new LinkedHashMap<>();
+            Map<String, String> apiStatus = new HashMap<>();
 
             bookInfo.put("author", detailNoteData.getBookAuthor()); // bookInfo body 구성
             bookInfo.put("publisher", detailNoteData.getPublisher());
@@ -70,10 +78,14 @@ public class DetailController {
             responseData.put("createdAt", detailNoteData.getCreatedAt());
             responseData.put("modifiedAt", detailNoteData.getModifiedAt());
             responseData.put("price", detailNoteData.getPrice());
-            responseData.put("isBought", detailNoteData.isBought());
+            responseData.put("isBought", detailService.isBought(userId, noteId));
             responseData.put("bookInfo", bookInfo);
 
             response.put("data", responseData);
+
+            apiStatus.put("errorMessage", "");
+            apiStatus.put("errorCode", "N200");
+            response.put("apiStatus", apiStatus);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
