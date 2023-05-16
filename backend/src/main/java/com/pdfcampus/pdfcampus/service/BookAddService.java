@@ -24,11 +24,10 @@ public class BookAddService {
         List<Book> bookList = bookRepository.findByBookTitle(bookDto.getBookTitle());
         Book input = bookDto.toEntity();
         for (Book book : bookList) {
-            if(book.getBookTitle() == input.getBookTitle() &&
-            book.getAuthor() == input.getAuthor() &&
-            book.getPublisher() == input.getPublisher() &&
-            book.getPublicationYear() == input.getPublicationYear() &&
-            book.getBookCover() == input.getBookCover()) {
+            if(book.getBookTitle().equals(input.getBookTitle()) &&
+            book.getAuthor().equals(input.getAuthor()) &&
+            book.getPublisher().equals(input.getPublisher()) &&
+            book.getPublicationYear().equals(input.getPublicationYear())){
                 return true;
             }
 
