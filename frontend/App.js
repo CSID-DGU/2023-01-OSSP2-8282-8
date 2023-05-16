@@ -19,8 +19,8 @@ export default function App() {
 		<RecoilRoot>
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
-					//<Stack.Screen name="LogIn" component={LogIn} />
-					//<Stack.Screen name="SignUp" component={SignUp} />
+					<Stack.Screen name="LogIn" component={LogIn} />
+					<Stack.Screen name="SignUp" component={SignUp} />
 					<Stack.Screen name="MainPage" component={MainPage} />
 					<Stack.Screen name="MyPage" component={MyPage} />
 					<Stack.Screen name="MyLibrary" component={MyLibrary} />
@@ -34,3 +34,5 @@ export default function App() {
 		
 	);
 }
+//<Stack.Screen name="LogIn" component={LogIn} />
+					//<Stack.Screen name="SignUp" component={SignUp} />

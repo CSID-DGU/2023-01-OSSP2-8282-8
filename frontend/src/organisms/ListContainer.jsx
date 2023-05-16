@@ -27,17 +27,17 @@ const ListContainer = ({ products, type }) => {
 		<Container>
 			{products.map((product) => {
 				return (
-					<Container2 key={product[type + "Id"]}>
+					<Container2 key={product.bookId}>
 						<Image
 							source={{
-								uri: "https://image.yes24.com/goods/89496122/XL"
+								uri: product.bookCover
 								//uri: {product.bookCover}
 								// product.bookCover
 							}}
 							style={{ width: 130, height: 190 }}
 						/>
 						<Container2>
-							<Nametypo>{product[type + "Title"]/*{product.title} */}</Nametypo> 
+							<Nametypo>제목</Nametypo> 
 						</Container2>
 					</Container2>
 				);
@@ -47,3 +47,5 @@ const ListContainer = ({ products, type }) => {
 };
 
 export default ListContainer;
+//{product[type + "Title"]/*{product.title} */}
+//[type + "Id"]
