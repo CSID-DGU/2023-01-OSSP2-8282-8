@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.dto.MylibBookDto;
+import com.pdfcampus.pdfcampus.dto.MylibNoteDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.entity.Sale;
@@ -52,8 +53,8 @@ public class DetailService {
                 note.getUser().getUsername(),
                 note.getCreatedAt(),
                 note.getModifiedAt(),
-                sale != null ? sale.getPrice().toString() : null,
-                sale != null ? true : false,
+                sale.getPrice().toString(),
+                false,
                 note.getBook().getAuthor(),
                 note.getUser().getUid(),
                 note.getBook().getPublisher(),
@@ -66,19 +67,19 @@ public class DetailService {
         Integer bidInt = Integer.parseInt(bid);
         List<MylibBookDto> userBookList = mylibService.getMylibBookData(uid);
         for (MylibBookDto mylibBookDto : userBookList){
-            if(mylibBookDto.getBookId() == bidInt) return true; //만약 나의 서재의 필기 리스트에서 일치하는 nid가 있다면 true
+            if(mylibBookDto.getBookId() == bidInt) return true; //만약 나의 서재의 도서 리스트에서 일치하는 bid가 있다면 true
         }
 
         return false; // 하나도 없으면 false
     }
 
-    /*public boolean isBought(String uid, String nid){
+    public boolean isBought(String uid, String nid){
         Integer nidInt = Integer.parseInt(nid);
         List<MylibNoteDto> userNoteList = mylibService.getMylibNoteData(uid);
         for (MylibNoteDto mylibNoteDto : userNoteList){
-            if(mylibNoteDto.getNoteId() == nidInt) return true; //만약 나의 서재의 대여 도서 리스트에서 일치하는 bid가 있다면 true
+            if(mylibNoteDto.getNoteId() == nidInt) return true;
         }
 
         return false; // 하나도 없으면 false
-    }*/
+    }
 }
