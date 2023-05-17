@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface SaleRepository  extends JpaRepository<Sale, Integer> {
 
     List<Sale> findTop10ByOrderByNoteDesc();
+    List<Sale> findByNote_NoteTitleContainingIgnoreCase(String keyword);
 
     boolean existsByNoteNid(Integer nid);
     Optional<Sale> findByNote(Note note);
