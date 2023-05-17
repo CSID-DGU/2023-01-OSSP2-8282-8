@@ -55,18 +55,18 @@ public class SearchService {
 
 
     public List<DetailNoteDto> searchNotes(String keyword) {
-        List<Note> notes = detailNoteRepository.findByNoteTitleContainingIgnoreCase(keyword);
-        return notes.stream()
-                .map(note -> {
-                    Sale sale = saleRepository.findByNote(note).orElse(null);
+        List<Sale> sales = saleRepository.findByNote_NoteTitleContainingIgnoreCase(keyword);
+        return sales.stream()
+                .map(sale -> {
+                    Note note = sale.getNote();
                     return new DetailNoteDto(
                             note.getNid(),
                             note.getNoteTitle(),
                             note.getUser().getUsername(),
                             note.getCreatedAt(),
                             note.getModifiedAt(),
-                            sale != null ? sale.getPrice().toString() : null,
-                            sale != null,
+                            sale.getPrice().toString(),
+                            true,
                             note.getBook().getAuthor(),
                             note.getUser().getUid(),
                             note.getBook().getPublisher(),
