@@ -31,7 +31,10 @@ const ListContainer = ({ navigation, products, type }) => {
 						key={product.bookId}
 						onPress={() => {
 							navigation.navigate(
-								type.charAt(0).toUpperCase() + type.slice(1) + "Detail"
+								type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
+								{
+									id: type == "book" ? product.bookId : product.noteId,
+								}
 							);
 						}}
 					>
