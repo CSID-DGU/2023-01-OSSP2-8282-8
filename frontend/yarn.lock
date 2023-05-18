@@ -7610,7 +7610,7 @@
     "postcss-value-parser" "^4.2.0"
     "styleq" "^0.1.2"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.59", "react-native@0.71.7":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@^0.71.7", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.59":
   "integrity" "sha512-Id6iRLS581fJMFGbBl1jP5uSmjExtGOvw5Gvh7694zISXjsRAsFMmU+izs0pyCLqDBoHK7y4BT7WGPGw693nYw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.71.7.tgz"
   "version" "0.71.7"
