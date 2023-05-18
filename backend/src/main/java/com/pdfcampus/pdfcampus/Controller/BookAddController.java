@@ -33,7 +33,7 @@ public class BookAddController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiStatus);
         }
 
-        bookAddService.addBook(bookDto);
+        bookAddService.addBook(addDto);
 
         apiStatus.put("errorMessage", "추가 완료");
         apiStatus.put("errorCode", "N200");
