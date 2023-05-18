@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
 import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
+import getBookDetail from "../../api/getBookDetail";
 
 const Container = styled.View`
 	width: 100%;
@@ -57,7 +58,11 @@ const AddBookLibrary = () => {
 	return Alert.alert("나의 서재에 추가");
 };
 
-const BookDetail = ({ navigation }) => {
+const BookDetail = ({ navigation, route }) => {
+	useEffect(() => {
+		const { id } = route.params;
+		getBookDetail(id);
+	}, []);
 	return (
 		<Container>
 			<Header navigation={navigation} />
