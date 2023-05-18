@@ -70,10 +70,6 @@ const Line = styled.View`
 	margin: 25px 0 0 0;
 `;
 
-const SubOnClick = () => {
-	Alert.alert("필기관리창");
-};
-
 const MyLibrary = ({ navigation }) => {
 	const [books, setBooks] = useState([]);
 	const [notes, setNotes] = useState([]);
@@ -89,6 +85,10 @@ const MyLibrary = ({ navigation }) => {
 	useEffect(() => {
 		getMyLib(userInfo.userId, handleContents);
 	}, []);
+
+	const ViewMyNotes = () => {
+		navigation.navigate("MyNotes");
+	};
 
 	const ViewAllNotesOnClick = () => {
 		navigation.navigate("BookAll", { type: "book" });
@@ -106,7 +106,7 @@ const MyLibrary = ({ navigation }) => {
 				<TitleContainer>
 					<PDFCampusTypo>내가 구매한 필기</PDFCampusTypo>
 					<ButtonWrapper>
-						<CommunityButton typo="나의 필기 관리" onPress={SubOnClick} />
+						<CommunityButton typo="나의 필기 관리" onPress={ViewMyNotes} />
 					</ButtonWrapper>
 				</TitleContainer>
 				<ContentWrapper>
