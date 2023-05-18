@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import getMyNotes from "../../api/getMyNotes";
 import { useRecoilValue } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
+import postDeleteNote from "../../api/postDeleteNote";
 
 const Container = styled.View`
 	display: flex;
@@ -88,17 +89,18 @@ const OnSale = () => {
 	return Alert.alert("판매 등록");
 };
 
-const MyNotesList = ({ notes }) => {
+const MyNotesList = ({ notes, handleModal1 }) => {
 	return notes.map((note) => (
 		<NoteHandle
 			key={note.noteId}
+			id={note.noteId}
 			img={note.bookInfo.bookCover}
 			bookTitle={note.noteTitle}
 			isSaled={note.isSale}
 			PublicationDate={note.bookInfo.publicationYear}
 			ModifiedDate={note.modifiedAt}
 			onPress1={OnSale}
-			onPress2={() => setModalVisible1(true)}
+			onPress2={handleModal1}
 		/>
 	));
 };
@@ -106,23 +108,28 @@ const MyNotesList = ({ notes }) => {
 const MyNotes = () => {
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
-
 	const [notes, setNotes] = useState([]);
+	const [selectedNote, setSelectedNote] = useState(-1);
+
+	const handleModal1 = (select) => {
+		setModalVisible1(true);
+		setSelectedNote(select);
+	};
+
 	const handleNotes = (notes) => {
 		setNotes(notes);
 	};
 
-	const DeleteNote = () => {
-		return (
-			setModalVisible1(false), setModalVisible2(true)
-			//노트삭제 기능
-		);
-	};
-
 	const userId = useRecoilValue(UserInfoState).userId;
+
+	const DeleteNote = () => {
+		setModalVisible1(false), setModalVisible2(true);
+		postDeleteNote({ userId, selectedNote });
+	};
 
 	useEffect(() => {
 		getMyNotes(userId, handleNotes);
+		console.log("last selected:", selectedNote);
 	}, []);
 	return (
 		<Container>
@@ -149,7 +156,7 @@ const MyNotes = () => {
 						<BlockTypo>필기가 삭제되었습니다</BlockTypo>
 						<ButtonsContainer>
 							<ButtonWrapper onPress={() => setModalVisible2(false)}>
-								<Buttontypo>삭제</Buttontypo>
+								<Buttontypo>확인</Buttontypo>
 							</ButtonWrapper>
 						</ButtonsContainer>
 					</Block>
@@ -162,7 +169,7 @@ const MyNotes = () => {
 				</BookTitleContainer>
 				<Container2>
 					<NoteListContiner>
-						<MyNotesList notes={notes} />
+						<MyNotesList notes={notes} handleModal1={handleModal1} />
 					</NoteListContiner>
 				</Container2>
 			</ScrollView>
