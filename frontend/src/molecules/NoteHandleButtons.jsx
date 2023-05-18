@@ -1,21 +1,21 @@
 import styled from "styled-components";
 
-const Container=styled.View`
-width:40%;
-display:flex;
-flex-direction:row;
-align-items:flex-end;
-justify-content:center;
-`
+const Container = styled.View`
+	width: 40%;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: center;
+`;
 const ButtonContainer1 = styled.TouchableOpacity`
 	width: 40%;
 	height: 40px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: #56AAF6;
+	background: #56aaf6;
 	border-radius: 11px;
-    margin-right:20px;
+	margin-right: 20px;
 `;
 
 const ButtonContainer2 = styled.TouchableOpacity`
@@ -49,14 +49,17 @@ const CommunityButton2 = ({ typo, onPress }) => {
 	);
 };
 
-const NoteHandleButton = ({onPress1,onPress2,isSaled}) => {
-    return(
-        <Container>
-            {isSaled ? (<CommunityButton1 typo="등록된 필기"/>)
-            :(<CommunityButton1 typo="필기판매등록" onPress={onPress1}/>)}
-            <CommunityButton2 typo="삭제"onPress={onPress2}/>
-        </Container>
-    )
-}
+const NoteHandleButton = ({ id, onPress1, onPress2, isSaled }) => {
+	return (
+		<Container>
+			{isSaled ? (
+				<CommunityButton1 typo="등록된 필기" />
+			) : (
+				<CommunityButton1 typo="필기판매등록" onPress={onPress1} />
+			)}
+			<CommunityButton2 typo="삭제" onPress={() => onPress2(id)} />
+		</Container>
+	);
+};
 
 export default NoteHandleButton;
