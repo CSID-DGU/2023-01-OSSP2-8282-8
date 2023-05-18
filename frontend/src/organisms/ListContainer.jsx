@@ -10,7 +10,7 @@ const Container = styled.View`
 	margin: 0 60px;
 	padding: 0 15px;
 `;
-const Container2 = styled.View`
+const Container2 = styled.TouchableOpacity`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -22,12 +22,19 @@ const Container2 = styled.View`
 const Nametypo = styled.Text`
 	font-size: 20;
 `;
-const ListContainer = ({ products, type }) => {
+const ListContainer = ({ navigation, products, type }) => {
 	return (
 		<Container>
 			{products.map((product) => {
 				return (
-					<Container2 key={product.bookId}>
+					<Container2
+						key={product.bookId}
+						onPress={() => {
+							navigation.navigate(
+								type.charAt(0).toUpperCase() + type.slice(1) + "Detail"
+							);
+						}}
+					>
 						<Image
 							source={{
 								uri: product.bookCover,
