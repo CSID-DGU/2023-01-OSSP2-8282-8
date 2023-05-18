@@ -1,5 +1,6 @@
 package com.pdfcampus.pdfcampus.Controller;
 
+import com.pdfcampus.pdfcampus.dto.BookAddDto;
 import com.pdfcampus.pdfcampus.dto.BookDto;
 import com.pdfcampus.pdfcampus.service.BookAddService;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,10 @@ public class BookAddController {
     }
 
     @PostMapping("/book/add")
-    public ResponseEntity<Map<String, Object>> signUp(@RequestBody BookDto bookDto) {
+    public ResponseEntity<Map<String, Object>> bookAdd(@RequestBody BookAddDto addDto) {
         Map<String, Object> apiStatus = new HashMap<>();
 
-        if(bookAddService.isDuplicated(bookDto)) { // 중복되는 도서
+        if(bookAddService.isDuplicated(addDto)) { // 중복되는 도서
             apiStatus.put("errorMessage", "이미 존재하는 도서");
             apiStatus.put("errorCode", "E400");
 
