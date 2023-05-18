@@ -1,4 +1,4 @@
-package com.pdfcampus.pdfcampus.controller;
+package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.LoginDto;
 import com.pdfcampus.pdfcampus.service.LoginService;

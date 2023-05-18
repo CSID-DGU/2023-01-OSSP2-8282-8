@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TouchableOpacity, Image, Alert } from "react-native";
 
 import CommunityHeader from "../organisms/Header";
 import Search from "../organisms/Search";
 import ListContainer from "../organisms/ListContainer";
+import getMain from "../../api/getMain";
 
 const Container = styled.View`
 	width: 100%;
@@ -77,24 +78,19 @@ const ListTitle = ({ typo }) => {
 	);
 };
 
-const books = [...Array(10).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `운영체제${id + 1}`,
-		image: "https://image.yes24.com/goods/89496122/XL",
-	};
-});
 
-const notes = [...Array(10).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `필기자료${id + 1}`,
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	};
-});
+
 
 const MainPage = ({ navigation }) => {
+	const [books, setBooks] = useState([]);
+	const [notes, setNotes] = useState([]);
+	const handleContents = (newBooks, newNotes) => {
+		setBooks(newBooks);
+		setNotes(newNotes);
+	};
+	useEffect(() => {
+		getMain(handleContents);
+	}, []);
 	const [pnum1, setPnum1] = useState(0);
 	const [pnum2, setPnum2] = useState(5);
 	const [pnum3, setPnum3] = useState(0);
@@ -130,6 +126,7 @@ const MainPage = ({ navigation }) => {
 	HandleSearch = (text) => {
 		setSearchContent("검색: " + text);
 	};
+
 	return (
 		<Container>
 			<CommunityHeader navigation={navigation} />
