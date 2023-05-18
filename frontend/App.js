@@ -11,6 +11,7 @@ import BookDetail from "./src/pages/BookDetail";
 import NoteDetail from "./src/pages/NoteDetail";
 import MyNotes from "./src/pages/MyNotes";
 import SearchResult from "./src/pages/SearchResult";
+import ContentsAll from "./src/pages/contentsAll";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,11 +29,16 @@ export default function App() {
 					<Stack.Screen name="BookDetail" component={BookDetail} />
 					<Stack.Screen name="NoteDetail" component={NoteDetail} />
 					<Stack.Screen name="MyNotes" component={MyNotes} />
+					<Stack.Screen name="BookAll">
+						{(props) => <ContentsAll {...props} />}
+					</Stack.Screen>
+					<Stack.Screen name="NoteAll">
+						{(props) => <ContentsAll {...props} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</RecoilRoot>
-		
 	);
 }
 //<Stack.Screen name="LogIn" component={LogIn} />
-					//<Stack.Screen name="SignUp" component={SignUp} />
+//<Stack.Screen name="SignUp" component={SignUp} />
