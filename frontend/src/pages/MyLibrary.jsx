@@ -111,7 +111,11 @@ const MyLibrary = ({ navigation }) => {
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={notes} type="note" />
+						<ListContainer
+							navigation={navigation}
+							products={notes}
+							type="note"
+						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>
 						<ViewAllButton typo="필기 전체보기" onPress={ViewAllNotesOnClick} />
@@ -123,7 +127,11 @@ const MyLibrary = ({ navigation }) => {
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={books} type="book" />
+						<ListContainer
+							navigation={navigation}
+							products={books}
+							type="book"
+						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>
 						<ViewAllButton typo="도서 전체보기" onPress={ViewAllPDFOnClick} />

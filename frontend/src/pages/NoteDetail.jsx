@@ -58,10 +58,10 @@ const AddBookLibrary = () => {
 	return Alert.alert("나의 서재에 추가");
 };
 
-const NoteDetail = () => {
+const NoteDetail = ({ navigation }) => {
 	return (
 		<Container>
-			<Header />
+			<Header navigation={navigation} />
 			<BookTitleContainer>
 				<BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>

@@ -132,6 +132,7 @@ const MainPage = ({ navigation }) => {
 			<ListWrapper>
 				<MainButtonLeft press={handleClickBookPrior} />
 				<ListContainer
+					navigation={navigation}
 					products={books.slice(pnum1, pnum2)}
 					type="book"
 					style={{ flex: 1 }}
@@ -142,6 +143,7 @@ const MainPage = ({ navigation }) => {
 			<ListWrapper>
 				<MainButtonLeft press={handleClickNotePrior} />
 				<ListContainer
+					navigation={navigation}
 					products={notes.slice(pnum3, pnum4)}
 					style={{ flex: 1 }}
 					type="note"

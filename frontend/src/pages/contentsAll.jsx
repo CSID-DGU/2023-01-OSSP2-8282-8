@@ -25,6 +25,7 @@ const ContentsAll = ({ navigation, route }) => {
 			<CommunityHeader navigation={navigation} />
 			{[...Array(parseInt(length / 5) + 1).keys()].map((i) => (
 				<ListContainer
+					navigation={navigation}
 					products={contentsList.slice(5 * i, 5 * (i + 1))}
 					type={type}
 				/>
