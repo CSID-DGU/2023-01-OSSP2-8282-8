@@ -32,6 +32,4 @@ public class Book {
     @Lob
     private byte[] bookCover;
 
-    public Book(Integer bid, String bookTitle, byte[] bookCover) {
-    }
 }
