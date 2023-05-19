@@ -18,7 +18,7 @@ public class DetailController {
         this.detailService = detailService;
     }
 
-    @GetMapping("/book/detail/{bookId}") // 도서 상세정보를 get
+    @GetMapping("/book/detail") // 도서 상세정보를 get
     public ResponseEntity<Map<String, Object>> getDetailBookData(@RequestParam("userId") String userId, @RequestParam("bookId") String bookId) {
         try {
             DetailBookDto detailBookData = detailService.getBookData(bookId);
@@ -57,7 +57,7 @@ public class DetailController {
         }
     }
 
-    @GetMapping("/note/detail/{noteId}") // 필기 상세 정보를 get
+    @GetMapping("/note/detail") // 필기 상세 정보를 get
     public ResponseEntity<Map<String, Object>> getDetailNoteData(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
         try {
             DetailNoteDto detailNoteData = detailService.getNoteData(noteId);
