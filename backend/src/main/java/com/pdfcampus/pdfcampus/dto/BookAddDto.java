@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 public class BookAddDto {
     private int bid;
-    private int uid;
+    private String uid;
     private String bookTitle;
     private String author;
     private String publisher;
