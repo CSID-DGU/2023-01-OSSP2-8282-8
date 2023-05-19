@@ -22,17 +22,19 @@ public class BookAddService {
         this.detailService = detailService;
         this.mylibRepository = mylibRepository;
     }
-    public Mylib addBook(BookAddDto addDto) {
-        Integer uidInt = Integer.parseInt(addDto.getUid());
+    public Mylib addBook(String userId, String bookId) {
+        Integer uidInt = Integer.parseInt(userId);
+        Integer bidInt = Integer.parseInt(bookId);
 
-        Book note = detailBookRepository.findById(addDto.getBid())
+        Book book = detailBookRepository.findByBid(bidInt)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid book id."));
 
-        return mylibRepository.save(new Mylib(uidInt, note));
+        return mylibRepository.save(new Mylib(uidInt, book));
     }
 
-    public boolean isDuplicated(BookAddDto addDto){
+    public boolean isDuplicated(String userId, String bookId){
         // uid에 해당하는 mylib에서 bid에 해당하는 book이 store 되어있는지 확인. stroe 되어있다면 해당 bid는 중복되는 것임
-        return detailService.isStored(addDto.getUid(), Integer.toString(addDto.getBid()));
+        System.out.println("#3333333333333");
+        return detailService.isStored(userId, bookId);
     }
 }
