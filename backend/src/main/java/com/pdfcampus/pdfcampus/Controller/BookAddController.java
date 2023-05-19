@@ -28,14 +28,12 @@ public class BookAddController {
         String userId = String.valueOf(request.get("userId"));
         String bookId = String.valueOf(request.get("bookId"));
 
-        System.out.println("1111111111111");
         if(bookAddService.isDuplicated(userId, bookId)) { // 중복되는 도서
             apiStatus.put("errorMessage", "이미 존재하는 도서");
             apiStatus.put("errorCode", "E400");
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiStatus);
         }
-        System.out.println("22222222222222");
         bookAddService.addBook(userId, bookId);
 
         apiStatus.put("errorMessage", "추가 완료");
