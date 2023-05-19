@@ -70,26 +70,6 @@ const Line = styled.View`
 	margin: 25px 0 0 0;
 `;
 
-const SubOnClick = () => {
-	Alert.alert("필기관리창");
-};
-
-const ViewAllNotesOnClick = () => {
-	Alert.alert("필기 전체보기");
-};
-
-const ViewAllPDFOnClick = () => {
-	Alert.alert("도서 전체보기");
-};
-
-const LIST1Info = {
-	name: "operating system",
-};
-
-const LIST2Info = {
-	name: "operating system",
-};
-
 const MyLibrary = ({ navigation }) => {
 	const [books, setBooks] = useState([]);
 	const [notes, setNotes] = useState([]);
@@ -105,6 +85,19 @@ const MyLibrary = ({ navigation }) => {
 	useEffect(() => {
 		getMyLib(userInfo.userId, handleContents);
 	}, []);
+
+	const ViewMyNotes = () => {
+		navigation.navigate("MyNotes");
+	};
+
+	const ViewAllNotesOnClick = () => {
+		navigation.navigate("BookAll", { type: "book" });
+	};
+
+	const ViewAllPDFOnClick = () => {
+		navigation.navigate("NoteAll", { type: "note" });
+	};
+
 	return (
 		<>
 			<Header navigation={navigation} />
@@ -113,15 +106,19 @@ const MyLibrary = ({ navigation }) => {
 				<TitleContainer>
 					<PDFCampusTypo>내가 구매한 필기</PDFCampusTypo>
 					<ButtonWrapper>
-						<CommunityButton typo="나의 필기 관리" onPress={SubOnClick} />
+						<CommunityButton typo="나의 필기 관리" onPress={ViewMyNotes} />
 					</ButtonWrapper>
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={books} type="book" />
+						<ListContainer
+							navigation={navigation}
+							products={notes}
+							type="note"
+						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>
-						<ViewAllButton typo="필기 전체보기" onPress={SubOnClick} />
+						<ViewAllButton typo="필기 전체보기" onPress={ViewAllNotesOnClick} />
 					</ViewAllButtonWrapper>
 				</ContentWrapper>
 				<Line />
@@ -130,10 +127,14 @@ const MyLibrary = ({ navigation }) => {
 				</TitleContainer>
 				<ContentWrapper>
 					<ListWrapper>
-						<ListContainer products={notes} type="note" />
+						<ListContainer
+							navigation={navigation}
+							products={books}
+							type="book"
+						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>
-						<ViewAllButton typo="도서 전체보기" onPress={SubOnClick} />
+						<ViewAllButton typo="도서 전체보기" onPress={ViewAllPDFOnClick} />
 					</ViewAllButtonWrapper>
 				</ContentWrapper>
 			</Container>
