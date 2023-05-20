@@ -6,6 +6,7 @@ const Container = styled.View`
 	width: 100%;
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
 	box-sizing: border-box;
 	margin: 0 60px;
 	padding: 0 15px;
@@ -40,7 +41,7 @@ const ListContainer = ({ navigation, products, type }) => {
 					>
 						<Image
 							source={{
-								uri: product.bookCover,
+								uri: "https://pdfampus.s3.ap-northeast-2.amazonaws.com/1.jpg",
 								//uri: {product.bookCover}
 								// product.bookCover
 							}}
