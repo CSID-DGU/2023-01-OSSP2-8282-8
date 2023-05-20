@@ -6,7 +6,6 @@ const Container = styled.View`
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
 	box-sizing: border-box;
 	margin: 0 60px;
 	padding: 0 15px;
@@ -17,7 +16,7 @@ const Container2 = styled.TouchableOpacity`
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
-	margin: 0 10px;
+	margin: 0 25px;
 `;
 
 const Nametypo = styled.Text`

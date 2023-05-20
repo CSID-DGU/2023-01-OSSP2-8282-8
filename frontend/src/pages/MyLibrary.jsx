@@ -76,8 +76,8 @@ const MyLibrary = ({ navigation }) => {
 	const [bookMore, setBookMore] = useState(false);
 	const [noteMore, setNoteMore] = useState(false);
 	const handleContents = (books, notes, bookMore, noteMore) => {
-		setBooks(books);
-		setNotes(notes);
+		setBooks(books.slice(0, 4));
+		setNotes(notes.slice(0, 4));
 		setBookMore(bookMore);
 		setNoteMore(noteMore);
 	};
