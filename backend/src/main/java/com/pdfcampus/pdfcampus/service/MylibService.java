@@ -57,7 +57,8 @@ public class MylibService {
                 .filter(mylib -> mylib.getNid() == null && mylib.getBid() != null)
                 .map(mylib -> {
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    return new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover());
+                    String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                    return new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl);
                 })
                 .toArray(MylibBookDto[]::new);
 
