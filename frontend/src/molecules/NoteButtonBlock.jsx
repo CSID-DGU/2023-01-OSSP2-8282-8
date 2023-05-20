@@ -2,21 +2,20 @@ import styled from "styled-components";
 import { TouchableOpacity } from "react-native";
 
 const Container = styled.View`
-	width: 40%;
 	height: 200px;
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-end;
 `;
 
-const StyledBuyButton = styled.View`
+const StyledBuyButton = styled.TouchableOpacity`
 	box-sizing: border-box;
 	margin: 0 100px;
 `;
 
 const ButtonWrapper = styled.View`
 	height: 45px;
-	width: 170px;
+	max-width: 210px;
 	border-radius: 15px;
 	background: #56aaf6;
 	align-items: center;
@@ -64,7 +63,7 @@ const GotoLibraryButton = ({ press }) => {
 	return (
 		<TouchableOpacity onPress={press}>
 			<ButtonWrapper>
-				<ButtonTypo>나의 필기로 가기</ButtonTypo>
+				<ButtonTypo>나의 서재에서 확인하기</ButtonTypo>
 			</ButtonWrapper>
 		</TouchableOpacity>
 	);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { View, Alert } from "react-native";
+import { View, Alert, Modal } from "react-native";
 
 import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
@@ -8,6 +8,7 @@ import LowerDetail from "../organisms/LowerDetail";
 import getNoteDetail from "../../api/getNoteDetail";
 import { useRecoilValue } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
+import postBuyNote from "../../api/postBuyNote";
 
 const Container = styled.View`
 	width: 100%;
@@ -43,13 +44,48 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const Move2Library = () => {
-	return Alert.alert("나의 서재로 이동");
-};
+const ModalContiner = styled.View`
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`;
 
-const AddBookLibrary = () => {
-	return Alert.alert("나의 서재에 추가");
-};
+const BlockTypo = styled.Text`
+	font-size: 20px;
+	font-weight: 800;
+`;
+
+const Block = styled.View`
+	width: 400px;
+	height: 300px;
+	align-items: center;
+	justify-content: space-around;
+	border-radius: 20px;
+	border-width: 2px;
+	border-color: #ccc;
+	background: white;
+`;
+
+const ButtonsContainer = styled.View`
+	width: 80%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+`;
+const ButtonWrapper = styled.TouchableOpacity`
+	width: 140px;
+	height: 66px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 11px;
+	background: #56aaf6;
+`;
+
+const Buttontypo = styled.Text`
+	font-size: 20px;
+	font-weight: 800;
+	color: white;
+`;
 
 const NoteDetail = ({ navigation, route }) => {
 	const [noteDetail, setNoteDetail] = useState({});
@@ -58,12 +94,45 @@ const NoteDetail = ({ navigation, route }) => {
 	};
 
 	const userId = useRecoilValue(UserInfoState).userId;
+	const { id } = route.params;
 	useEffect(() => {
-		const { id } = route.params;
 		getNoteDetail(id, userId, handleNoteDetail);
 	}, []);
+
+	const Move2Library = () => {
+		navigation.navigate("MyLibrary");
+	};
+
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleBuyNote = () => {
+		setModalVisible(true);
+	};
+
+	const buyNote = () => {
+		postBuyNote(
+			{
+				userId: userId,
+				noteId: id,
+			},
+			handleBuyNote
+		);
+	};
+
 	return (
 		<Container>
+			<Modal visible={modalVisible} transparent={true}>
+				<ModalContiner>
+					<Block>
+						<BlockTypo>필기가 구매되었습니다.</BlockTypo>
+						<ButtonsContainer>
+							<ButtonWrapper onPress={() => setModalVisible(false)}>
+								<Buttontypo>확인</Buttontypo>
+							</ButtonWrapper>
+						</ButtonsContainer>
+					</Block>
+				</ModalContiner>
+			</Modal>
+
 			<Header navigation={navigation} />
 			<BookTitleContainer>
 				<BookTitleTypo>{noteDetail.bookTitle}</BookTitleTypo>
@@ -72,7 +141,7 @@ const NoteDetail = ({ navigation, route }) => {
 				<UpperDetail
 					contentInfo={noteDetail}
 					truepress={Move2Library}
-					falsepress={AddBookLibrary}
+					falsepress={buyNote}
 					isBook={false}
 				/>
 				<DetailInfoDivider />
