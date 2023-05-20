@@ -1,18 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-
-
 const Container = styled.View`
 	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	flex-direction: column;
-	background:green;
 `;
 const DateContainer = styled.View`
+	height: 80px;
 	display: flex;
-	flex: 1;
+	justify-content: space-between;
+	box-sizing: border-box;
+	padding: 0 0 20px 0;
 `;
 const DateInfoTypo = styled.Text`
 	font-size: 20px;

@@ -17,17 +17,16 @@ const Container = styled.View`
 const InfoWrapper = styled.View`
 	display: flex;
 	flex-direction: row;
-	align-items: center;
 `;
 
 const UpperDetail = ({ contentInfo, truepress, falsepress, isBook }) => {
-	const { bookCover, publicationDate, modifiedDate, isStored } = contentInfo;
+	const { bookCover, publicationYear, modifiedDate, isStored } = contentInfo;
 	return (
 		<Container>
 			<InfoWrapper>
 				<ImageBlock img={bookCover} />
 				<DateBlock
-					PublicationDate={publicationDate}
+					PublicationDate={publicationYear}
 					ModifiedDate={modifiedDate}
 				/>
 			</InfoWrapper>
