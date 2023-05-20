@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
@@ -6,6 +6,8 @@ import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
 import getBookDetail from "../../api/getBookDetail";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	width: 100%;
@@ -59,29 +61,36 @@ const AddBookLibrary = () => {
 };
 
 const BookDetail = ({ navigation, route }) => {
+	const userId = useRecoilValue(UserInfoState).userId;
+
+	const [bookDetail, setBookDetail] = useState({});
+	const handleBookDetail = (detail) => {
+		setBookDetail(detail);
+	};
+
 	useEffect(() => {
 		const { id } = route.params;
-		getBookDetail(id);
+		getBookDetail(id, userId, handleBookDetail);
 	}, []);
 	return (
 		<Container>
 			<Header navigation={navigation} />
 			<BookTitleContainer>
-				<BookTitleTypo>{BookInfo.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{bookDetail.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={BookInfo}
+					contentInfo={bookDetail}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
 					isBook={true}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={BookInfo.bookCover}
-					img2={BookInfo.bookCover}
-					img3={BookInfo.bookCover}
-					bookDetailContent={BookInfo.DetailInfo}
+					img1={bookDetail.bookCover}
+					img2={bookDetail.bookCover}
+					img3={bookDetail.bookCover}
+					bookDetailContent={bookDetail.DetailInfo}
 				/>
 			</ContentContainer>
 		</Container>
