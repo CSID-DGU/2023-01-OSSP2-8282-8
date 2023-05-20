@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
 import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
+import getNoteDetail from "../../api/getNoteDetail";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
 
 const Container = styled.View`
 	width: 100%;
@@ -40,16 +43,6 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const NoteInfo = {
-	bookTitle: "운영체제 필기자료",
-	bookCover:
-		"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	isStored: false,
-	publicationDate: "0000년 0월 0일 오후 00:00",
-	modifiedDate: "0000년 0월 0일 오후 00:00",
-	DetailInfo: "상세정보입니다~~~~~",
-};
-
 const Move2Library = () => {
 	return Alert.alert("나의 서재로 이동");
 };
@@ -58,26 +51,36 @@ const AddBookLibrary = () => {
 	return Alert.alert("나의 서재에 추가");
 };
 
-const NoteDetail = ({ navigation }) => {
+const NoteDetail = ({ navigation, route }) => {
+	const [noteDetail, setNoteDetail] = useState({});
+	const handleNoteDetail = (detail) => {
+		setNoteDetail(detail);
+	};
+
+	const userId = useRecoilValue(UserInfoState).userId;
+	useEffect(() => {
+		const { id } = route.params;
+		getNoteDetail(id, userId, handleNoteDetail);
+	}, []);
 	return (
 		<Container>
 			<Header navigation={navigation} />
 			<BookTitleContainer>
-				<BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{noteDetail.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={NoteInfo}
+					contentInfo={noteDetail}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
 					isBook={false}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={NoteInfo.bookCover}
-					img2={NoteInfo.bookCover}
-					img3={NoteInfo.bookCover}
-					bookDetailContent={NoteInfo.DetailInfo}
+					img1={noteDetail.bookCover}
+					img2={noteDetail.bookCover}
+					img3={noteDetail.bookCover}
+					bookDetailContent={noteDetail.DetailInfo}
 				/>
 			</ContentContainer>
 		</Container>
