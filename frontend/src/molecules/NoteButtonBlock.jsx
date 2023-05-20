@@ -8,10 +8,7 @@ const Container = styled.View`
 	align-items: flex-end;
 `;
 
-const StyledBuyButton = styled.TouchableOpacity`
-	box-sizing: border-box;
-	margin: 0 100px;
-`;
+const StyledBuyButton = styled.TouchableOpacity``;
 
 const ButtonWrapper = styled.View`
 	height: 45px;
@@ -22,6 +19,8 @@ const ButtonWrapper = styled.View`
 	justify-content: space-around;
 	display: flex;
 	flex-direction: row;
+	box-sizing: border-box;
+	padding: 0 6px;
 `;
 const PriceWrapper = styled.View`
 	height: 30px;
