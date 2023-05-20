@@ -14,6 +14,6 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
     List<Note> findTop10ByOrderByNidDesc();
 
     List<Note> findByNoteTitleContainingIgnoreCase(String keyword);
-    Optional<Note> findByBookId(String bookId);
+    Optional<Note> findByBook(Integer bookId);
 
 }

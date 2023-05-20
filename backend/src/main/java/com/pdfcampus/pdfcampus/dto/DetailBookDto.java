@@ -15,6 +15,7 @@ public class DetailBookDto {
     private String author;
     private String publisher;
     private Integer publicationYear;
-    private byte[] bookCover;
+    private String bookCover; // URL of the book cover image
     private boolean isStored;
+
 }

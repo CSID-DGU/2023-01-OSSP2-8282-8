@@ -1,4 +1,5 @@
 package com.pdfcampus.pdfcampus.Controller;
+import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.service.ReadBookService;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping
 public class ReadBookController {
 
     @Autowired
@@ -23,7 +26,9 @@ public class ReadBookController {
     @GetMapping("/read/book/{bookId}")
     public ResponseEntity<Map<String, Object>> getBook(@PathVariable String bookId) {
         try {
-            Book book = readBookService.getBookById(bookId);
+            System.out.print("Controller: "+bookId+"\n");
+            DetailBookDto book = readBookService.getBookById(bookId);
+            System.out.print(book.getBid());
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
             List<byte[]> pages = new ArrayList<>();
