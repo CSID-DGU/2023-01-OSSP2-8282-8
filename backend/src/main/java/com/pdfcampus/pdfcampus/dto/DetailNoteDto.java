@@ -23,5 +23,5 @@ public class DetailNoteDto {
     private Integer authorId;
     private String publisher;
     private Integer publicationYear;
-    private byte[] bookCover;
+    private String bookCover;
 }

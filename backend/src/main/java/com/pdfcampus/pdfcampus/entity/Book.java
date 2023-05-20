@@ -30,8 +30,6 @@ public class Book {
 
     @Column(name = "bookCover")
     @Lob
-    private byte[] bookCover;
+    private String bookCover;
 
-    public Book(Integer bid, String bookTitle, byte[] bookCover) {
-    }
 }
