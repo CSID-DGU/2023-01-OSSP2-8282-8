@@ -49,40 +49,30 @@ const TitleButton = ({ typo, onPress }) => {
 	);
 };
 
-const ClickHome = (navigation) => {
-	navigation.navigate("MainPage");
-};
-
-const ClickHandelMyPage = (navigation) => {
-	navigation.navigate("MyPage");
-};
-const ClickHandelMyLibrary = (navigation) => {
-	navigation.navigate("MyLibrary");
-};
-const ClickHandelLogout = (navigation) => {
-	navigation.navigate("LogIn");
-};
-
 const CommunityHeader = ({ navigation }) => {
-	console.log(navigation);
+	const ClickHome = () => {
+		navigation.navigate("MainPage");
+	};
+
+	const ClickHandelMyPage = () => {
+		navigation.navigate("MyPage");
+	};
+	const ClickHandelMyLibrary = () => {
+		navigation.navigate("MyLibrary");
+	};
+	const ClickHandelLogout = () => {
+		navigation.navigate("LogIn");
+	};
+
 	return (
 		<HeaderContainer>
-			<TouchableOpacity onPress={() => ClickHome(navigation)}>
+			<TouchableOpacity onPress={ClickHome}>
 				<TitleTypo>PDFCampus</TitleTypo>
 			</TouchableOpacity>
 			<ButtonContainer>
-				<TitleButton
-					typo="마이페이지"
-					onPress={() => ClickHandelMyPage(navigation)}
-				/>
-				<TitleButton
-					typo="나의 서재"
-					onPress={() => ClickHandelMyLibrary(navigation)}
-				/>
-				<TitleButton
-					typo="로그아웃"
-					onPress={() => ClickHandelLogout(navigation)}
-				/>
+				<TitleButton typo="마이페이지" onPress={ClickHandelMyPage} />
+				<TitleButton typo="나의 서재" onPress={ClickHandelMyLibrary} />
+				<TitleButton typo="로그아웃" onPress={ClickHandelLogout} />
 			</ButtonContainer>
 		</HeaderContainer>
 	);

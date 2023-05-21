@@ -62,9 +62,10 @@ public class Mylib {
         }
     }
 
-    public Mylib(Integer uid, Note note) {
+    public Mylib(Integer uid, Note note, Book book) {
         this.uid = uid;
         this.note = note;
+        this.book = book;
     }
 
     public Mylib(Integer uid, Book book) {
