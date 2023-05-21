@@ -34,5 +34,3 @@ export default function App() {
 		
 	);
 }
-//<Stack.Screen name="LogIn" component={LogIn} />
-					//<Stack.Screen name="SignUp" component={SignUp} />

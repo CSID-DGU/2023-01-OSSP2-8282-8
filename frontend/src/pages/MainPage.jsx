@@ -136,6 +136,7 @@ const MainPage = ({ navigation }) => {
 				<MainButtonLeft press={handleClickBookPrior} />
 				<ListContainer
 					products={books.slice(pnum1, pnum2)}
+					type="book"
 					style={{ flex: 1 }}
 				/>
 				<MainButtonRight press={handleClickBookNext} />
@@ -145,6 +146,7 @@ const MainPage = ({ navigation }) => {
 				<MainButtonLeft press={handleClickNotePrior} />
 				<ListContainer
 					products={notes.slice(pnum3, pnum4)}
+					type="note"
 					style={{ flex: 1 }}
 				/>
 				<MainButtonRight press={handleClickNoteNext} />
@@ -154,3 +156,20 @@ const MainPage = ({ navigation }) => {
 };
 
 export default MainPage;
+
+/*const books = [...Array(10).keys()].map((id) => {
+	return {
+		id: id + 1,
+		name: `운영체제${id + 1}`,
+		image: "https://image.yes24.com/goods/89496122/XL",
+	};
+});//api적용시 삭제
+
+const notes = [...Array(10).keys()].map((id) => {
+	return {
+		id: id + 1,
+		name: `필기자료${id + 1}`,
+		image:
+			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
+	};
+});//api적용시 삭제*/
