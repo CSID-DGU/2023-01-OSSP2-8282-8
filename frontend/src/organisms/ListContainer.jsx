@@ -16,7 +16,7 @@ const Container2 = styled.TouchableOpacity`
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
-	margin: 0 10px;
+	margin: 0 25px;
 `;
 
 const Nametypo = styled.Text`
@@ -40,7 +40,7 @@ const ListContainer = ({ navigation, products, type }) => {
 					>
 						<Image
 							source={{
-								uri: product.bookCover,
+								uri: "https://pdfampus.s3.ap-northeast-2.amazonaws.com/1.jpg",
 								//uri: {product.bookCover}
 								// product.bookCover
 							}}
