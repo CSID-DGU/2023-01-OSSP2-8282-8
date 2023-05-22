@@ -32,12 +32,6 @@ public class MylibService {
     public MylibDto getMylibData(String uid) {
         Integer uidInt = Integer.parseInt(uid);
         Mylib[] mylibArray = mylibRepository.findByUid(uidInt).toArray(new Mylib[0]);
-        /*for (Mylib mylib : mylibArray) {
-            System.out.println("mid: " + mylib.getMid());
-            System.out.println("uid: " + mylib.getUid());
-            System.out.println("nid: " + mylib.getNid());
-            System.out.println("bid: " + mylib.getBid());
-        } 테스트용 */
         Arrays.sort(mylibArray, Comparator.comparing(Mylib::getMid).reversed());
 
         MylibDto mylibData = new MylibDto();
@@ -48,7 +42,8 @@ public class MylibService {
                 .map(mylib -> {
                     Note note = noteRepository.findByNid(mylib.getNid()).get(0);
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    return new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover());
+                    String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                    return new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl);
                 })
                 .toArray(MylibNoteDto[]::new);
         for (MylibNoteDto note : noteArray) {
@@ -62,7 +57,8 @@ public class MylibService {
                 .filter(mylib -> mylib.getNid() == null && mylib.getBid() != null)
                 .map(mylib -> {
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    return new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover());
+                    String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                    return new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl);
                 })
                 .toArray(MylibBookDto[]::new);
 
@@ -78,7 +74,8 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() != null && mylib.getBid() != null) {
                 Note note = noteRepository.findByNid(mylib.getNid()).get(0);
-                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover()));
+                String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl));
             }
         }
         Collections.sort(noteList, Comparator.comparing(MylibNoteDto::getNoteId).reversed());
@@ -92,7 +89,8 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() == null && mylib.getBid() != null) {
                 Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover()));
+                String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl));
             }
         }
         Collections.sort(bookList, Comparator.comparing(MylibBookDto::getBookId).reversed());
