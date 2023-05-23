@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Modal } from "react-native";
 
 const ModalContiner = styled.View`
 	height: 100%;
@@ -43,7 +44,13 @@ const Buttontypo = styled.Text`
 	color: white;
 `;
 
-const Modal = ({ typo, buttonTypo1, buttonTypo2, visible, handleModal }) => {
+const CustomedModal = ({
+	typo,
+	buttonTypo1,
+	buttonTypo2,
+	visible,
+	handleModal,
+}) => {
 	return (
 		<Modal visible={visible} transparent={true}>
 			<ModalContiner>
@@ -65,4 +72,4 @@ const Modal = ({ typo, buttonTypo1, buttonTypo2, visible, handleModal }) => {
 	);
 };
 
-export default Modal;
+export default CustomedModal;
