@@ -57,5 +57,3 @@ const ListContainer = ({ navigation, products, type }) => {
 };
 
 export default ListContainer;
-//{product[type + "Title"]/*{product.title} */}
-//[type + "Id"]

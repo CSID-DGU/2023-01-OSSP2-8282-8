@@ -14,6 +14,8 @@ import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
 
 const Stack = createNativeStackNavigator();
+//<Stack.Screen name="LogIn" component={LogIn} />
+//<Stack.Screen name="SignUp" component={SignUp} />
 
 export default function App() {
 	return (
@@ -44,5 +46,3 @@ export default function App() {
 		</RecoilRoot>
 	);
 }
-//<Stack.Screen name="LogIn" component={LogIn} />
-//<Stack.Screen name="SignUp" component={SignUp} />
