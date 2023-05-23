@@ -2,10 +2,10 @@ import { Axios } from "./axios";
 
 export default getNoteDetail = async (id, userId, handleNoteDetail) => {
 	try {
-		const res = await Axios.get(`/book/detail`, {
+		const res = await Axios.get(`/note/detail`, {
 			params: {
 				userId: userId,
-				bookId: id,
+				noteId: id,
 			},
 		});
 		const data = res.data.data;

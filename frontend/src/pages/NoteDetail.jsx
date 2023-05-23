@@ -135,20 +135,25 @@ const NoteDetail = ({ navigation, route }) => {
 
 			<Header navigation={navigation} />
 			<BookTitleContainer>
-				<BookTitleTypo>{noteDetail.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{noteDetail.noteTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={noteDetail}
+					contentInfo={{
+						bookCover: noteDetail.bookInfo?.bookCover,
+						publicationYear: noteDetail.createdAt,
+						modifiedDate: noteDetail.modifiedAt,
+						isStored: noteDetail.isBought,
+					}}
 					truepress={Move2Library}
 					falsepress={buyNote}
 					isBook={false}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={noteDetail.bookCover}
-					img2={noteDetail.bookCover}
-					img3={noteDetail.bookCover}
+					img1={noteDetail.bookInfo?.bookCover}
+					img2={noteDetail.bookInfo?.bookCover}
+					img3={noteDetail.bookInfo?.bookCover}
 					bookDetailContent={noteDetail.DetailInfo}
 				/>
 			</ContentContainer>
