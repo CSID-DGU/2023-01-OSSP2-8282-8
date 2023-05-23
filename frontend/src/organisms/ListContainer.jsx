@@ -20,7 +20,7 @@ const Container2 = styled.TouchableOpacity`
 `;
 
 const Nametypo = styled.Text`
-	font-size: 20;
+	font-size: 20px;
 `;
 const ListContainer = ({ navigation, products, type }) => {
 	return (
@@ -28,7 +28,7 @@ const ListContainer = ({ navigation, products, type }) => {
 			{products.map((product) => {
 				return (
 					<Container2
-						key={product.bookId}
+						key={type == "book" ? product.bookId : product.noteId}
 						onPress={() => {
 							navigation.navigate(
 								type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
