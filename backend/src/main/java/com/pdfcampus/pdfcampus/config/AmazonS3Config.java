@@ -14,7 +14,7 @@ public class AmazonS3Config {
     @Value("${aws.accessKeyId}")
     private String awsId;
 
-    @Value("${aws.secretKey}")
+    @Value("${aws.secretAccessKey}")
     private String awsKey;
 
     @Value("${aws.region}")
