@@ -19,7 +19,7 @@ const InfoWrapper = styled.View`
 	flex-direction: row;
 `;
 
-const UpperDetail = ({ contentInfo, truepress, falsepress, isBook }) => {
+const UpperDetail = ({ contentInfo, truepress, falsepress, isBook, price }) => {
 	const { bookCover, publicationYear, modifiedDate, isStored } = contentInfo;
 	return (
 		<Container>
@@ -41,6 +41,7 @@ const UpperDetail = ({ contentInfo, truepress, falsepress, isBook }) => {
 					isStored={isStored}
 					truepress={truepress}
 					falsepress={falsepress}
+					price={price}
 				/>
 			)}
 		</Container>

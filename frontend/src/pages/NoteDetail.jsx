@@ -148,6 +148,7 @@ const NoteDetail = ({ navigation, route }) => {
 					truepress={Move2Library}
 					falsepress={buyNote}
 					isBook={false}
+					price={noteDetail.price}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail

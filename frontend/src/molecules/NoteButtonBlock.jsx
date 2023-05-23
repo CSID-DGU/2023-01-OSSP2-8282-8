@@ -45,12 +45,12 @@ const PriceTypo = styled.Text`
 	font-size: 18px;
 	font-weight: 600;
 `;
-const BuyButton = ({ press }) => {
+const BuyButton = ({ press, price }) => {
 	return (
 		<StyledBuyButton onPress={press}>
 			<ButtonWrapper>
 				<PriceWrapper>
-					<PriceTypo>1400₩</PriceTypo>
+					<PriceTypo>{price}₩</PriceTypo>
 				</PriceWrapper>
 				<ButtonTypo>구매</ButtonTypo>
 			</ButtonWrapper>
@@ -68,13 +68,13 @@ const GotoLibraryButton = ({ press }) => {
 	);
 };
 
-const NoteButtonBlock = ({ isStored, truepress, falsepress }) => {
+const NoteButtonBlock = ({ isStored, truepress, falsepress, price }) => {
 	return (
 		<Container>
 			{isStored ? (
 				<GotoLibraryButton press={truepress} />
 			) : (
-				<BuyButton press={falsepress} />
+				<BuyButton press={falsepress} price={price} />
 			)}
 		</Container>
 	);
