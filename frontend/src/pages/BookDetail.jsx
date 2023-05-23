@@ -54,12 +54,16 @@ const BookDetail = ({ navigation, route }) => {
 		setBookDetail(detail);
 	};
 
+	const handleAddBook = () => {
+		setModalVisible(true);
+	};
+
 	const Move2Library = () => {
 		navigation.navigate("MyLibrary");
 	};
 
 	const AddBookLibrary = () => {
-		postAddBook(id, userId);
+		postAddBook(id, userId, handleAddBook);
 	};
 
 	useEffect(() => {
