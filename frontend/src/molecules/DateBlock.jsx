@@ -17,17 +17,24 @@ const DateInfoTypo = styled.Text`
 	font-weight: 600;
 `;
 
-const DateBlock = ({ PublicationDate, ModifiedDate }) => {
+const DateBlock = ({ info1, info2, isBook }) => {
 	return (
 		<Container>
 			<DateContainer>
-				<DateInfoTypo>등록 날짜</DateInfoTypo>
-				<DateInfoTypo>{PublicationDate}</DateInfoTypo>
+				<DateInfoTypo>{isBook ? "출판 년도" : "등록 날짜"}</DateInfoTypo>
+				<DateInfoTypo>{info1}</DateInfoTypo>
 			</DateContainer>
-			<DateContainer>
-				<DateInfoTypo>최근 수정 날짜</DateInfoTypo>
-				<DateInfoTypo>{ModifiedDate}</DateInfoTypo>
-			</DateContainer>
+			{isBook ? (
+				<DateContainer>
+					<DateInfoTypo>최근 수정 날짜</DateInfoTypo>
+					<DateInfoTypo>{info2}</DateInfoTypo>
+				</DateContainer>
+			) : (
+				<DateContainer>
+					<DateInfoTypo>최근 수정 날짜</DateInfoTypo>
+					<DateInfoTypo>{info2}</DateInfoTypo>
+				</DateContainer>
+			)}
 		</Container>
 	);
 };

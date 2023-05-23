@@ -9,7 +9,7 @@ export default getBookDetail = async (id, userId, handleBookDetail) => {
 			},
 		});
 		const data = res.data.data;
-		handleBookDetail(data);
+		handleBookDetail({ ...data, modifiedDate: data.author });
 	} catch (e) {
 		console.log(e);
 	}

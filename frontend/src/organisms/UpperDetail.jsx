@@ -26,8 +26,9 @@ const UpperDetail = ({ contentInfo, truepress, falsepress, isBook, price }) => {
 			<InfoWrapper>
 				<ImageBlock img={bookCover} />
 				<DateBlock
-					PublicationDate={publicationYear}
-					ModifiedDate={modifiedDate}
+					info1={publicationYear}
+					info2={modifiedDate}
+					isBook={isBook}
 				/>
 			</InfoWrapper>
 			{isBook ? (

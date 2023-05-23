@@ -8,6 +8,8 @@ import LowerDetail from "../organisms/LowerDetail";
 import getBookDetail from "../../api/getBookDetail";
 import { useRecoilValue } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
+import postAddBook from "../../api/postAddBook";
+import Modal from "../organisms/Modal";
 
 const Container = styled.View`
 	width: 100%;
@@ -43,37 +45,39 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const BookInfo = {
-	bookTitle: "운영체제",
-	bookCover: "https://image.yes24.com/goods/89496122/XL",
-	isStored: false,
-	publicationDate: "0000년 0월 0일 오후 00:00",
-	modifiedDate: "0000년 0월 0일 오후 00:00",
-	DetailInfo: "상세정보입니다~~~~~",
-};
-
-const Move2Library = () => {
-	return Alert.alert("나의 서재로 이동");
-};
-
-const AddBookLibrary = () => {
-	return Alert.alert("나의 서재에 추가");
-};
-
 const BookDetail = ({ navigation, route }) => {
 	const userId = useRecoilValue(UserInfoState).userId;
+	const { id } = route.params;
 
 	const [bookDetail, setBookDetail] = useState({});
 	const handleBookDetail = (detail) => {
 		setBookDetail(detail);
 	};
 
+	const Move2Library = () => {
+		navigation.navigate("MyLibrary");
+	};
+
+	const AddBookLibrary = () => {
+		postAddBook(id, userId);
+	};
+
 	useEffect(() => {
-		const { id } = route.params;
 		getBookDetail(id, userId, handleBookDetail);
 	}, []);
+
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleModal = () => {
+		setModalVisible(false);
+	};
 	return (
 		<Container>
+			<Modal
+				typo="도서가 추가되었습니다."
+				buttonTypo1="확인"
+				visible={modalVisible}
+				handleModal={handleModal}
+			/>
 			<Header navigation={navigation} />
 			<BookTitleContainer>
 				<BookTitleTypo>{bookDetail.bookTitle}</BookTitleTypo>
