@@ -2,27 +2,25 @@ import styled from "styled-components";
 import { TouchableOpacity } from "react-native";
 
 const Container = styled.View`
-	width: 40%;
 	height: 200px;
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-end;
 `;
 
-const StyledBuyButton = styled.View`
-	box-sizing: border-box;
-	margin: 0 100px;
-`;
+const StyledBuyButton = styled.TouchableOpacity``;
 
 const ButtonWrapper = styled.View`
 	height: 45px;
-	width: 170px;
+	max-width: 210px;
 	border-radius: 15px;
 	background: #56aaf6;
 	align-items: center;
 	justify-content: space-around;
 	display: flex;
 	flex-direction: row;
+	box-sizing: border-box;
+	padding: 0 6px;
 `;
 const PriceWrapper = styled.View`
 	height: 30px;
@@ -47,12 +45,12 @@ const PriceTypo = styled.Text`
 	font-size: 18px;
 	font-weight: 600;
 `;
-const BuyButton = ({ press }) => {
+const BuyButton = ({ press, price }) => {
 	return (
 		<StyledBuyButton onPress={press}>
 			<ButtonWrapper>
 				<PriceWrapper>
-					<PriceTypo>1400₩</PriceTypo>
+					<PriceTypo>{price}₩</PriceTypo>
 				</PriceWrapper>
 				<ButtonTypo>구매</ButtonTypo>
 			</ButtonWrapper>
@@ -64,19 +62,19 @@ const GotoLibraryButton = ({ press }) => {
 	return (
 		<TouchableOpacity onPress={press}>
 			<ButtonWrapper>
-				<ButtonTypo>나의 필기로 가기</ButtonTypo>
+				<ButtonTypo>나의 서재에서 확인하기</ButtonTypo>
 			</ButtonWrapper>
 		</TouchableOpacity>
 	);
 };
 
-const NoteButtonBlock = ({ isStored, truepress, falsepress }) => {
+const NoteButtonBlock = ({ isStored, truepress, falsepress, price }) => {
 	return (
 		<Container>
 			{isStored ? (
 				<GotoLibraryButton press={truepress} />
 			) : (
-				<BuyButton press={falsepress} />
+				<BuyButton press={falsepress} price={price} />
 			)}
 		</Container>
 	);
