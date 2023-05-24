@@ -176,23 +176,23 @@ const SearchButton = ({ press, type }) => {
 };
 
 const SearchResult = ({ navigation, route }) => {
+	const { type, keyword } = route.params;
+
 	const [SearchContent, setSearchContent] = useState(""); //검색 키워드 저장
 	const [contents, setContents] = useState([]);
-	const [searchTypeText, setSearchTypeText] = useState("도서");
-	const [searchType, setSearchType] = useState("");
+	const [searchTypeText, setSearchTypeText] = useState(
+		type == "book" ? "도서" : "필기"
+	);
 
 	const userId = useRecoilValue(UserInfoState).userId;
-
-	const { type, keyword } = route.params;
-	console.log("keywor:", keyword);
 
 	const handleContents = (contentsList) => {
 		setContents(contentsList);
 	};
 	const SearchClick = () => {
-		setSearchType(searchType === "도서" ? "book" : "note"); //books 나 notes 로 지정하면 오류나서 book과 note로 대체
+		//books 나 notes 로 지정하면 오류나서 book과 note로 대체
 		navigation.navigate("SearchResult", {
-			type: searchType,
+			type: searchTypeText == "도서" ? "book" : "note",
 			keyword: SearchContent,
 		});
 	};

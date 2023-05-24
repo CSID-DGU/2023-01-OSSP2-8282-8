@@ -118,7 +118,6 @@ const MainPage = ({ navigation }) => {
 	const [pnum4, setPnum4] = useState(5);
 	const [SearchContent, setSearchContent] = useState(""); //검색 키워드 저장
 	const [searchTypeText, setSearchTypeText] = useState("도서");
-	const [searchType, setSearchType] = useState("book");
 	const handleContents = (newBooks, newNotes) => {
 		setBooks(newBooks);
 		setNotes(newNotes);
@@ -127,14 +126,13 @@ const MainPage = ({ navigation }) => {
 		getMain(handleContents);
 	}, []);
 	const SearchClick = () => {
-		setSearchType(searchTypeText === "도서" ? "book" : "note"); //books 나 notes 로 지정하면 오류나서 book과 note로 대체
 		navigation.navigate("SearchResult", {
-			type: searchType,
+			type: searchTypeText == "도서" ? "book" : "note",
 			keyword: SearchContent,
 		});
 	};
 	const TypeSelect = () => {
-		if (searchTypeText === "도서") {
+		if (searchTypeText == "도서") {
 			setSearchTypeText("필기");
 		} else {
 			setSearchTypeText("도서");
