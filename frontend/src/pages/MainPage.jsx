@@ -13,6 +13,7 @@ const Container = styled.View`
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow-x: scroll;
 `;
 const ListWrapper = styled.View`
 	width: 80%;
@@ -38,6 +39,36 @@ const TitleTypo = styled.Text`
 	color: black;
 	font-weight: 900;
 `;
+
+const SearchContainer = styled.View`
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+`;
+const ButtonWrapper = styled.View`
+	width: 60px;
+	height: 38px;
+	border-radius: 11px;
+	background: #848484;
+	align-items: center;
+	justify-content: center;
+`;
+const ButtonTypo = styled.Text`
+	font-size: 20px;
+	color: white;
+`;
+
+const SearchButton = ({ press, type }) => {
+	return (
+		<TouchableOpacity onPress={press}>
+			<ButtonWrapper>
+				<ButtonTypo>{type}</ButtonTypo>
+			</ButtonWrapper>
+		</TouchableOpacity>
+	);
+};
 
 const MainButtonLeft = ({ press }) => {
 	return (
@@ -81,6 +112,13 @@ const ListTitle = ({ typo }) => {
 const MainPage = ({ navigation }) => {
 	const [books, setBooks] = useState([]);
 	const [notes, setNotes] = useState([]);
+	const [pnum1, setPnum1] = useState(0);
+	const [pnum2, setPnum2] = useState(5);
+	const [pnum3, setPnum3] = useState(0);
+	const [pnum4, setPnum4] = useState(5);
+	const [SearchContent, setSearchContent] = useState(""); //검색 키워드 저장
+	const [searchTypeText, setSearchTypeText] = useState("도서");
+	const [searchType, setSearchType] = useState("book");
 	const handleContents = (newBooks, newNotes) => {
 		setBooks(newBooks);
 		setNotes(newNotes);
@@ -88,11 +126,21 @@ const MainPage = ({ navigation }) => {
 	useEffect(() => {
 		getMain(handleContents);
 	}, []);
-	const [pnum1, setPnum1] = useState(0);
-	const [pnum2, setPnum2] = useState(5);
-	const [pnum3, setPnum3] = useState(0);
-	const [pnum4, setPnum4] = useState(5);
-	const [SearchContent, setSearchContent] = useState(""); //검색 키워드 저장
+	const SearchClick = () => {
+		setSearchType(searchTypeText === "도서" ? "book" : "note"); //books 나 notes 로 지정하면 오류나서 book과 note로 대체
+		navigation.navigate("SearchResult", {
+			type: searchType,
+			keyword: SearchContent,
+		});
+	};
+	const TypeSelect = () => {
+		if (searchTypeText === "도서") {
+			setSearchTypeText("필기");
+		} else {
+			setSearchTypeText("도서");
+		}
+	};
+
 	function handleClickBookNext() {
 		if (pnum1 === 0) {
 			setPnum1(5);
@@ -117,17 +165,17 @@ const MainPage = ({ navigation }) => {
 			setPnum4(5);
 		}
 	}
-	SearchClick = () => {
-		Alert.alert(SearchContent);
-	};
 	HandleSearch = (text) => {
-		setSearchContent("검색: " + text);
+		setSearchContent(text);
 	};
 
 	return (
 		<Container>
 			<CommunityHeader navigation={navigation} />
-			<Search press={SearchClick} changeHandler={HandleSearch} />
+			<SearchContainer>
+				<SearchButton press={TypeSelect} type={searchTypeText} />
+				<Search press={SearchClick} changeHandler={HandleSearch} />
+			</SearchContainer>
 			<ListTitle typo="신규 도서 컨텐츠" />
 			<ListWrapper>
 				<MainButtonLeft press={handleClickBookPrior} />
@@ -147,7 +195,6 @@ const MainPage = ({ navigation }) => {
 					products={notes.slice(pnum3, pnum4)}
 					type="note"
 					style={{ flex: 1 }}
-					
 				/>
 				<MainButtonRight press={handleClickNoteNext} />
 			</ListWrapper>
@@ -156,20 +203,3 @@ const MainPage = ({ navigation }) => {
 };
 
 export default MainPage;
-
-/*const books = [...Array(10).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `운영체제${id + 1}`,
-		image: "https://image.yes24.com/goods/89496122/XL",
-	};
-});//api적용시 삭제
-
-const notes = [...Array(10).keys()].map((id) => {
-	return {
-		id: id + 1,
-		name: `필기자료${id + 1}`,
-		image:
-			"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	};
-});//api적용시 삭제*/
