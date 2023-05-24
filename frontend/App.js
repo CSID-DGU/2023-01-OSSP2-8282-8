@@ -27,7 +27,9 @@ export default function App() {
 					<Stack.Screen name="MainPage" component={MainPage} />
 					<Stack.Screen name="MyPage" component={MyPage} />
 					<Stack.Screen name="MyLibrary" component={MyLibrary} />
-					<Stack.Screen name="SearchResult" component={SearchResult} />
+					<Stack.Screen name="SearchResult">
+						{(props) => <SearchResult {...props} />}
+					</Stack.Screen>
 					<Stack.Screen name="BookDetail">
 						{(props) => <BookDetail {...props} />}
 					</Stack.Screen>
