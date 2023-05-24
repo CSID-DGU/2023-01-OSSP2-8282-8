@@ -3,27 +3,20 @@ import styled from "styled-components";
 import DateBlock from "../molecules/DateBlock";
 import NoteHandleButton from "../molecules/NoteHandleButtons";
 
-const Container = styled.View`
-	display: flex;
-	height: 200px;
-	margin-top: 20px;
-`;
 const InfoContainer = styled.View`
 	display: flex;
 	flex-direction: row;
-	margin-bottom: 20px;
+	margin: 20px 0;
 `;
 const Divider = styled.View`
 	width: 100%;
 	height: 2px;
 	background: #bebebe;
-	box-sizing: border-box;
-	margin-bottom: 17px;
 `;
 
 const DateContainer = styled.View`
 	display: flex;
-	height: 80%;
+	height: 130px;
 	justify-content: center;
 `;
 
@@ -47,7 +40,7 @@ const Block2 = styled.View`
 const IsSaledBlock = styled.View`
 	display: flex;
 	flex-direction: row;
-	height: 20%;
+	height: 20px;
 	margin-top: 15px;
 `;
 
@@ -84,7 +77,7 @@ const NoteHandle = ({
 	onPress2,
 }) => {
 	return (
-		<Container>
+		<>
 			<InfoContainer>
 				<Block1>
 					<Img
@@ -129,7 +122,7 @@ const NoteHandle = ({
 				/>
 			</InfoContainer>
 			<Divider />
-		</Container>
+		</>
 	);
 };
 
