@@ -130,7 +130,6 @@ const MyNotes = () => {
 
 	useEffect(() => {
 		getMyNotes(userId, handleNotes);
-		console.log("last selected:", selectedNote);
 	}, []);
 	return (
 		<Container>
