@@ -25,7 +25,7 @@ const Nametypo = styled.Text`
 const ListContainer = ({ navigation, products, type }) => {
 	return (
 		<Container>
-			{products.map((product) => {
+			{products.map((product, i) => {
 				return (
 					<Container2
 						key={type == "book" ? product.bookId : product.noteId}
@@ -40,7 +40,9 @@ const ListContainer = ({ navigation, products, type }) => {
 					>
 						<Image
 							source={{
-								uri: "https://pdfampus.s3.ap-northeast-2.amazonaws.com/1.jpg",
+								uri: `https://pdfampus.s3.ap-northeast-2.amazonaws.com/${
+									i + 1
+								}.jpg`,
 								//uri: {product.bookCover}
 								// product.bookCover
 							}}

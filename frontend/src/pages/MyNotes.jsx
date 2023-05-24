@@ -90,11 +90,12 @@ const OnSale = () => {
 };
 
 const MyNotesList = ({ notes, handleModal1 }) => {
-	return notes.map((note) => (
+	return notes.map((note, i) => (
 		<NoteHandle
 			key={note.noteId}
 			id={note.noteId}
-			img={note.bookInfo.bookCover}
+			// img={note.bookInfo.bookCover}
+			img={`https://pdfampus.s3.ap-northeast-2.amazonaws.com/${i + 1}.jpg`}
 			bookTitle={note.noteTitle}
 			isSaled={note.isSale}
 			PublicationDate={note.bookInfo.publicationYear}
