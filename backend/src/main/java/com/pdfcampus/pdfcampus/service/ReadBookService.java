@@ -23,8 +23,7 @@ public class ReadBookService {
         System.out.print("Service:" + bookId + "\n");
         Book book = bookRepository.findById(Integer.valueOf(bookId))
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id " + bookId));
-        System.out.print("Book:" + book + "\n");
-
+        System.out.print("BookTitle"+book.getBookTitle());
         // 책의 표지 이미지가 저장된 S3의 URL을 생성
         String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + bookId + ".jpg";
 
