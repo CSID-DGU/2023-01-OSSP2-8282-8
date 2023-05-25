@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { View, Alert } from "react-native";
+import { View, Alert, Modal } from "react-native";
 
 import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
+import getNoteDetail from "../../api/getNoteDetail";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import postBuyNote from "../../api/postBuyNote";
 
 const Container = styled.View`
 	width: 100%;
@@ -40,44 +44,118 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const NoteInfo = {
-	bookTitle: "운영체제 필기자료",
-	bookCover:
-		"https://simage.mujikorea.net/goods/31/11/79/07/4550002435097_N_N_400.jpg",
-	isStored: false,
-	publicationDate: "0000년 0월 0일 오후 00:00",
-	modifiedDate: "0000년 0월 0일 오후 00:00",
-	DetailInfo: "상세정보입니다~~~~~",
-};
+const ModalContiner = styled.View`
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+`;
 
-const Move2Library = () => {
-	return Alert.alert("나의 서재로 이동");
-};
+const BlockTypo = styled.Text`
+	font-size: 20px;
+	font-weight: 800;
+`;
 
-const AddBookLibrary = () => {
-	return Alert.alert("나의 서재에 추가");
-};
+const Block = styled.View`
+	width: 400px;
+	height: 300px;
+	align-items: center;
+	justify-content: space-around;
+	border-radius: 20px;
+	border-width: 2px;
+	border-color: #ccc;
+	background: white;
+`;
 
-const NoteDetail = () => {
+const ButtonsContainer = styled.View`
+	width: 80%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+`;
+const ButtonWrapper = styled.TouchableOpacity`
+	width: 140px;
+	height: 66px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 11px;
+	background: #56aaf6;
+`;
+
+const Buttontypo = styled.Text`
+	font-size: 20px;
+	font-weight: 800;
+	color: white;
+`;
+
+const NoteDetail = ({ navigation, route }) => {
+	const [noteDetail, setNoteDetail] = useState({});
+	const handleNoteDetail = (detail) => {
+		setNoteDetail(detail);
+	};
+
+	const userId = useRecoilValue(UserInfoState).userId;
+	const { id } = route.params;
+	useEffect(() => {
+		getNoteDetail(id, userId, handleNoteDetail);
+	}, []);
+
+	const Move2Library = () => {
+		navigation.navigate("MyLibrary");
+	};
+
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleBuyNote = () => {
+		setModalVisible(true);
+	};
+
+	const buyNote = () => {
+		postBuyNote(
+			{
+				userId: userId,
+				noteId: id,
+			},
+			handleBuyNote
+		);
+	};
+
 	return (
 		<Container>
-			<Header />
+			<Modal visible={modalVisible} transparent={true}>
+				<ModalContiner>
+					<Block>
+						<BlockTypo>필기가 구매되었습니다.</BlockTypo>
+						<ButtonsContainer>
+							<ButtonWrapper onPress={() => setModalVisible(false)}>
+								<Buttontypo>확인</Buttontypo>
+							</ButtonWrapper>
+						</ButtonsContainer>
+					</Block>
+				</ModalContiner>
+			</Modal>
+
+			<Header navigation={navigation} />
 			<BookTitleContainer>
-				<BookTitleTypo>{NoteInfo.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{noteDetail.noteTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={NoteInfo}
+					contentInfo={{
+						bookCover: noteDetail.bookInfo?.bookCover,
+						publicationYear: noteDetail.createdAt,
+						modifiedDate: noteDetail.modifiedAt,
+						isStored: noteDetail.isBought,
+					}}
 					truepress={Move2Library}
-					falsepress={AddBookLibrary}
+					falsepress={buyNote}
 					isBook={false}
+					price={noteDetail.price}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={NoteInfo.bookCover}
-					img2={NoteInfo.bookCover}
-					img3={NoteInfo.bookCover}
-					bookDetailContent={NoteInfo.DetailInfo}
+					img1={noteDetail.bookInfo?.bookCover}
+					img2={noteDetail.bookInfo?.bookCover}
+					img3={noteDetail.bookInfo?.bookCover}
+					bookDetailContent={noteDetail.DetailInfo}
 				/>
 			</ContentContainer>
 		</Container>

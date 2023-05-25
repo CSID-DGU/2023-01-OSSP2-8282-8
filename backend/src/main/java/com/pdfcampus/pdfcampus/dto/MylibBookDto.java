@@ -11,7 +11,7 @@ import lombok.Setter;
 public class MylibBookDto {
     private Integer bookId;
     private String bookTitle;
-    private byte[] bookCover;
+    private String bookCover;
 
     public MylibBookDto() {
     }

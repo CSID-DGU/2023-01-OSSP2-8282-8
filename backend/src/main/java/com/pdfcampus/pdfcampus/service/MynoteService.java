@@ -49,7 +49,7 @@ public class MynoteService {
             bookDto.setAuthor(note.getBook().getAuthor());
             bookDto.setPublisher(note.getBook().getPublisher());
             bookDto.setPublicationYear(note.getBook().getPublicationYear());
-            bookDto.setBookCover(Arrays.toString(note.getBook().getBookCover()));
+            bookDto.setBookCover(note.getBook().getBookCover());
             mynoteDto.setBookInfo(bookDto);
 
             mynoteDtoList.add(mynoteDto);

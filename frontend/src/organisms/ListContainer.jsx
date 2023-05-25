@@ -10,27 +10,40 @@ const Container = styled.View`
 	margin: 0 60px;
 	padding: 0 15px;
 `;
-const Container2 = styled.View`
+const Container2 = styled.TouchableOpacity`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
-	margin: 0 10px;
+	margin: 0 25px;
 `;
 
 const Nametypo = styled.Text`
-	font-size: 20;
+	font-size: 20px;
 `;
-const ListContainer = ({ products, type }) => {
+const ListContainer = ({ navigation, products, type }) => {
 	return (
 		<Container>
-			{products.map((product) => {
+			{products.map((product, i) => {
 				return (
-					<Container2 key={product[type + "Id"]}>
+					<Container2
+						key={type == "book" ? product.bookId : product.noteId}
+						onPress={() => {
+							navigation.navigate(
+								type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
+								{
+									id: type == "book" ? product.bookId : product.noteId,
+								}
+							);
+						}}
+					>
 						<Image
 							source={{
-								uri: "https://image.yes24.com/goods/89496122/XL",
+								uri: `https://pdfampus.s3.ap-northeast-2.amazonaws.com/${
+									i + 1
+								}.jpg`,
+								//uri: {product.bookCover}
 								// product.bookCover
 							}}
 							style={{ width: 130, height: 190 }}

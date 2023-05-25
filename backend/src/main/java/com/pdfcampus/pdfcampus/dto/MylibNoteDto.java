@@ -10,7 +10,7 @@ import lombok.Setter;
 public class MylibNoteDto {
     private Integer noteId;
     private String noteTitle;
-    private byte[] bookCover;
+    private String bookCover;
 
     public MylibNoteDto() {
     }

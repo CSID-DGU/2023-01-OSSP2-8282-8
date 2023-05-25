@@ -1,5 +1,6 @@
 package com.pdfcampus.pdfcampus.dto;
 
+import com.pdfcampus.pdfcampus.entity.Book;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +29,9 @@ public class BookDto {
     }
 
     public BookDto(String author, String publisher, int publicationYear, byte[] bookCover) {
+    }
+
+    public Book toEntity(){
+        return new Book(bid, bookTitle, author, publisher, publicationYear, bookCover);
     }
 }
