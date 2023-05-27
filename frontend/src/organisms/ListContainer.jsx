@@ -20,15 +20,15 @@ const Container2 = styled.TouchableOpacity`
 `;
 
 const Nametypo = styled.Text`
-	font-size: 20;
+	font-size: 20px;
 `;
 const ListContainer = ({ navigation, products, type }) => {
 	return (
 		<Container>
-			{products.map((product) => {
+			{products.map((product, i) => {
 				return (
 					<Container2
-						key={product.bookId}
+						key={type == "book" ? product.bookId : product.noteId}
 						onPress={() => {
 							navigation.navigate(
 								type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
@@ -40,7 +40,9 @@ const ListContainer = ({ navigation, products, type }) => {
 					>
 						<Image
 							source={{
-								uri: "https://pdfampus.s3.ap-northeast-2.amazonaws.com/1.jpg",
+								uri: `https://pdfampus.s3.ap-northeast-2.amazonaws.com/${
+									i + 1
+								}.jpg`,
 								//uri: {product.bookCover}
 								// product.bookCover
 							}}
@@ -57,5 +59,3 @@ const ListContainer = ({ navigation, products, type }) => {
 };
 
 export default ListContainer;
-//{product[type + "Title"]/*{product.title} */}
-//[type + "Id"]

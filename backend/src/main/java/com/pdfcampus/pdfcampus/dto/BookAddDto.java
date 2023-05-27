@@ -21,6 +21,6 @@ public class BookAddDto {
     private boolean isStored;
 
     public Book toEntity(){
-        return new Book(bid, bookTitle, author, publisher, publicationYear, bookCover.getBytes());
+        return new Book(bid, bookTitle, author, publisher, publicationYear, bookCover);
     }
 }

@@ -14,6 +14,8 @@ import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
 
 const Stack = createNativeStackNavigator();
+//<Stack.Screen name="LogIn" component={LogIn} />
+//<Stack.Screen name="SignUp" component={SignUp} />
 
 export default function App() {
 	return (
@@ -25,7 +27,9 @@ export default function App() {
 					<Stack.Screen name="MainPage" component={MainPage} />
 					<Stack.Screen name="MyPage" component={MyPage} />
 					<Stack.Screen name="MyLibrary" component={MyLibrary} />
-					<Stack.Screen name="SearchResult" component={SearchResult} />
+					<Stack.Screen name="SearchResult">
+						{(props) => <SearchResult {...props} />}
+					</Stack.Screen>
 					<Stack.Screen name="BookDetail">
 						{(props) => <BookDetail {...props} />}
 					</Stack.Screen>
@@ -44,5 +48,3 @@ export default function App() {
 		</RecoilRoot>
 	);
 }
-//<Stack.Screen name="LogIn" component={LogIn} />
-//<Stack.Screen name="SignUp" component={SignUp} />

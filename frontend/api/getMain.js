@@ -1,5 +1,6 @@
 import { Axios } from "./axios";
 
+
 export default getMain = async (handleContents) => {
 	try {
 		const res = await Axios.get(`/main`);

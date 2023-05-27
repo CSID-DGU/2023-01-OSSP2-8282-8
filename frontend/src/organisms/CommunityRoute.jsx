@@ -12,7 +12,6 @@ const RouteText = styled.Text`
 const CommunityRoute = ({ typo, navigation }) => {
 	const path = typo === "로그인" ? "LogIn" : "SignUp";
 	const routeOnClick = () => {
-		console.log("clicked");
 		navigation.navigate(path);
 	};
 

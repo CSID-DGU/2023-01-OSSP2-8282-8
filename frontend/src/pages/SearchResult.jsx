@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { TouchableOpacity, Text, Alert } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { TouchableOpacity, Text, Alert, Image } from "react-native";
 
 import styled from "styled-components";
 
@@ -7,13 +7,16 @@ import CommunityButton from "../organisms/CommunityButton";
 import ViewAllButton from "../organisms/ViewAllButton";
 import CompleteButton from "../organisms/CompleteButton";
 import Search from "../organisms/Search";
+import Header from "../organisms/Header";
+import getSearch from "../../api/getSearch";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import ImageBlock from "../molecules/ImageBlock";
 
 const Container = styled.View`
 	width: 100%;
 	height: 100%;
 	display: flex;
-	flex-direction: cloumn;
-	justify-content: flex-first;
 	align-items: center;
 `;
 
@@ -23,21 +26,20 @@ const SearchContainer = styled.View`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	align-items: flex-end;
+	align-items: center;
 `;
 
-const Line = styled.View`	
+const Line = styled.View`
 	width: 60%;
 	height: 0px;
 
-	border: 1px solid #BEBEBE;
+	border: 1px solid #bebebe;
 `;
 
 const ListContainer = styled.View`
 	width: 100%;
 	height: 80%;
 	display: flex;
-	flex-direction: cloumn;
 	justify-content: flex-first;
 	align-items: center;
 `;
@@ -50,147 +52,181 @@ const LIST = styled.View`
 	justify-content: space-between;
 `;
 
-const Picture = styled.View`	
+const Picture = styled.View`
 	box-sizing: border-box;
 	width: 128px;
 	height: 168px;
 
-	background: #D9D9D9;
-	border: 1.5px solid #BEBEBE;
+	background: #d9d9d9;
+	border: 1.5px solid #bebebe;
 `;
 
 const Typoone = styled.Text`
 	font-weight: 600;
 	font-size: 20px;
-	line-height : 35px
+	line-height: 35px;
 `;
 
 const Typotwo = styled.Text`
 	font-weight: 500;
 	font-size: 16px;
-	line-height : 25px
+	line-height: 25px;
 `;
 
 const SubIntro = styled.View`
 	width: 50%;
 	height: 80%;
 	justify-content: flex-start;
-	align-items : flex-start;
-	line-height : 19px
+	align-items: flex-start;
+	line-height: 19px;
 `;
 
 const ButtonIntro = styled.View`
 	width: 20%;
 	height: 30%;
 	justify-content: flex-start;
-	align-items : flex-start;
-	line-height : 19px
+	align-items: flex-start;
+	line-height: 19px;
 `;
 
 const GotoLibarary = () => {
 	Alert.alert("나의 서재에 담기 완료");
-
 };
 
-const BookInfo = {
-	code:"국내도서",
-	bookTitle:"운영체제",
-	author:"JeongJunHo",
-	publisher:"퍼스트북",
-	publicationYear:1,
-	bookCover:"",
-	isStored:true
-}
+const BookResultList = (bookcontents) => {
+	return (
+		<ListContainer>
+			{bookcontents.bookContents.map((book, index) => (
+				<>
+					<LIST key={index}>
+						<Image
+							source={{
+								uri: `https://pdfampus.s3.ap-northeast-2.amazonaws.com/3.jpg`,
+								//uri: {product.bookCover}
+								// product.bookCover
+							}}
+							style={{ width: 130, height: 190 }}
+						/>
+						<SubIntro>
+							<Typoone>
+								[도서] {book.bookTitle} {book.publicationYear}판
+							</Typoone>
+							<Typotwo>저자 : {book.author}</Typotwo>
+							<Typotwo>출판사 : {book.publisher}</Typotwo>
+						</SubIntro>
+						<ButtonIntro>
+							<ViewAllButton typo="나의 서재 담기" onPress={GotoLibarary} />
+						</ButtonIntro>
+					</LIST>
+					<Text>{"\n"}</Text>
+					<Line />
+				</>
+			))}
+		</ListContainer>
+	);
+};
+const NoteResultList = (notecontents) => {
+	return (
+		<ListContainer>
+			{notecontents.noteContents.map((note, index) => (
+				<>
+					<LIST key={index}>
+						<Picture></Picture>
+						<SubIntro>
+							<Typoone>
+								[필기] {note.bookInfo.bookTitle} {note.bookInfo.publicationYear}
+								판
+							</Typoone>
+							<Typotwo>저자 : {note.booInfo.author}</Typotwo>
+							<Typotwo>출판사 : {note.booInfo.publisher}</Typotwo>
+							<Typotwo>작성자 : {note.author}</Typotwo>
+						</SubIntro>
+						<ButtonIntro>
+							<ViewAllButton typo="나의 서재 담기" onPress={GotoLibarary} />
+						</ButtonIntro>
+					</LIST>
+					<Text>{"\n"}</Text>
+					<Line />
+				</>
+			))}
+		</ListContainer>
+	);
+};
 
-const NoteInfo = {
-	code:"필기",
-	writer:"이현정",
-	createdAt:"2023-01-01",
-	modifiedAt:"2023-05-01",
-	price:"2000",
-	isBought:true,
-	NoteCover:"",
-	BookInfo:{
-		bookTitle:"운영체제",
-		author:"JeongJunHo",
-		publisher:"퍼스트북",
-		publicationYear:1,
-	}
-}
+const ButtonWrapper = styled.View`
+	width: 60px;
+	height: 38px;
+	border-radius: 11px;
+	background: #848484;
+	align-items: center;
+	justify-content: center;
+`;
+const ButtonTypo = styled.Text`
+	font-size: 20px;
+	color: white;
+`;
+const SearchButton = ({ press, type }) => {
+	return (
+		<TouchableOpacity onPress={press}>
+			<ButtonWrapper>
+				<ButtonTypo>{type}</ButtonTypo>
+			</ButtonWrapper>
+		</TouchableOpacity>
+	);
+};
 
-const SearchResult = () => {
+const SearchResult = ({ navigation, route }) => {
+	const { type, keyword } = route.params;
 
-	const [pnum1,setPnum1]=useState(0);
-	const [pnum2,setPnum2]=useState(5);
-	const [pnum3,setPnum3]=useState(0);
-	const [pnum4,setPnum4]=useState(5);
-	const [SearchContent,setSearchContent]=useState("");//검색 키워드 저장
+	const [SearchContent, setSearchContent] = useState(""); //검색 키워드 저장
+	const [contents, setContents] = useState([]);
+	const [searchTypeText, setSearchTypeText] = useState(
+		type == "book" ? "도서" : "필기"
+	);
 
-	SearchClick = () => {
-		Alert.alert(SearchContent);
-	  }
-	  HandleSearch = (text) =>{
-		setSearchContent("검색: "+text);
-	  }
+	const userId = useRecoilValue(UserInfoState).userId;
+
+	const handleContents = (contentsList) => {
+		setContents(contentsList);
+	};
+	const SearchClick = () => {
+		//books 나 notes 로 지정하면 오류나서 book과 note로 대체
+		navigation.navigate("SearchResult", {
+			type: searchTypeText == "도서" ? "book" : "note",
+			keyword: SearchContent,
+		});
+	};
+	const HandleSearch = (text) => {
+		setSearchContent(text);
+	};
+	const TypeSelect = () => {
+		if (searchTypeText === "도서") {
+			setSearchTypeText("필기");
+		} else {
+			setSearchTypeText("도서");
+		}
+	};
+
+	useEffect(() => {
+		getSearch(handleContents, type, keyword, userId);
+	}, []);
 
 	return (
-			<>
-				<Container>
-					<SearchContainer>
-						<Search press={SearchClick} changeHandler={HandleSearch}/>
-					</SearchContainer>
-
-					<ListContainer>
-						<LIST>
-						<Picture></Picture>
-						<SubIntro>
-							<Typoone>[{BookInfo.code}] {BookInfo.bookTitle} {BookInfo.publicationYear}판</Typoone>
-							<Typotwo>저자 : {BookInfo.author}</Typotwo>
-							<Typotwo>출판사 : {BookInfo.publisher}</Typotwo>
-						</SubIntro>
-						<ButtonIntro>
-							<ViewAllButton typo="나의 서재 담기" onPress={GotoLibarary} />
-						</ButtonIntro>
-						</LIST>
-
-						<Text>{"\n"}</Text>
-						<Line></Line>
-
-						<LIST>
-						<Picture></Picture>
-						<SubIntro>
-							<Typoone>[{NoteInfo.code}] {NoteInfo.BookInfo.bookTitle} {NoteInfo.BookInfo.publicationYear}판</Typoone>
-							<Typotwo>저자 : {NoteInfo.BookInfo.author}</Typotwo>
-							<Typotwo>출판사 : {NoteInfo.BookInfo.publisher}</Typotwo>
-							<Typotwo>작성자 : {NoteInfo.writer}</Typotwo>
-						</SubIntro>
-						<ButtonIntro>
-							<ViewAllButton typo="나의 서재 담기" onPress={GotoLibarary} />
-						</ButtonIntro>
-						</LIST>
-
-						<Text>{"\n"}</Text>
-						<Line></Line>
-
-						<LIST>
-						<Picture></Picture>
-						<SubIntro>
-							<Typoone>[{NoteInfo.code}] {NoteInfo.BookInfo.bookTitle} {NoteInfo.BookInfo.publicationYear}판</Typoone>
-							<Typotwo>저자 : {NoteInfo.BookInfo.author}</Typotwo>
-							<Typotwo>출판사 : {NoteInfo.BookInfo.publisher}</Typotwo>
-							<Typotwo>작성자 : {NoteInfo.writer}</Typotwo>
-						</SubIntro>
-						<ButtonIntro>
-							<ViewAllButton typo="나의 서재 담기" onPress={GotoLibarary} />
-						</ButtonIntro>
-						</LIST>
-
-
-					</ListContainer>
-				</Container>
-			</>
+		<>
+			<Container>
+				<Header />
+				<SearchContainer>
+					<SearchButton press={TypeSelect} type={searchTypeText} />
+					<Search press={SearchClick} changeHandler={HandleSearch} />
+				</SearchContainer>
+				{type === "book" ? (
+					<BookResultList bookContents={contents} />
+				) : (
+					<NoteResultList noteContents={contents} />
+				)}
+			</Container>
+		</>
 	);
-	
 };
 
 export default SearchResult;
