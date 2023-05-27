@@ -3,7 +3,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
-
+import com.pdfcampus.pdfcampus.entity.Book;
+import com.pdfcampus.pdfcampus.entity.Note;
+import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
@@ -23,49 +25,27 @@ import javax.imageio.ImageIO;
 @Service
 public class AmazonS3ClientService {
     private AmazonS3 s3client;
+    private PdfMetadataService pdfMetadataService;
+    private DetailBookRepository detailBookRepository;
 
     @Autowired
-    public AmazonS3ClientService(AmazonS3 s3client) {
+    public AmazonS3ClientService(AmazonS3 s3client, PdfMetadataService pdfMetadataService, DetailBookRepository detailBookRepository) {
         this.s3client = s3client;
+        this.pdfMetadataService = pdfMetadataService;
+        this.detailBookRepository = detailBookRepository;
     }
 
-    public byte[] downloadFile(String bucketName, String keyName) {
+    public void downloadAndProcessPdf(String bucketName, String keyName) {
+        Book book = detailBookRepository.findByBookTitle(keyName).orElseThrow(() -> new NullPointerException("Note not found"));
         S3Object s3object = s3client.getObject(bucketName, keyName);
         S3ObjectInputStream inputStream = s3object.getObjectContent();
         byte[] content;
         try {
+            Integer bid = book.getBid();
             content = IOUtils.toByteArray(inputStream);
-            processPDF(content);
+            pdfMetadataService.processPDF(content, bid);
         } catch (IOException e) {
             throw new RuntimeException("Failed to download content from S3", e);
         }
-        return content;
-    }
-
-    public void processPDF(byte[] pdfContent) throws IOException {
-        PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfContent));
-
-        PDFTextStripper pdfStripper = new PDFTextStripper() {
-            @Override
-            protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
-                for (TextPosition textPosition : textPositions) {
-                    float endX = textPosition.getXDirAdj() + (textPosition.getWidthDirAdj());
-
-                    // DB에 저장
-                    System.out.println("String: [" + text + "], Position: [" + textPosition.getXDirAdj() + ", " + endX + ", " + textPosition.getYDirAdj() + "]");
-                }
-            }
-        };
-
-        for (int page = 0; page < document.getNumberOfPages(); ++page) {
-            pdfStripper.setStartPage(page);
-            pdfStripper.setEndPage(page);
-            String text = pdfStripper.getText(document);
-
-            // DB에 저장
-            System.out.println("Page: [" + (page + 1) + "], Text: [" + text + "]");
-        }
-
-        document.close();
     }
 }
