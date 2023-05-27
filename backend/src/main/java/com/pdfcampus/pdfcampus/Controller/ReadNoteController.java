@@ -23,20 +23,13 @@ public class ReadNoteController {
     private ReadNoteService readNoteService;
 
     @GetMapping("/read/note/{noteId}")
-    public ResponseEntity<Map<String, Object>> getBook(@PathVariable String bookId) {
+    public ResponseEntity<Map<String, Object>> getBook(@PathVariable String noteId) {
         try {
-            System.out.print("Controller: "+bookId+"\n");
-            DetailNoteDto book = readNoteService.getBookById(bookId);
-            System.out.print(book.getBid());
+            DetailNoteDto note = readNoteService.getNoteById(noteId);
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
-            List<byte[]> pages = new ArrayList<>();
             List<Note> notes = new ArrayList<>();
 
-            // Here you should populate pages and notes according to your business logic
-            // This may involve additional service methods and repository queries
-
-            data.put("pages", pages);
             data.put("notes", notes);
             response.put("data", data);
 
