@@ -12,4 +12,6 @@ public interface DetailBookRepository extends JpaRepository<Book, Integer> {
     Optional<Book> findByBid(Integer bookId);
 
     List<Book> findByBookTitleContainingIgnoreCase(String keyword);
+
+    Optional<Book> findByBookTitle(String bookTitle);
 }

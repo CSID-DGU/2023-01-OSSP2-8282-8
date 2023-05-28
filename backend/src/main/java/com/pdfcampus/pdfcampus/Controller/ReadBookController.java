@@ -27,18 +27,13 @@ public class ReadBookController {
     public ResponseEntity<Map<String, Object>> getBook(@PathVariable String bookId) {
         try {
             System.out.print("Controller: "+bookId+"\n");
-            DetailBookDto book = readBookService.getBookById(bookId);
-            System.out.print(book.getBid());
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
-            List<byte[]> pages = new ArrayList<>();
-            List<Note> notes = new ArrayList<>();
 
-            // Here you should populate pages and notes according to your business logic
-            // This may involve additional service methods and repository queries
+            //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
+            String bookPDFUrl = readBookService.getBookPdfUrl(bookId).toString();
 
-            data.put("pages", pages);
-            data.put("notes", notes);
+            data.put("bookPDFUrl", bookPDFUrl);
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();
