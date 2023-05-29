@@ -12,6 +12,7 @@ import NoteDetail from "./src/pages/NoteDetail";
 import MyNotes from "./src/pages/MyNotes";
 import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
+import PDF from "./src/pages/PDF";
 
 const Stack = createNativeStackNavigator();
 //<Stack.Screen name="LogIn" component={LogIn} />
@@ -19,7 +20,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 	return (
-		<RecoilRoot>
+		/*<RecoilRoot>
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="LogIn" component={LogIn} />
@@ -45,6 +46,7 @@ export default function App() {
 					</Stack.Screen>
 				</Stack.Navigator>
 			</NavigationContainer>
-		</RecoilRoot>
+		</RecoilRoot>*/
+		<PDF />
 	);
 }
