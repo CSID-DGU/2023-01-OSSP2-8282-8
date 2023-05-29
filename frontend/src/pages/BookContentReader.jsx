@@ -3,10 +3,10 @@ import { View } from "react-native";
 import PDFReader from "rn-pdf-reader-js";
 import Header from "../organisms/Header";
 
-const BookContentReader = ({ navigaion }) => {
+const BookContentReader = ({ navigation }) => {
 	return (
 		<>
-			<Header />
+			<Header navigation={navigation} />
 			<PDFReader
 				source={{
 					uri: "http://samples.leanpub.com/thereactnativebook-sample.pdf",
