@@ -1,7 +1,11 @@
 package com.pdfcampus.pdfcampus.service;
 
+import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Page;
 import com.pdfcampus.pdfcampus.entity.Text;
+import com.pdfcampus.pdfcampus.entity.User;
+import com.pdfcampus.pdfcampus.repository.BookRepository;
+import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.PageRepository;
 import com.pdfcampus.pdfcampus.repository.TextRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,9 +24,10 @@ public class PdfMetadataService {
     private PageRepository pageRepository;
     @Autowired
     private TextRepository textRepository;
+    @Autowired
+    private DetailBookRepository detailBookRepository;
     public void processPDF(byte[] pdfContent, Integer bid) throws IOException {
         PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfContent));
-
         PDFTextStripper pdfStripper = new PDFTextStripper() {
             @Override
             protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
@@ -38,7 +43,6 @@ public class PdfMetadataService {
                 }
             }
         };
-
         for (int page = 0; page < document.getNumberOfPages(); ++page) {
             pdfStripper.setStartPage(page);
             pdfStripper.setEndPage(page);
@@ -46,7 +50,8 @@ public class PdfMetadataService {
             // DB에 저장
             String text = pdfStripper.getText(document);
             Page pageEntity = new Page();
-            pageEntity.setBid(bid);
+            Book book = detailBookRepository.findByBid(bid).orElse(null);
+            pageEntity.setBid(book.getBid());
             pageEntity.setPageNumber(page + 1);
             pageRepository.save(pageEntity);
             System.out.println("Page: [" + (page + 1) + "], Text: [" + text + "]");

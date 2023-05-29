@@ -26,6 +26,6 @@ public class Page {
     @Column(name = "bid", nullable = false)
     private Integer bid;
 
-    @Column(name = "page number")
+    @Column(name = "pageNumber")
     private Integer pageNumber;
 }
