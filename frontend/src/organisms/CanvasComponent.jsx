@@ -15,6 +15,16 @@ import styled from "styled-components";
 import pen_image from "../../assets/pen_image.png";
 import eraser_image from "../../assets/eraser_image.png";
 import highlight_image from "../../assets/highlight_image.png";
+import postMetadata from "../../api/postMetadata";
+
+const UpperContainer = styled.View`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	box-sizing: border-box;
+	margin: 0 0 13px 0;
+`;
 
 const ToolKitContainer = styled.View`
 	width: 325px;
@@ -37,6 +47,23 @@ const ToolIcon = styled.TouchableOpacity`
 	border-radius: 50%;
 	box-sizing: border-box;
 	margin: 0 4px;
+`;
+
+const DownLoadButtonStyle = styled.TouchableOpacity`
+	width: 119px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #281696;
+	border-radius: 8px;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
+const DownLoadTypo = styled.Text`
+	color: #fff;
+	font-size: 16px;
+	font-weight: 600;
 `;
 
 const Tool = ({ ctx, props, onClick }) => {
@@ -108,6 +135,14 @@ const ToolKit = ({ ctx }) => {
 	);
 };
 
+const DownLoadButton = ({ onClick }) => {
+	return (
+		<DownLoadButtonStyle onPress={onClick}>
+			<DownLoadTypo>필기 다운로드</DownLoadTypo>
+		</DownLoadButtonStyle>
+	);
+};
+
 const CanvasComponent = () => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
@@ -145,12 +180,11 @@ const CanvasComponent = () => {
 			setTotalPath((prev) => [...prev, path]);
 			setPath([]);
 		}
-		console.log("total path:", totalPath);
-		console.log("path:", path);
 	};
 
 	useEffect(() => {
 		setTotalPath([]);
+		setMeta([]);
 		if (touchRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
 			ctx.lineWidth = 2;
@@ -165,11 +199,34 @@ const CanvasComponent = () => {
 	}, []);
 
 	const [path, setPath] = useState([]);
+	const [meta, setMeta] = useState([]);
+
+	const downloadOnClick = () => {
+		totalPath.map((h) => {
+			x_s = h.map((item) => item.x);
+			y_s = h.map((item) => item.y);
+			console.log("x_s", x_s);
+			console.log("y_s", y_s);
+			setMeta((prev) => [
+				...prev,
+				[
+					Math.min(...x_s),
+					Math.max(...x_s),
+					y_s.reduce((a, b) => a + b, 0) / y_s.length,
+				],
+			]);
+		});
+		// postMetadata
+		console.log("meta", meta);
+	};
 
 	return (
 		<>
 			<SafeAreaView style={{ flex: 1 }}>
-				<ToolKit ctx={ctx} />
+				<UpperContainer>
+					<ToolKit ctx={ctx} />
+					<DownLoadButton onClick={downloadOnClick} />
+				</UpperContainer>
 				<View
 					ref={touchRef}
 					style={{
@@ -179,6 +236,11 @@ const CanvasComponent = () => {
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
+						borderStyle: "solid",
+						borderWidth: "1px",
+						borderColor: "#D9D9D9",
+						borderRadius: "15",
+						boxSizing: "border-box",
 					}}
 					onTouchStart={handleTouchStart}
 					onTouchMove={handleTouchMove}
