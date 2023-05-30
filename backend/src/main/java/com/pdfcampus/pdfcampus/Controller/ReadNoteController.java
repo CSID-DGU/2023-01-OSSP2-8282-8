@@ -1,14 +1,13 @@
 package com.pdfcampus.pdfcampus.Controller;
 import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.entity.Note;
+import com.pdfcampus.pdfcampus.service.DetailService;
+import com.pdfcampus.pdfcampus.service.LoginService;
 import com.pdfcampus.pdfcampus.service.ReadNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +21,26 @@ public class ReadNoteController {
     @Autowired
     private ReadNoteService readNoteService;
 
-    @GetMapping("/read/note/{noteId}")
-    public ResponseEntity<Map<String, Object>> getBook(@PathVariable String noteId) {
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private DetailService detailService;
+
+    @GetMapping("/read/note")
+    public ResponseEntity<Map<String, Object>> getBook(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
         try {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
 
-            //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
+            if(readNoteService.isUserSubscribed(userId) == true) { //만약 사용자가 구독을 했다면 book도 같이 전송
+                String bookId = readNoteService.getBookId(noteId);
+                String bookPDFUrl = readNoteService.getBookPdfUrl(bookId).toString();
+                data.put("bookPDFUrl", bookPDFUrl);
+            }
+            System.out.println(userId);System.out.println("99999999999999999");
+            System.out.println(loginService.isUserSubscribed(userId));System.out.println("99999999999999999");
+
             String notePDFUrl = readNoteService.getNotePdfUrl(noteId).toString();
 
             data.put("notePDFUrl", notePDFUrl);
