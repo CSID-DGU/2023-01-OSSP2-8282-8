@@ -1,8 +1,7 @@
 package com.pdfcampus.pdfcampus.Controller;
-import com.pdfcampus.pdfcampus.dto.DetailBookDto;
-import com.pdfcampus.pdfcampus.entity.Book;
+import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.entity.Note;
-import com.pdfcampus.pdfcampus.service.ReadBookService;
+import com.pdfcampus.pdfcampus.service.ReadNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,22 +17,21 @@ import java.util.Map;
 
 @RestController
 @RequestMapping
-public class ReadBookController {
+public class ReadNoteController {
 
     @Autowired
-    private ReadBookService readBookService;
+    private ReadNoteService readNoteService;
 
-    @GetMapping("/read/book/{bookId}")
-    public ResponseEntity<Map<String, Object>> getBook(@PathVariable String bookId) {
+    @GetMapping("/read/note/{noteId}")
+    public ResponseEntity<Map<String, Object>> getBook(@PathVariable String noteId) {
         try {
-            System.out.print("Controller: "+bookId+"\n");
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
 
             //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
-            String bookPDFUrl = readBookService.getBookPdfUrl(bookId).toString();
+            String notePDFUrl = readNoteService.getNotePdfUrl(noteId).toString();
 
-            data.put("bookPDFUrl", bookPDFUrl);
+            data.put("notePDFUrl", notePDFUrl);
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();

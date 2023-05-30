@@ -11,7 +11,7 @@ import java.net.URL;
 
 
 @Service
-public class ReadBookService {
+public class ReadNoteService {
     @Autowired
     private AmazonS3ClientService amazonS3ClientService;
 
@@ -22,22 +22,19 @@ public class ReadBookService {
     private NoteRepository noteRepository; //노트 있는 경우
     // 추후 노트 있는 경우 검사하고, 합쳐서 전송하는 로직 추가
 
-    @Autowired
-    private BookRepository bookRepository;
-
-    public URL getBookCoverUrl(String bookId) {
+    public URL getBookCoverUrl(String noteId) {
         // 책의 표지 이미지가 저장된 S3의 URL을 생성
         String bucketName = "pdfampus";
-        String objectKey = bookId + ".jpg";
+        String objectKey = noteId + ".jpg";
         return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
     }
 
-    public URL getBookPdfUrl(String bookId) {
-        Book book = bookRepository.findById(Integer.valueOf(bookId))
-                .orElseThrow(() -> new EntityNotFoundException("Book not found with id " + bookId));
-        // bookTitle로 pdf url 생성(presigned)
-        String bucketName = "8282book";
-        String objectKey = book.getBookTitle() + ".pdf";
+    public URL getNotePdfUrl(String noteId) {
+        Note note = noteRepository.findById(Integer.valueOf(noteId))
+                .orElseThrow(() -> new EntityNotFoundException("Note not found with id " + noteId));
+        // noteTitle로 pdf url 생성(presigned)
+        String bucketName = "8282note";
+        String objectKey = note.getNoteTitle() + ".pdf";
         return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
     }
 }
