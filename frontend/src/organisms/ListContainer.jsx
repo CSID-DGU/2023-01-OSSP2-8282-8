@@ -22,7 +22,7 @@ const Container2 = styled.TouchableOpacity`
 const Nametypo = styled.Text`
 	font-size: 20px;
 `;
-const ListContainer = ({ navigation, products, type }) => {
+const ListContainer = ({ navigation, products, type, isMyLib = false }) => {
 	return (
 		<Container>
 			{products.map((product, i) => {
@@ -30,12 +30,14 @@ const ListContainer = ({ navigation, products, type }) => {
 					<Container2
 						key={type == "book" ? product.bookId : product.noteId}
 						onPress={() => {
-							navigation.navigate(
-								type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
-								{
-									id: type == "book" ? product.bookId : product.noteId,
-								}
-							);
+							isMyLib
+								? navigation.navigate("BookContentReader")
+								: navigation.navigate(
+										type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
+										{
+											id: type == "book" ? product.bookId : product.noteId,
+										}
+								  );
 						}}
 					>
 						<Image

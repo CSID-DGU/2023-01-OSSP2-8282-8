@@ -131,6 +131,7 @@ const MyLibrary = ({ navigation }) => {
 							navigation={navigation}
 							products={books}
 							type="book"
+							isMyLib={true}
 						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>

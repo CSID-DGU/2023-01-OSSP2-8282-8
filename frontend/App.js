@@ -12,6 +12,7 @@ import NoteDetail from "./src/pages/NoteDetail";
 import MyNotes from "./src/pages/MyNotes";
 import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
+import BookContentReader from "./src/pages/BookContentReader";
 
 const Stack = createNativeStackNavigator();
 //<Stack.Screen name="LogIn" component={LogIn} />
@@ -43,6 +44,10 @@ export default function App() {
 					<Stack.Screen name="NoteAll">
 						{(props) => <ContentsAll {...props} />}
 					</Stack.Screen>
+					<Stack.Screen
+						name="BookContentReader"
+						component={BookContentReader}
+					/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</RecoilRoot>
