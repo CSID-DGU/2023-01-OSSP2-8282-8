@@ -95,8 +95,8 @@ const ToolKit = ({ ctx }) => {
 	];
 	const [selectedTool, setSelectedTool] = useState("pen_black");
 	const toolOnClick = (ctx, type, color) => {
-		// ctx.strokeStyle = color;
-		// ctx.lineWidth = 1;
+		ctx.strokeStyle = color;
+		ctx.lineWidth = type == "pen" ? 2 : 15;
 		setSelectedTool(type + "_" + color);
 	};
 	return (
@@ -119,7 +119,9 @@ const CanvasComponent = () => {
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		console.log("touch start:", x, y);
-		ctx.fillRect(x, y, 10, 10);
+		ctx.beginPath();
+		ctx.lineTo(x, y);
+		ctx.stroke();
 		setPath([{ x, y }]);
 	};
 
@@ -128,13 +130,13 @@ const CanvasComponent = () => {
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		console.log("touch move:", x, y);
-		ctx.fillRect(x, y, 10, 10);
+		ctx.lineTo(x, y);
+		ctx.stroke();
 		setPath((prevPath) => [...prevPath, { x, y }]);
 	};
 
 	const handleTouchEnd = () => {
 		// Finish the path when the user releases their finger
-		console.log("touch end");
 		setPath([]);
 	};
 
@@ -148,20 +150,17 @@ const CanvasComponent = () => {
 				canvasRef.current.height = heightval;
 
 				console.log("current:", canvasRef.current);
-				Alert.alert("canvas is ready");
-				ctx.fillRect(10, 10, 10, 10);
 				setCtx(ctx);
 			}
 		}
 	}, []);
 
-	const [isDrawing, setIsDrawing] = useState(false);
 	const [path, setPath] = useState([]);
 
 	return (
 		<>
 			<SafeAreaView style={{ flex: 1 }}>
-				<ToolKit ctx={touchRef.current} />
+				<ToolKit ctx={ctx} />
 				<View
 					ref={touchRef}
 					style={{
