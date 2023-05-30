@@ -93,11 +93,9 @@ const ToolKit = ({ ctx }) => {
 			type: "eraser",
 		},
 	];
-	const [selectedTool, setSelectedTool] = useState("pen_black");
 	const toolOnClick = (ctx, type, color) => {
 		ctx.strokeStyle = color;
 		ctx.lineWidth = type == "pen" ? 2 : 15;
-		setSelectedTool(type + "_" + color);
 	};
 	return (
 		<ToolKitContainer>
@@ -112,44 +110,54 @@ const CanvasComponent = () => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
 
+	const [totalPath, setTotalPath] = useState([]);
+
 	const [ctx, setCtx] = useState();
 
 	const handleTouchStart = (event) => {
 		// Start a new path when the user touches the canvas
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
-		console.log("touch start:", x, y);
 		ctx.beginPath();
 		ctx.lineTo(x, y);
 		ctx.stroke();
-		setPath([{ x, y }]);
+		if (ctx.lineWidth == 15) {
+			setPath([{ x, y }]);
+		}
 	};
 
 	const handleTouchMove = (event) => {
 		// Update the path while the user moves their finger
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
-		console.log("touch move:", x, y);
 		ctx.lineTo(x, y);
 		ctx.stroke();
-		setPath((prevPath) => [...prevPath, { x, y }]);
+		console.log("line width:", ctx.lineWidth);
+		if (ctx.lineWidth == 15) {
+			setPath((prevPath) => [...prevPath, { x, y }]);
+		}
 	};
 
 	const handleTouchEnd = () => {
 		// Finish the path when the user releases their finger
-		setPath([]);
+		if (path.length > 0) {
+			setTotalPath((prev) => [...prev, path]);
+			setPath([]);
+		}
+		console.log("total path:", totalPath);
+		console.log("path:", path);
 	};
 
 	useEffect(() => {
+		setTotalPath([]);
 		if (touchRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
+			ctx.lineWidth = 2;
 			const widthval = 1500;
 			const heightval = 1000;
 			if (ctx) {
 				canvasRef.current.width = widthval;
 				canvasRef.current.height = heightval;
-
-				console.log("current:", canvasRef.current);
 				setCtx(ctx);
 			}
 		}
