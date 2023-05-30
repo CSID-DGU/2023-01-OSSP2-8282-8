@@ -25,12 +25,13 @@ public class ReadNoteController {
     @GetMapping("/read/note/{noteId}")
     public ResponseEntity<Map<String, Object>> getBook(@PathVariable String noteId) {
         try {
-            DetailNoteDto note = readNoteService.getNoteById(noteId);
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
-            List<Note> notes = new ArrayList<>();
 
-            data.put("notes", notes);
+            //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
+            String notePDFUrl = readNoteService.getNotePdfUrl(noteId).toString();
+
+            data.put("notePDFUrl", notePDFUrl);
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();

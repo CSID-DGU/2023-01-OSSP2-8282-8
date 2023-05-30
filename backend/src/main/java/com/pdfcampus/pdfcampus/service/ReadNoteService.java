@@ -1,14 +1,14 @@
 package com.pdfcampus.pdfcampus.service;
-
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
-import com.pdfcampus.pdfcampus.dto.DetailNoteDto;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
+import com.pdfcampus.pdfcampus.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
+import java.net.URL;
+
 
 @Service
 public class ReadNoteService {
@@ -16,33 +16,25 @@ public class ReadNoteService {
     private AmazonS3ClientService amazonS3ClientService;
 
     @Autowired
-    private NoteRepository noteRepository;
+    private S3PresignedURLService s3PresignedURLService;
 
-    private DetailService detailService;
+    @Autowired
+    private NoteRepository noteRepository; //노트 있는 경우
+    // 추후 노트 있는 경우 검사하고, 합쳐서 전송하는 로직 추가
 
-    public DetailNoteDto getNoteById(String noteId) {
+    public URL getBookCoverUrl(String noteId) {
+        // 책의 표지 이미지가 저장된 S3의 URL을 생성
+        String bucketName = "pdfampus";
+        String objectKey = noteId + ".jpg";
+        return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
+    }
+
+    public URL getNotePdfUrl(String noteId) {
         Note note = noteRepository.findById(Integer.valueOf(noteId))
                 .orElseThrow(() -> new EntityNotFoundException("Note not found with id " + noteId));
-
-        // 책의 표지 이미지가 저장된 S3의 URL을 생성
-        String noteCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + noteId + ".jpg";
-
-        // Note 객체를 불러옴
-
-        // DetailNoteDto 객체를 생성하고 반환
-        return new DetailNoteDto(
-                note.getNid(),
-                note.getNoteTitle(),
-                note.getAuthor(),
-                note.getCreatedAt(),
-                note.getModifiedAt(),
-                "0",
-                true,
-                note.getBook().getPublisher(),
-                note.getUser().getUid(),
-                note.getBook().getPublisher(),
-                note.getBook().getPublicationYear(),
-                noteCoverUrl
-        );
+        // noteTitle로 pdf url 생성(presigned)
+        String bucketName = "8282note";
+        String objectKey = note.getNoteTitle() + ".pdf";
+        return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
     }
 }
