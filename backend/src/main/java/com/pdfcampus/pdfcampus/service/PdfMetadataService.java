@@ -33,6 +33,11 @@ public class PdfMetadataService {
         for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); ++pageNumber) {
             Book book = detailBookRepository.findByBid(bid).orElse(null);
 
+            if (book == null) {
+                System.out.println("Book with ID: " + bid + " not found.");
+                continue;
+            }
+
             Page pageEntity = new Page();
             pageEntity.setBid(book.getBid());
             pageEntity.setPageNumber(pageNumber + 1);
