@@ -26,37 +26,82 @@ public class PdfMetadataService {
     private TextRepository textRepository;
     @Autowired
     private DetailBookRepository detailBookRepository;
+
     public void processPDF(byte[] pdfContent, Integer bid) throws IOException {
         PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfContent));
-        PDFTextStripper pdfStripper = new PDFTextStripper() {
-            @Override
-            protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
-                for (TextPosition textPosition : textPositions) {
-                    float endX = textPosition.getXDirAdj() + (textPosition.getWidthDirAdj());
 
-                    // DB에 저장
-                    String position = "[" + textPosition.getXDirAdj() + ", " + endX + ", " + textPosition.getYDirAdj() + "]";
-                    Text textEntity = new Text();
-                    textEntity.setPosition(position);
-                    textRepository.save(textEntity);
-                    System.out.println("String: [" + text + "], Position: [" + textPosition.getXDirAdj() + ", " + endX + ", " + textPosition.getYDirAdj() + "]");
-                }
-            }
-        };
-        for (int page = 0; page < document.getNumberOfPages(); ++page) {
-            pdfStripper.setStartPage(page);
-            pdfStripper.setEndPage(page);
-
-            // DB에 저장
-            String text = pdfStripper.getText(document);
-            Page pageEntity = new Page();
+        for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); ++pageNumber) {
             Book book = detailBookRepository.findByBid(bid).orElse(null);
+
+            if (book == null) {
+                System.out.println("Book with ID: " + bid + " not found.");
+                continue;
+            }
+
+            Page pageEntity = new Page();
             pageEntity.setBid(book.getBid());
-            pageEntity.setPageNumber(page + 1);
-            pageRepository.save(pageEntity);
-            System.out.println("Page: [" + (page + 1) + "], Text: [" + text + "]");
+            pageEntity.setPageNumber(pageNumber + 1);
+            pageEntity = pageRepository.save(pageEntity);
+
+            PDFTextStripper pdfStripper = new CustomPDFTextStripper(pageEntity);
+            pdfStripper.setStartPage(pageNumber);
+            pdfStripper.setEndPage(pageNumber);
+
+            String text = pdfStripper.getText(document);
+
+            System.out.println("Page: [" + (pageNumber + 1) + "], Text: [" + text + "]");
         }
 
         document.close();
     }
+
+    private class CustomPDFTextStripper extends PDFTextStripper {
+        private Page associatedPage;
+
+        public CustomPDFTextStripper(Page associatedPage) throws IOException {
+            super();
+            this.associatedPage = associatedPage;
+        }
+
+        @Override
+        protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
+            String fullText = "";
+            float startY = -1, startX = -1, endX = -1;
+            for (TextPosition textPosition : textPositions) {
+                if (startY == -1 || textPosition.getYDirAdj() == startY) {
+                    if (startY == -1) {
+                        startY = textPosition.getYDirAdj();
+                        startX = textPosition.getXDirAdj();
+                    }
+                    fullText += textPosition.getUnicode();
+                    endX = textPosition.getXDirAdj() + textPosition.getWidthDirAdj();
+                } else {
+                    String position = "[" + startX + ", " + endX + ", " + startY + "]";
+                    Text textEntity = new Text();
+                    textEntity.setPosition(position);
+                    textEntity.setPage(associatedPage);
+                    textRepository.save(textEntity);
+
+                    System.out.println("String: [" + fullText + "], Position: [" + startX + ", " + endX + ", " + startY + "]");
+
+                    startY = textPosition.getYDirAdj();
+                    startX = textPosition.getXDirAdj();
+                    endX = textPosition.getXDirAdj() + textPosition.getWidthDirAdj();
+                    fullText = textPosition.getUnicode();
+                }
+            }
+            if (!fullText.isEmpty()) {
+                String position = "[" + startX + ", " + endX + ", " + startY + "]";
+                Text textEntity = new Text();
+                textEntity.setPosition(position);
+                textEntity.setPage(associatedPage);
+                textRepository.save(textEntity);
+
+                System.out.println("String: [" + fullText + "], Position: [" + startX + ", " + endX + ", " + startY + "]");
+            }
+        }
+
+    }
 }
+
+
