@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping
@@ -31,19 +28,17 @@ public class ReadNoteController {
     public ResponseEntity<Map<String, Object>> getBook(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
         try {
             Map<String, Object> response = new HashMap<>();
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new LinkedHashMap<>();
 
-            if(readNoteService.isUserSubscribed(userId) == true) { //만약 사용자가 구독을 했다면 book도 같이 전송
+            if(readNoteService.isUserSubscribed(userId)) { //만약 사용자가 구독을 했다면 book도 같이 전송
                 String bookId = readNoteService.getBookId(noteId);
                 String bookPDFUrl = readNoteService.getBookPdfUrl(bookId).toString();
                 data.put("bookPDFUrl", bookPDFUrl);
             }
-            System.out.println(userId);System.out.println("99999999999999999");
-            System.out.println(loginService.isUserSubscribed(userId));System.out.println("99999999999999999");
 
             String notePDFUrl = readNoteService.getNotePdfUrl(noteId).toString();
-
             data.put("notePDFUrl", notePDFUrl);
+
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();

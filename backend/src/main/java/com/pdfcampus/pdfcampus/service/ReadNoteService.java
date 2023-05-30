@@ -66,7 +66,8 @@ public class ReadNoteService {
     }
 
     public boolean isUserSubscribed(String id) {
-        User user = readRepository.findByUserId(Integer.parseInt(id));
+        Integer uidInt = Integer.parseInt(id);
+        User user = readRepository.findByUid(uidInt);
         if (user != null) {
             return user.isSubscribed();
         } else {
