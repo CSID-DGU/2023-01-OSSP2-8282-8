@@ -40,12 +40,14 @@ const ToolIcon = styled.TouchableOpacity`
 `;
 
 const Tool = ({ ctx, props, onClick }) => {
-	const typo = props.type + "_" + props.color;
 	return (
 		<ToolIcon
 			style={{ backgroundColor: props.color }}
 			onPress={() => {
 				onClick(ctx, props.type, props.color);
+				props.type == "eraser"
+					? (ctx.globalCompositeOperation = "destination-out")
+					: (ctx.globalCompositeOperation = "source-over");
 			}}
 		>
 			<Image
@@ -95,7 +97,7 @@ const ToolKit = ({ ctx }) => {
 	];
 	const toolOnClick = (ctx, type, color) => {
 		ctx.strokeStyle = color;
-		ctx.lineWidth = type == "pen" ? 2 : 15;
+		ctx.lineWidth = type == "pen" ? 2 : type == "highlight" ? 15 : 30;
 	};
 	return (
 		<ToolKitContainer>
@@ -132,7 +134,6 @@ const CanvasComponent = () => {
 		const y = event.nativeEvent.locationY;
 		ctx.lineTo(x, y);
 		ctx.stroke();
-		console.log("line width:", ctx.lineWidth);
 		if (ctx.lineWidth == 15) {
 			setPath((prevPath) => [...prevPath, { x, y }]);
 		}
