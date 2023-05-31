@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 @AllArgsConstructor
 @ToString
@@ -14,4 +15,5 @@ public class PageDto {
     private Integer pid;
     private Integer bid;
     private Integer pageNumber;
+    private List<TextDto> texts;
 }
