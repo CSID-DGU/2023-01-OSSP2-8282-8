@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import Pdf from 'react-native-pdf';
+import Header from '../organisms/Header'
 
 export default class PDFExample extends React.Component {
     render() {
@@ -8,8 +9,10 @@ export default class PDFExample extends React.Component {
 
         return (
             <View style={styles.container}>
+                <Header />
                 <Pdf
-                    enablePaging={true}
+                    trustAllCerts={false}
+                    enablePaging={true}//한장씩 렌더
                     source={source}
                     onLoadComplete={(numberOfPages,filePath) => {
                         console.log(`Number of pages: ${numberOfPages}`);
@@ -19,9 +22,6 @@ export default class PDFExample extends React.Component {
                     }}
                     onError={(error) => {
                         console.log(error);
-                    }}
-                    onPressLink={(uri) => {
-                        console.log(`Link pressed: ${uri}`);
                     }}
                     style={styles.pdf}/>
             </View>
