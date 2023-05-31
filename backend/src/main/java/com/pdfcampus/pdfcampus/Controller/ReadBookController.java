@@ -30,10 +30,9 @@ public class ReadBookController {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
 
-            //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
             String bookPDFUrl = readBookService.getBookPdfUrl(bookId).toString();
 
-            data.put("bookPDFUrl", bookPDFUrl);
+            data.put("pages", bookPDFUrl);
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();
