@@ -1,5 +1,6 @@
 package com.pdfcampus.pdfcampus.dto;
 
+import com.pdfcampus.pdfcampus.entity.Page;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +13,7 @@ import java.util.Set;
 @Setter
 @Getter
 public class PageDto {
-    private Integer pid;
-    private Integer bid;
     private Integer pageNumber;
-    private List<TextDto> texts;
+
 }
+

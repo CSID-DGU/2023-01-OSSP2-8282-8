@@ -2,12 +2,10 @@ package com.pdfcampus.pdfcampus.service;
 
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Page;
-import com.pdfcampus.pdfcampus.entity.Text;
-import com.pdfcampus.pdfcampus.entity.User;
-import com.pdfcampus.pdfcampus.repository.BookRepository;
+import com.pdfcampus.pdfcampus.entity.RowNum;
 import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.PageRepository;
-import com.pdfcampus.pdfcampus.repository.TextRepository;
+import com.pdfcampus.pdfcampus.repository.RowNumRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
@@ -23,12 +21,13 @@ public class PdfMetadataService {
     @Autowired
     private PageRepository pageRepository;
     @Autowired
-    private TextRepository textRepository;
+    private RowNumRepository rowNumRepository;
     @Autowired
     private DetailBookRepository detailBookRepository;
 
     public void processPDF(byte[] pdfContent, Integer bid) throws IOException {
         PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfContent));
+        int rowNumber = 1;
 
         for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); ++pageNumber) {
             Book book = detailBookRepository.findByBid(bid).orElse(null);
@@ -40,67 +39,72 @@ public class PdfMetadataService {
 
             Page pageEntity = new Page();
             pageEntity.setBid(book.getBid());
-            pageEntity.setPageNumber(pageNumber + 1);
+            pageEntity.setPageNumber(pageNumber+1);
             pageEntity = pageRepository.save(pageEntity);
 
-            PDFTextStripper pdfStripper = new CustomPDFTextStripper(pageEntity);
-            pdfStripper.setStartPage(pageNumber);
-            pdfStripper.setEndPage(pageNumber);
+            System.out.println("Page: [" + (pageNumber + 1) + "]");
 
-            String text = pdfStripper.getText(document);
+            PDFTextStripper pdfStripper = new CustomPDFTextStripper(pageEntity, rowNumber);
+            pdfStripper.setStartPage(pageNumber+1);
+            pdfStripper.setEndPage(pageNumber+1);
 
-            System.out.println("Page: [" + (pageNumber + 1) + "], Text: [" + text + "]");
+            pdfStripper.getText(document);
         }
 
         document.close();
     }
 
     private class CustomPDFTextStripper extends PDFTextStripper {
-        private Page associatedPage;
+        private static final float Y_TOLERANCE = 2.0f;
 
-        public CustomPDFTextStripper(Page associatedPage) throws IOException {
+        private Page associatedPage;
+        private int rowNumber;
+        private float lastY = -1;
+
+        public CustomPDFTextStripper(Page associatedPage, int rowNumber) throws IOException {
             super();
             this.associatedPage = associatedPage;
+            this.rowNumber = rowNumber;
         }
 
         @Override
         protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
-            String fullText = "";
-            float startY = -1, startX = -1, endX = -1;
+            StringBuilder fullTextBuilder = new StringBuilder();
+            float startX = -1, endX = -1, y = -1;
             for (TextPosition textPosition : textPositions) {
-                if (startY == -1 || textPosition.getYDirAdj() == startY) {
-                    if (startY == -1) {
-                        startY = textPosition.getYDirAdj();
-                        startX = textPosition.getXDirAdj();
+                if (startX == -1 || Math.abs(textPosition.getY() - lastY) <= Y_TOLERANCE) {
+                    if (startX == -1) {
+                        startX = textPosition.getX();
+                        y = textPosition.getY();
                     }
-                    fullText += textPosition.getUnicode();
-                    endX = textPosition.getXDirAdj() + textPosition.getWidthDirAdj();
+                    fullTextBuilder.append(textPosition.getUnicode());
+                    endX = textPosition.getEndX();
+                    lastY = y;
                 } else {
-                    String position = "[" + startX + ", " + endX + ", " + startY + "]";
-                    Text textEntity = new Text();
-                    textEntity.setPosition(position);
-                    textEntity.setPage(associatedPage);
-                    textRepository.save(textEntity);
 
-                    System.out.println("String: [" + fullText + "], Position: [" + startX + ", " + endX + ", " + startY + "]");
+                    saveRow(fullTextBuilder.toString(), startX, endX, lastY);
 
-                    startY = textPosition.getYDirAdj();
-                    startX = textPosition.getXDirAdj();
-                    endX = textPosition.getXDirAdj() + textPosition.getWidthDirAdj();
-                    fullText = textPosition.getUnicode();
+                    startX = textPosition.getX();
+                    y = textPosition.getY();
+                    endX = textPosition.getEndX();
+                    fullTextBuilder.setLength(0);
+                    fullTextBuilder.append(textPosition.getUnicode());
+                    lastY = y;
                 }
             }
-            if (!fullText.isEmpty()) {
-                String position = "[" + startX + ", " + endX + ", " + startY + "]";
-                Text textEntity = new Text();
-                textEntity.setPosition(position);
-                textEntity.setPage(associatedPage);
-                textRepository.save(textEntity);
 
-                System.out.println("String: [" + fullText + "], Position: [" + startX + ", " + endX + ", " + startY + "]");
+            if (fullTextBuilder.length() > 0) {
+                saveRow(fullTextBuilder.toString(), startX, endX, lastY);
             }
         }
 
+        private void saveRow(String text, float startX, float endX, float y) {
+            RowNum rowNumEntity = new RowNum();
+            rowNumEntity.setPid(associatedPage.getPid());
+            rowNumEntity.setRowNumber(rowNumber++);
+            rowNumRepository.save(rowNumEntity);
+            System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
+        }
     }
 }
 
