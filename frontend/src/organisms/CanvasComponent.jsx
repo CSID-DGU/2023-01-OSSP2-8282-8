@@ -68,13 +68,33 @@ const DownLoadTypo = styled.Text`
 	font-weight: 600;
 `;
 
-const PageButtonContainer = styled.View`
+const PageButtonContainer = styled.TouchableOpacity`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
 	margin: 0 0 -13px 0;
+`;
+
+const PageNumberWrapper = styled.View`
+	width: 71px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #d9d9d9;
+	box-sizing: border-box;
+	margin: 0 12px;
+	border-radius: 8px;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
+const PageNumberValue = styled.Text`
+	font-size: 16px;
+	font-weight: 600;
+	color: #ffffff;
+	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 const Tool = ({ ctx, props, onClick }) => {
@@ -160,6 +180,16 @@ const PageButton = () => {
 			<Image source={prev_page} />
 			<Image source={next_page} />
 		</PageButtonContainer>
+	);
+};
+
+const PageNumber = ({ number, totalPage }) => {
+	return (
+		<PageNumberWrapper>
+			<PageNumberValue>
+				{number}/{totalPage}
+			</PageNumberValue>
+		</PageNumberWrapper>
 	);
 };
 
@@ -249,6 +279,7 @@ const CanvasComponent = () => {
 					}}
 				>
 					<DownLoadButton onClick={downloadOnClick} />
+					<PageNumber number={1} totalPage={10} />
 					<PageButton />
 				</View>
 			</UpperContainer>
