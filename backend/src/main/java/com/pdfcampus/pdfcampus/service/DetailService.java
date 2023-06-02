@@ -10,8 +10,11 @@ import com.pdfcampus.pdfcampus.entity.Sale;
 import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
 import com.pdfcampus.pdfcampus.repository.SaleRepository;
+import com.pdfcampus.pdfcampus.service.ReadBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,32 +24,48 @@ public class DetailService {
     private final DetailNoteRepository detailNoteRepository;
     private final SaleRepository saleRepository;
     private final MylibService mylibService;
-    public DetailService(DetailBookRepository detailBookRepository, DetailNoteRepository detailNoteRepository, MylibService mylibService, SaleRepository saleRepository) {
+    @Autowired
+    private final ReadBookService readBookService;
+
+    public DetailService(DetailBookRepository detailBookRepository, DetailNoteRepository detailNoteRepository, MylibService mylibService, SaleRepository saleRepository, ReadBookService readBookService) {
         this.detailBookRepository = detailBookRepository;
         this.detailNoteRepository = detailNoteRepository;
         this.mylibService = mylibService;
         this.saleRepository = saleRepository;
+        this.readBookService = readBookService;
     }
 
     public DetailBookDto getBookData(String bid) { // 데이터베이스에서 책에 대한 데이터를 가져오도록 레포지토리 호출
         Integer bidInt = Integer.parseInt(bid);
-        Book book = detailBookRepository.findByBid(bidInt).orElseThrow(() -> new NullPointerException("Book not found")); // bookId를 통해 레포지토리를 호출하여 엔티티 받기
+        Book book = detailBookRepository.findByBid(bidInt).orElseThrow(() -> new NullPointerException("Book not found"));
+
+        String bookCoverUrl = null;
+        try {
+            bookCoverUrl = readBookService.getBookCoverUrl(String.valueOf(book.getBid())).toString();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         return new DetailBookDto( //form 형태에 맞는 dto 반환
                 book.getBid(),
                 book.getBookTitle(),
                 book.getAuthor(),
                 book.getPublisher(),
                 book.getPublicationYear(),
-                book.getBookCover(),
+                bookCoverUrl,
                 false);
     }
 
     public DetailNoteDto getNoteData(String nid) { // 데이터베이스에서 필기에 대한 데이터를 가져오도록 =1&bookId=2레포지토리 호출
         Integer nidInt = Integer.parseInt(nid);
-        Note note = detailNoteRepository.findByNid(nidInt).orElseThrow(() -> new NullPointerException("Note not found")); // noteId를 통해 레포지토리를 호출하여 엔티티 받기
-
+        Note note = detailNoteRepository.findByNid(nidInt).orElseThrow(() -> new NullPointerException("Note not found"));
         Sale sale = saleRepository.findByNote(note).orElse(null);
 
+        String bookCoverUrl = null;
+        try {
+            bookCoverUrl = readBookService.getBookCoverUrl(String.valueOf(note.getBook().getBid())).toString();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         return new DetailNoteDto(
                 note.getNid(),
                 note.getNoteTitle(),
@@ -59,7 +78,7 @@ public class DetailService {
                 note.getUser().getUid(),
                 note.getBook().getPublisher(),
                 note.getBook().getPublicationYear(),
-                note.getBook().getBookCover());
+                bookCoverUrl);
     }
 
 
