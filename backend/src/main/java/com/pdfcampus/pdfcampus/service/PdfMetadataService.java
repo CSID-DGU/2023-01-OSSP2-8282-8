@@ -50,7 +50,10 @@ public class PdfMetadataService {
                 continue;
             }
 
-            Page pageEntity = new Page();
+            // Check if a Page already exists for this book and page number
+            Page pageEntity = pageRepository.findByBidAndPageNumber(book.getBid(), pageNumber + 1)
+                    .orElse(new Page());
+
             pageEntity.setBid(book.getBid());
             pageEntity.setPageNumber(pageNumber+1);
 
@@ -127,9 +130,13 @@ public class PdfMetadataService {
         }
 
         private void saveRow(String text, float startX, float endX, float y) {
-            RowNum rowNumEntity = new RowNum();
+            // Check if a RowNum already exists for this page and row number
+            RowNum rowNumEntity = rowNumRepository.findByPidAndRowNumber(associatedPage.getPid(), rowNumber)
+                    .orElse(new RowNum());
+
             rowNumEntity.setPid(associatedPage.getPid());
             rowNumEntity.setRowNumber(rowNumber++);
+
             rowNumRepository.save(rowNumEntity);
             System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
         }
