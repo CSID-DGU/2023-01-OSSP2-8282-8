@@ -24,8 +24,7 @@ const Nametypo = styled.Text`
 const ListContainer = ({ navigation, products, type, isMyLib = false }) => {
 	return (
 		<Container>
-			{products.map((product, i) => {
-				console.log("product:", product.bookCover);
+			{products.map((product) => {
 				return (
 					<Container2
 						key={type == "book" ? product.bookId : product.noteId}
