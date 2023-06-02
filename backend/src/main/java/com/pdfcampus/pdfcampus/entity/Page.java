@@ -28,4 +28,7 @@ public class Page {
 
     @Column(name = "pageNumber")
     private Integer pageNumber;
+
+    @Column(name = "pageUrl")
+    private String pageUrl;
 }

@@ -14,4 +14,6 @@ public interface PageRepository extends JpaRepository<Page, Integer> {
     @Query("SELECT p FROM Page p WHERE p.bid = :bookId AND p.pageNumber IN :pageNumbers")
     List<Page> findByBookIdAndPageNumbers(@Param("bookId") Integer bookId, @Param("pageNumbers") List<Integer> pageNumbers);
 
+    List<Page> findByBid(Integer bid);
+
 }

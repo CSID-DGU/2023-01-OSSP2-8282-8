@@ -15,7 +15,7 @@ public class S3PresignedURLService {
     @Autowired
     public S3PresignedURLService(AmazonS3 s3Client) {
         this.s3Client = s3Client;
-    }
+    } // 사용 보류
 
     public URL generatePresignedUrl(String bucketName, String objectKey) {
         Date expiration = new Date();
