@@ -15,6 +15,8 @@ import styled from "styled-components";
 import pen_image from "../../assets/pen_image.png";
 import eraser_image from "../../assets/eraser_image.png";
 import highlight_image from "../../assets/highlight_image.png";
+import prev_page from "../../assets/prev_page.png";
+import next_page from "../../assets/next_page.png";
 import postMetadata from "../../api/postMetadata";
 
 const UpperContainer = styled.View`
@@ -23,7 +25,7 @@ const UpperContainer = styled.View`
 	justify-content: space-between;
 	align-items: flex-end;
 	box-sizing: border-box;
-	margin: 0 0 13px 0;
+	margin: 13px 0 13px 0;
 `;
 
 const ToolKitContainer = styled.View`
@@ -64,6 +66,15 @@ const DownLoadTypo = styled.Text`
 	color: #fff;
 	font-size: 16px;
 	font-weight: 600;
+`;
+
+const PageButtonContainer = styled.View`
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	margin: 0 0 -13px 0;
 `;
 
 const Tool = ({ ctx, props, onClick }) => {
@@ -143,6 +154,15 @@ const DownLoadButton = ({ onClick }) => {
 	);
 };
 
+const PageButton = () => {
+	return (
+		<PageButtonContainer>
+			<Image source={prev_page} />
+			<Image source={next_page} />
+		</PageButtonContainer>
+	);
+};
+
 const CanvasComponent = () => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
@@ -152,7 +172,6 @@ const CanvasComponent = () => {
 	const [ctx, setCtx] = useState();
 
 	const handleTouchStart = (event) => {
-		// Start a new path when the user touches the canvas
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		ctx.beginPath();
@@ -164,7 +183,6 @@ const CanvasComponent = () => {
 	};
 
 	const handleTouchMove = (event) => {
-		// Update the path while the user moves their finger
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		ctx.lineTo(x, y);
@@ -175,7 +193,6 @@ const CanvasComponent = () => {
 	};
 
 	const handleTouchEnd = () => {
-		// Finish the path when the user releases their finger
 		if (path.length > 0) {
 			setTotalPath((prev) => [...prev, path]);
 			setPath([]);
@@ -222,11 +239,20 @@ const CanvasComponent = () => {
 
 	return (
 		<>
-			<SafeAreaView style={{ flex: 1 }}>
-				<UpperContainer>
-					<ToolKit ctx={ctx} />
+			<UpperContainer>
+				<ToolKit ctx={ctx} />
+				<View
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						alignItems: "flex-end",
+					}}
+				>
 					<DownLoadButton onClick={downloadOnClick} />
-				</UpperContainer>
+					<PageButton />
+				</View>
+			</UpperContainer>
+			<View style={{ position: "relative", zIndex: 1 }}>
 				<View
 					ref={touchRef}
 					style={{
@@ -255,7 +281,17 @@ const CanvasComponent = () => {
 						}}
 					/>
 				</View>
-			</SafeAreaView>
+
+				<View
+					style={{
+						width: 100,
+						height: 100,
+						backgroundColor: "#000",
+						position: "absolute",
+						zIndex: -1,
+					}}
+				/>
+			</View>
 		</>
 	);
 };
