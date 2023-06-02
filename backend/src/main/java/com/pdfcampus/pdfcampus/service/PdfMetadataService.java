@@ -71,7 +71,12 @@ public class PdfMetadataService {
 
             String s3Key = book.getBookTitle() + "/page" + pageNumber + ".pdf";
             String bucketName = "8282book";
-            s3client.putObject(new PutObjectRequest(bucketName, s3Key, is, new ObjectMetadata()));
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("application/pdf");
+            metadata.setContentDisposition("inline");
+            s3client.putObject(new PutObjectRequest(bucketName, s3Key, is, metadata));
+
 
             URL s3Url = s3client.getUrl(bucketName, s3Key);
             pageEntity.setPageUrl(s3Url.toString());
