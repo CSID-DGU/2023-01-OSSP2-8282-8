@@ -9,8 +9,9 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-public class TextDto {
-    private Integer tid;
+public class RowNumDto {
+    private Integer rid;
     private Integer pid;
-    private String position;
+    private Integer rowNumber;
+
 }

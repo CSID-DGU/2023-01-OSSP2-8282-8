@@ -1,9 +1,9 @@
 package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
 import com.pdfcampus.pdfcampus.entity.Book;
-import com.pdfcampus.pdfcampus.entity.Note;
-import com.pdfcampus.pdfcampus.repository.NoteRepository;
+import com.pdfcampus.pdfcampus.entity.Page;
 import com.pdfcampus.pdfcampus.repository.BookRepository;
+import com.pdfcampus.pdfcampus.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -22,11 +24,9 @@ public class ReadBookService {
     private S3PresignedURLService s3PresignedURLService;
 
     @Autowired
-    private NoteRepository noteRepository; //노트 있는 경우
-    // 추후 노트 있는 경우 검사하고, 합쳐서 전송하는 로직 추가
-
-    @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private PageRepository pageRepository;
 
     public URL getBookCoverUrl(String bookId) throws MalformedURLException {
         Book book = bookRepository.findById(Integer.valueOf(bookId))
@@ -42,7 +42,7 @@ public class ReadBookService {
         String bucketName = "pdfampus";
         String objectKey = bookId + ".jpg";
         URL newUrl = s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
-        
+
         book.setBookCover(newUrl.toString());
         bookRepository.save(book);
 
@@ -61,12 +61,17 @@ public class ReadBookService {
         }
     }
 
-    public URL getBookPdfUrl(String bookId) {
+    public List<String> getBookPdfUrls(String bookId) {
         Book book = bookRepository.findById(Integer.valueOf(bookId))
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id " + bookId));
-        // bookTitle로 pdf url 생성(presigned)
-        String bucketName = "8282book";
-        String objectKey = book.getBookTitle() + ".pdf";
-        return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
+
+        List<Page> pages = pageRepository.findByBid(book.getBid());
+        List<String> pageUrls = new ArrayList<>();
+        for (Page page : pages) {
+            pageUrls.add(page.getPageUrl());
+        }
+
+        return pageUrls;
     }
+
 }
