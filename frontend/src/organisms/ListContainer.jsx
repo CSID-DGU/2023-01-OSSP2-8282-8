@@ -30,7 +30,7 @@ const ListContainer = ({ navigation, products, type, isMyLib = false }) => {
 						key={type == "book" ? product.bookId : product.noteId}
 						onPress={() => {
 							isMyLib
-								? navigation.navigate("BookContentReader")
+								? navigation.navigate("ContentReader")
 								: navigation.navigate(
 										type.charAt(0).toUpperCase() + type.slice(1) + "Detail",
 										{
