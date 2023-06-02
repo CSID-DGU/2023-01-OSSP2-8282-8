@@ -4,7 +4,6 @@ package com.pdfcampus.pdfcampus.entity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.amazonaws.services.alexaforbusiness.model.Text;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
