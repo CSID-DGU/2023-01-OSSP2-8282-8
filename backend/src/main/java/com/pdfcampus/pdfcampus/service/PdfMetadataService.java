@@ -9,7 +9,6 @@ import com.pdfcampus.pdfcampus.entity.RowNum;
 import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.PageRepository;
 import com.pdfcampus.pdfcampus.repository.RowNumRepository;
-import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -43,13 +42,7 @@ public class PdfMetadataService {
         PDFRenderer pdfRenderer = new PDFRenderer(document);
         int rowNumber = 1;
 
-        // Initialize the PDF splitter
-        Splitter splitter = new Splitter();
-
-        // Split the pages
-        List<PDDocument> Pages = splitter.split(document);
-
-        for (int pageNumber = 0; pageNumber < Pages.size(); ++pageNumber) {
+        for (int pageNumber = 0; pageNumber < document.getNumberOfPages(); ++pageNumber) {
             Book book = detailBookRepository.findByBid(bid).orElse(null);
 
             if (book == null) {
@@ -57,27 +50,24 @@ public class PdfMetadataService {
                 continue;
             }
 
+            // Check if a Page already exists for this book and page number
             Page pageEntity = pageRepository.findByBidAndPageNumber(book.getBid(), pageNumber + 1)
                     .orElse(new Page());
 
             pageEntity.setBid(book.getBid());
             pageEntity.setPageNumber(pageNumber+1);
 
-            // Save each page to a ByteArrayOutputStream
-            ByteArrayOutputStream pdfPage = new ByteArrayOutputStream();
-            Pages.get(pageNumber).save(pdfPage);
+            // Render the page to an image and save it to S3
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 300);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(bim, "png", os);
+            InputStream is = new ByteArrayInputStream(os.toByteArray());
 
-            InputStream is = new ByteArrayInputStream(pdfPage.toByteArray());
-
-            String s3Key = book.getBookTitle() + "/page" + pageNumber + ".pdf";
+            String s3Key = book.getBookTitle() + "/page" + pageNumber + ".png";
             String bucketName = "8282book";
+            s3client.putObject(new PutObjectRequest(bucketName, s3Key, is, new ObjectMetadata()));
 
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType("application/pdf");
-            metadata.setContentDisposition("inline");
-            s3client.putObject(new PutObjectRequest(bucketName, s3Key, is, metadata));
-
-
+            // Get the URL of the image we just uploaded
             URL s3Url = s3client.getUrl(bucketName, s3Key);
             pageEntity.setPageUrl(s3Url.toString());
 
