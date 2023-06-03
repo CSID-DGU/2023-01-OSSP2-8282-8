@@ -23,33 +23,38 @@ public class MetadataController {
     public ResponseEntity<?> processTextAndLocationData(@PathVariable Integer bookId, @RequestBody Map<String, Object> body) {
         try {
             Map<String, Object> response = new HashMap<>();
-            List<Map<String, Object>> metadata = new ArrayList<>();
+            Map<String, List<Map<String, Object>>> metadata = new HashMap<>();
 
             Map<String, Object> data = (Map<String, Object>) body.get("data");
-            List<List<Object>> dataList = (List<List<Object>>) data.get("metadata");
+            Map<String, List<List<Object>>> dataList = (Map<String, List<List<Object>>>) data.get("metadata");
 
-            for (List<Object> item : dataList) {
-                Integer pageNumber = (Integer) item.get(0);
-                List<Object> positionInfo = (List<Object>) item.get(1);
+            for (Map.Entry<String, List<List<Object>>> entry : dataList.entrySet()) {
+                String pageNumber = entry.getKey();
+                List<List<Object>> items = entry.getValue();
+                List<Map<String, Object>> pageInfo = new ArrayList<>();
 
-                float startX = ((Number) positionInfo.get(0)).floatValue();
-                float endX = ((Number) positionInfo.get(1)).floatValue();
-                float y = ((Number) positionInfo.get(2)).floatValue();
+                for (List<Object> item : items) {
+                    float startX = ((Number) item.get(0)).floatValue();
+                    float endX = ((Number) item.get(1)).floatValue();
+                    float y = ((Number) item.get(2)).floatValue();
 
-                float width = endX - startX;
-                float height = 1;
+                    float width = endX - startX;
+                    float height = 1;
 
-                ExtractedTextInfo extractedTextInfo = pdfMetadataService.extractTextFromLocation(bookId, pageNumber, startX, y, width, height);
-                String extractedText = extractedTextInfo.getText();
+                    ExtractedTextInfo extractedTextInfo = pdfMetadataService.extractTextFromLocation(bookId, Integer.parseInt(pageNumber), startX, y, width, height);
+                    String extractedText = extractedTextInfo.getText();
 
-                Map<String, Object> itemMetadata = new HashMap<>();
-                itemMetadata.put("positionInfo", positionInfo);
-                itemMetadata.put("extractedText", extractedText);
+                    Map<String, Object> itemMetadata = new HashMap<>();
+                    itemMetadata.put("positionInfo", item);
+                    itemMetadata.put("extractedText", extractedText);
 
-                metadata.add(itemMetadata);
+                    pageInfo.add(itemMetadata);
+                }
+
+                metadata.put(pageNumber, pageInfo);
             }
 
-            // Retrieve all pages for the given bookId
+
             List<Integer> allPages = pdfMetadataService.getAllPages(bookId);
 
             response.put("metadata", metadata);
@@ -68,4 +73,3 @@ public class MetadataController {
         }
     }
 }
-
