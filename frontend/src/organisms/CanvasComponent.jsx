@@ -332,18 +332,21 @@ const CanvasComponent = ({
 					<Image
 						source={{ uri: content[currentPage] }}
 						style={{
-							width: 580,
+							width: 590,
 							height: 680,
 						}}
 					/>
-
-					<Image
-						source={{ uri: content[currentPage + 1] }}
-						style={{
-							width: 580,
-							height: 680,
-						}}
-					/>
+					{currentPage + 1 < content.length ? (
+						<Image
+							source={{
+								uri: content[currentPage + 1],
+							}}
+							style={{
+								width: 590,
+								height: 680,
+							}}
+						/>
+					) : null}
 				</View>
 			</View>
 		</>
