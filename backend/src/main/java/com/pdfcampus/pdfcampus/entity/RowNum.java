@@ -24,4 +24,7 @@ public class RowNum {
     @Column(name = "rowNumber", nullable = false)
     private Integer rowNumber;
 
+    @Column(name = "rowY", nullable = false)
+    private Float rowY;
+
 }
