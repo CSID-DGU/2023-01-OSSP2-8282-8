@@ -11,18 +11,37 @@ const Container = styled.View`
 	z-index: 1;
 `;
 
-const ContentReader = () => {
+const ContentReader = ({ navigation, route }) => {
+	const { type, contentId } = route.params;
+	const [currentPage, setCurrentPage] = useState(0);
 	const [pages, setPages] = useState([]);
+	const prevOnClick = () => {
+		setCurrentPage(currentPage > 1 ? currentPage - 2 : currentPage);
+	};
+	const nextOnClick = () => {
+		setCurrentPage(
+			currentPage < pages.length - 2 ? currentPage + 2 : currentPage
+		);
+	};
 	const handlePages = (pages) => {
 		setPages(pages);
 	};
 	useEffect(() => {
-		getBookContent(handlePages);
+		if (type == "book") {
+			getBookContent(contentId, handlePages);
+		} else {
+			// get note content
+		}
 	}, []);
 	return (
 		<Container>
-			<Header />
-			<CanvasComponent />
+			<Header navigation={navigation} />
+			<CanvasComponent
+				content={pages}
+				prevOnClick={prevOnClick}
+				nextOnClick={nextOnClick}
+				currentPage={currentPage}
+			/>
 		</Container>
 	);
 };

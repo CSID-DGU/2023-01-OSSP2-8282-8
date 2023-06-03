@@ -174,11 +174,15 @@ const DownLoadButton = ({ onClick }) => {
 	);
 };
 
-const PageButton = () => {
+const PageButton = ({ prevOnClick, nextOnClick }) => {
 	return (
 		<PageButtonContainer>
-			<Image source={prev_page} />
-			<Image source={next_page} />
+			<TouchableOpacity onPress={prevOnClick}>
+				<Image source={prev_page} />
+			</TouchableOpacity>
+			<TouchableOpacity onPress={nextOnClick}>
+				<Image source={next_page} />
+			</TouchableOpacity>
 		</PageButtonContainer>
 	);
 };
@@ -193,7 +197,12 @@ const PageNumber = ({ number, totalPage }) => {
 	);
 };
 
-const CanvasComponent = () => {
+const CanvasComponent = ({
+	content,
+	prevOnClick,
+	nextOnClick,
+	currentPage,
+}) => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
 
@@ -279,8 +288,8 @@ const CanvasComponent = () => {
 					}}
 				>
 					<DownLoadButton onClick={downloadOnClick} />
-					<PageNumber number={1} totalPage={10} />
-					<PageButton />
+					<PageNumber number={currentPage + 1} totalPage={content.length} />
+					<PageButton prevOnClick={prevOnClick} nextOnClick={nextOnClick} />
 				</View>
 			</UpperContainer>
 			<View style={{ position: "relative", zIndex: 1 }}>
@@ -312,16 +321,30 @@ const CanvasComponent = () => {
 						}}
 					/>
 				</View>
-
 				<View
 					style={{
-						width: 100,
-						height: 100,
-						backgroundColor: "#000",
+						display: "flex",
+						flexDirection: "row",
 						position: "absolute",
 						zIndex: -1,
 					}}
-				/>
+				>
+					<Image
+						source={{ uri: content[currentPage] }}
+						style={{
+							width: 580,
+							height: 680,
+						}}
+					/>
+
+					<Image
+						source={{ uri: content[currentPage + 1] }}
+						style={{
+							width: 580,
+							height: 680,
+						}}
+					/>
+				</View>
 			</View>
 		</>
 	);
