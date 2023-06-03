@@ -210,6 +210,26 @@ const CanvasComponent = ({
 
 	const [ctx, setCtx] = useState();
 
+	const [img, setImg] = useState({});
+
+	const handlePrev = async () => {
+		prevOnClick();
+
+		const url = await canvasRef.current.toDataURL("image/png");
+		setImg({ ...img, [currentPage + 1]: url });
+
+		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+	};
+
+	const handleNext = async () => {
+		nextOnClick();
+
+		const url = await canvasRef.current.toDataURL("image/png");
+		setImg({ ...img, [currentPage + 1]: url });
+
+		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+	};
+
 	const handleTouchStart = (event) => {
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
@@ -255,25 +275,28 @@ const CanvasComponent = ({
 	}, []);
 
 	const [path, setPath] = useState([]);
-	const [meta, setMeta] = useState([]);
+	const [meta, setMeta] = useState({});
+	let md = {};
 
 	const downloadOnClick = () => {
 		totalPath.map((h) => {
-			x_s = h.map((item) => item.x);
-			y_s = h.map((item) => item.y);
-			console.log("x_s", x_s);
-			console.log("y_s", y_s);
-			setMeta((prev) => [
-				...prev,
-				[
-					Math.min(...x_s),
-					Math.max(...x_s),
-					y_s.reduce((a, b) => a + b, 0) / y_s.length,
-				],
-			]);
+			const x_s = h.map((item) => item.x);
+			const y_s = h.map((item) => item.y);
+			const position = [
+				Math.min(...x_s),
+				Math.max(...x_s),
+				y_s.reduce((a, b) => a + b, 0) / y_s.length,
+			];
+
+			if (!md[position[0] > 590 ? currentPage + 2 : currentPage + 1]) {
+				md[position[0] > 590 ? currentPage + 2 : currentPage + 1] = [];
+			}
+
+			md[position[0] > 590 ? currentPage + 2 : currentPage + 1].push(position);
+			setMeta({ ...meta, ...md });
 		});
-		// postMetadata
-		console.log("meta", meta);
+		console.log("meta:", meta);
+		// // postMetadata
 	};
 
 	return (
@@ -289,7 +312,7 @@ const CanvasComponent = ({
 				>
 					<DownLoadButton onClick={downloadOnClick} />
 					<PageNumber number={currentPage + 1} totalPage={content.length} />
-					<PageButton prevOnClick={prevOnClick} nextOnClick={nextOnClick} />
+					<PageButton prevOnClick={handlePrev} nextOnClick={handleNext} />
 				</View>
 			</UpperContainer>
 			<View style={{ position: "relative", zIndex: 1 }}>
