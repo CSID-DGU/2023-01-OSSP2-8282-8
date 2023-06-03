@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface RowNumRepository extends JpaRepository<RowNum, Integer> {
 
     Optional<RowNum> findByPidAndRowNumber(Integer pid, int rowNumber);
+
+    RowNum findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(Integer pid, float y);
+    RowNum findFirstByPidAndRowYLessThanOrderByRowYDesc(Integer pid, float y);
 }

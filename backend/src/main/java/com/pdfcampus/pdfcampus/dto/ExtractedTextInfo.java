@@ -9,10 +9,13 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-public class RowNumDto {
-    private Integer rid;
-    private Integer pid;
-    private Integer rowNumber;
-    private Float rowY;
+public class ExtractedTextInfo {
+    private String text;
+    private int rowNumber;
+    private float yPosition;
 
+    public ExtractedTextInfo() {
+
+    }
 }
+
