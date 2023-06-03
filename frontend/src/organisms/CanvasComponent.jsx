@@ -198,6 +198,7 @@ const PageNumber = ({ number, totalPage }) => {
 };
 
 const CanvasComponent = ({
+	bookId,
 	content,
 	prevOnClick,
 	nextOnClick,
@@ -278,6 +279,11 @@ const CanvasComponent = ({
 	const [meta, setMeta] = useState({});
 	let md = {};
 
+	const [metadata, setMetadata] = useState();
+	const handleMetadata = (data) => {
+		setMetadata(data);
+	};
+
 	const downloadOnClick = () => {
 		totalPath.map((h) => {
 			const x_s = h.map((item) => item.x);
@@ -296,7 +302,15 @@ const CanvasComponent = ({
 			setMeta({ ...meta, ...md });
 		});
 		console.log("meta:", meta);
-		// // postMetadata
+		postMetadata(
+			bookId,
+			{
+				data: {
+					metadata: meta,
+				},
+			},
+			handleMetadata
+		);
 	};
 
 	return (

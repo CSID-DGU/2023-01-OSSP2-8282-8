@@ -41,6 +41,7 @@ const ContentReader = ({ navigation, route }) => {
 				prevOnClick={prevOnClick}
 				nextOnClick={nextOnClick}
 				currentPage={currentPage}
+				bookId={contentId}
 			/>
 		</Container>
 	);
