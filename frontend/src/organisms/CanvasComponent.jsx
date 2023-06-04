@@ -254,13 +254,15 @@ const CanvasComponent = ({
 
 	const handleTouchEnd = () => {
 		let md = {};
+		const ttp = [...totalPath, path];
 		if (path.length > 0) {
 			setTotalPath((prev) => [...prev, path]);
 			setPath([]);
 		}
-		totalPath.map((h) => {
+		ttp.map((h) => {
 			const x_s = h.map((item) => item.x);
 			const y_s = h.map((item) => item.y);
+
 			const position = [
 				Math.min(...x_s),
 				Math.max(...x_s),
@@ -268,10 +270,14 @@ const CanvasComponent = ({
 			];
 			const idx = position[0] > 590 ? currentPage + 2 : currentPage + 1;
 			if (!md[[idx]]) {
-				md[p[idx]] = [];
+				md[[idx]] = [];
 			}
 
-			md[[idx]].push(position);
+			md[[idx]].push(
+				position[0] > 590
+					? [position[0] - 590, position[1] - 590, position[2]]
+					: position
+			);
 			console.log("md:", md);
 			setMeta({ ...meta, ...md });
 		});
