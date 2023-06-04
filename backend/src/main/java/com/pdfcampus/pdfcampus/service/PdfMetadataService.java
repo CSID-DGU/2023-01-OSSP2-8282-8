@@ -9,6 +9,7 @@ import com.pdfcampus.pdfcampus.entity.RowNum;
 import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.PageRepository;
 import com.pdfcampus.pdfcampus.repository.RowNumRepository;
+import com.pdfcampus.pdfcampus.service.GetPDFDimensions;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -63,6 +64,9 @@ public class PdfMetadataService {
 
             pageEntity.setBid(book.getBid());
             pageEntity.setPageNumber(pageNumber+1);
+
+            float[] dimensions = GetPDFDimensions.getPageDimensions(document, pageNumber);
+            System.out.println("Page Width: " + dimensions[0] + ", Page Height: " + dimensions[1]);
 
             // Render the page to an image and save it to S3
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 300);
@@ -151,10 +155,21 @@ public class PdfMetadataService {
     }
     public ExtractedTextInfo extractTextFromLocation(Integer bid, Integer pageNumber, float startX, float startY, float width, float height) throws IOException {
 
+        // PDFBox 인식 페이지 크기
+        float pdfBoxPageWidth = 595;
+        float pdfBoxPageHeight = 841;
+
+        // 요청받는 PDF 페이지 크기
+        float requestPageWidth = 590;
+        float requestPageHeight = 680;
+
+        // 위치 및 크기 조정을 위한 스케일 계산
+        float scaleX = pdfBoxPageWidth / requestPageWidth;
+        float scaleY = pdfBoxPageHeight / requestPageHeight;
+
         // Check if the page exists in the database
         Page page = pageRepository.findByBidAndPageNumber(bid, pageNumber)
                 .orElseThrow(() -> new RuntimeException("Page number: " + pageNumber + " for book with ID: " + bid + " not found."));
-
 
         // Get the PDF from S3
         S3Object s3Object = s3client.getObject("8282book", bid + ".pdf");
@@ -168,7 +183,8 @@ public class PdfMetadataService {
         PDFTextStripperByArea stripper = new PDFTextStripperByArea();
 
         // Define a rectangle area with the given startX, startY, width, and height
-        Rectangle2D.Float rect = new Rectangle2D.Float(startX, startY, width, height);
+        // 위치 및 크기를 스케일에 맞게 조정
+        Rectangle2D.Float rect = new Rectangle2D.Float(startX * scaleX, startY * scaleY, width * scaleX, height * scaleY);
 
         // Add the defined area to the stripper
         stripper.addRegion("region", rect);
@@ -206,6 +222,7 @@ public class PdfMetadataService {
 
         return extractedTextInfo;
     }
+
     public List<Integer> getAllPages(Integer bookId) {
         List<Page> pages = pageRepository.findByBid(bookId);
         List<Integer> pageNumbers = new ArrayList<>();
