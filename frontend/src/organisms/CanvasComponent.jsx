@@ -100,9 +100,9 @@ const PageNumberValue = styled.Text`
 const Tool = ({ ctx, props, onClick }) => {
 	return (
 		<ToolIcon
-			style={{ backgroundColor: props.color }}
+			style={{ backgroundColor: props.color[0] }}
 			onPress={() => {
-				onClick(ctx, props.type, props.color);
+				onClick(ctx, props.type, props.color[1]);
 				props.type == "eraser"
 					? (ctx.globalCompositeOperation = "destination-out")
 					: (ctx.globalCompositeOperation = "source-over");
@@ -125,27 +125,27 @@ const Tool = ({ ctx, props, onClick }) => {
 const ToolKit = ({ ctx }) => {
 	const tools = [
 		{
-			color: "#F96060",
+			color: ["rgb(249,96,96)", "rgba(249,96,96,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#E1E440",
+			color: ["rgb(225,228,64)", "rgba(225,228,64,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#595FE5",
+			color: ["rgb(89,95,229)", "rgba(89,95,229,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#333",
+			color: ["#333", "#333"],
 			type: "pen",
 		},
 		{
-			color: "#E12323",
+			color: ["#E12323", "#E12323"],
 			type: "pen",
 		},
 		{
-			color: "#1E25BB",
+			color: ["#1E25BB", "#1E25BB"],
 			type: "pen",
 		},
 		{
@@ -253,10 +253,28 @@ const CanvasComponent = ({
 	};
 
 	const handleTouchEnd = () => {
+		let md = {};
 		if (path.length > 0) {
 			setTotalPath((prev) => [...prev, path]);
 			setPath([]);
 		}
+		totalPath.map((h) => {
+			const x_s = h.map((item) => item.x);
+			const y_s = h.map((item) => item.y);
+			const position = [
+				Math.min(...x_s),
+				Math.max(...x_s),
+				y_s.reduce((a, b) => a + b, 0) / y_s.length,
+			];
+			const idx = position[0] > 590 ? currentPage + 2 : currentPage + 1;
+			if (!md[[idx]]) {
+				md[p[idx]] = [];
+			}
+
+			md[[idx]].push(position);
+			console.log("md:", md);
+			setMeta({ ...meta, ...md });
+		});
 	};
 
 	useEffect(() => {
@@ -277,7 +295,6 @@ const CanvasComponent = ({
 
 	const [path, setPath] = useState([]);
 	const [meta, setMeta] = useState({});
-	let md = {};
 
 	const [metadata, setMetadata] = useState();
 	const handleMetadata = (data) => {
@@ -285,22 +302,6 @@ const CanvasComponent = ({
 	};
 
 	const downloadOnClick = () => {
-		totalPath.map((h) => {
-			const x_s = h.map((item) => item.x);
-			const y_s = h.map((item) => item.y);
-			const position = [
-				Math.min(...x_s),
-				Math.max(...x_s),
-				y_s.reduce((a, b) => a + b, 0) / y_s.length,
-			];
-
-			if (!md[position[0] > 590 ? currentPage + 2 : currentPage + 1]) {
-				md[position[0] > 590 ? currentPage + 2 : currentPage + 1] = [];
-			}
-
-			md[position[0] > 590 ? currentPage + 2 : currentPage + 1].push(position);
-			setMeta({ ...meta, ...md });
-		});
 		console.log("meta:", meta);
 		postMetadata(
 			bookId,
