@@ -149,7 +149,7 @@ const ToolKit = ({ ctx }) => {
 			type: "pen",
 		},
 		{
-			color: "white",
+			color: ["white", "white"],
 			type: "eraser",
 		},
 	];
