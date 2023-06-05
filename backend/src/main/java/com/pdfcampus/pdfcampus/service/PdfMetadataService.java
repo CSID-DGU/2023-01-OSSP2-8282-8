@@ -141,13 +141,25 @@ public class PdfMetadataService {
         }
 
         private void saveRow(String text, float startX, float endX, float y) {
+            // PDFBox 인식 페이지 크기
+            float pdfBoxPageWidth = 595;
+            float pdfBoxPageHeight = 841;
+
+            // 요청받는 PDF 페이지 크기
+            float requestPageWidth = 590;
+            float requestPageHeight = 680;
+
+            // 위치 및 크기 조정을 위한 스케일 계산
+            float scaleX = pdfBoxPageWidth / requestPageWidth;
+            float scaleY = pdfBoxPageHeight / requestPageHeight;
+
             // Check if a RowNum already exists for this page and row number
             RowNum rowNumEntity = rowNumRepository.findByPidAndRowNumber(associatedPage.getPid(), rowNumber)
                     .orElse(new RowNum());
 
             rowNumEntity.setPid(associatedPage.getPid());
             rowNumEntity.setRowNumber(rowNumber++);
-            rowNumEntity.setRowY(y);
+            rowNumEntity.setRowY(y*scaleY);
 
             rowNumRepository.save(rowNumEntity);
             System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
@@ -199,9 +211,57 @@ public class PdfMetadataService {
         int rowNumber = 1;
         float y = startY;
 
+        System.out.println(y);
         // Check if the row exists in the database
-        RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
+        /*RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
+        System.out.println(upperRow.getRowY());
         RowNum lowerRow = rowNumRepository.findFirstByPidAndRowYLessThanOrderByRowYDesc(page.getPid(), y);
+        System.out.println(lowerRow.getRowY());*/
+
+        RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
+        if (upperRow != null) {
+            System.out.println("Upper Row Y: " + upperRow.getRowY());
+            Rectangle2D.Float upperRect = new Rectangle2D.Float(0, upperRow.getRowY() * scaleY, pdfBoxPageWidth, 1);
+            stripper.addRegion("upperRegion", upperRect);
+            stripper.extractRegions(document.getPage(pageNumber - 1));
+            String upperText = stripper.getTextForRegion("upperRegion");
+            System.out.println("Upper Row Text: " + upperText);
+        } else {
+            System.out.println("upperRow is null");
+        }
+
+        RowNum lowerRow = rowNumRepository.findFirstByPidAndRowYLessThanOrderByRowYDesc(page.getPid(), y);
+        if (lowerRow != null) {
+            System.out.println("Lower Row Y: " + lowerRow.getRowY());
+            Rectangle2D.Float lowerRect = new Rectangle2D.Float(0, lowerRow.getRowY() * scaleY, pdfBoxPageWidth, 1);
+            stripper.addRegion("lowerRegion", lowerRect);
+            stripper.extractRegions(document.getPage(pageNumber - 1));
+            String lowerText = stripper.getTextForRegion("lowerRegion");
+            System.out.println("Lower Row Text: " + lowerText);
+        } else {
+            System.out.println("lowerRow is null");
+        }
+
+        // If the extracted text is empty, whitespace, or newline characters, find the nearest y row and extract the text from that row
+        if (text.isBlank() || text.contains("\r\n")) {
+            // Find the nearest non-empty row
+            String nearestText = "\r\n";
+            boolean hasNonEmptyRow = false;
+            float deltaY = 1.0f;  // The amount by which to change y
+            while (!hasNonEmptyRow) {
+                y += deltaY;  // Change y
+                Rectangle2D.Float nearestRect = new Rectangle2D.Float(startX * scaleX, y * scaleY, width * scaleX, height * scaleY);
+                stripper.addRegion("nearestRegion", nearestRect);
+                stripper.extractRegions(document.getPage(pageNumber - 1));
+                nearestText = stripper.getTextForRegion("nearestRegion");
+                if (!nearestText.trim().isEmpty() && !nearestText.matches("\r\n")) {
+                    hasNonEmptyRow = true;
+                }
+            }
+            text = nearestText;
+        }
+
+
 
         RowNum rowNum;
         if (upperRow == null) {
