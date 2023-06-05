@@ -49,10 +49,6 @@ public class MynoteService {
         return false;
     }
 
-    public boolean deleteS3Note(String nid) {
-
-    }
-
     public List<MynoteDto> getMynoteByUserId(String userId) {
         List<Note> noteList = mynoteRepository.findByUserUid(Integer.valueOf(userId));
 

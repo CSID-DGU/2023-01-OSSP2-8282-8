@@ -3,6 +3,7 @@ package com.pdfcampus.pdfcampus.Controller;
 
 import com.pdfcampus.pdfcampus.dto.MynoteAssignDto;
 import com.pdfcampus.pdfcampus.dto.MynoteDto;
+import com.pdfcampus.pdfcampus.service.AmazonS3ClientService;
 import com.pdfcampus.pdfcampus.service.DetailService;
 import com.pdfcampus.pdfcampus.service.MynoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ public class MynoteController {
 
     private final MynoteService mynoteService;
     private final DetailService detailService;
+    private final AmazonS3ClientService amazonS3ClientService;
     @Autowired
-    public MynoteController(MynoteService mynoteService, DetailService detailService) {
+    public MynoteController(MynoteService mynoteService, DetailService detailService, AmazonS3ClientService amazonS3ClientService) {
         this.mynoteService = mynoteService;
         this.detailService = detailService;
+        this.amazonS3ClientService = amazonS3ClientService;
     }
 
     @PostMapping("/mynote/assign")
@@ -91,6 +94,7 @@ public class MynoteController {
             boolean deleted = mynoteService.deleteNote(userId, noteId);
 
             //aws s3 8282note 버킷에서 데이터 삭제
+            amazonS3ClientService.deleteS3Note("8282note", noteId);
 
             if (deleted) {
                 //정상적으로 삭제
