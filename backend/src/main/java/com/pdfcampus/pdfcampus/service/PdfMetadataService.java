@@ -149,9 +149,8 @@ public class PdfMetadataService {
             float requestPageWidth = 590;
             float requestPageHeight = 680;
 
-            // 위치 및 크기 조정을 위한 스케일 계산
-            float scaleX = pdfBoxPageWidth / requestPageWidth;
-            float scaleY = pdfBoxPageHeight / requestPageHeight;
+            // 잘린 부분의 크기
+            // float cutOff = pdfBoxPageHeight - requestPageHeight;
 
             // Check if a RowNum already exists for this page and row number
             RowNum rowNumEntity = rowNumRepository.findByPidAndRowNumber(associatedPage.getPid(), rowNumber)
@@ -159,13 +158,17 @@ public class PdfMetadataService {
 
             rowNumEntity.setPid(associatedPage.getPid());
             rowNumEntity.setRowNumber(rowNumber++);
-            rowNumEntity.setRowY(y*scaleY);
+            rowNumEntity.setRowY(y);
 
             rowNumRepository.save(rowNumEntity);
             System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
         }
     }
     public ExtractedTextInfo extractTextFromLocation(Integer bid, Integer pageNumber, float startX, float startY, float width, float height) throws IOException {
+        System.out.println("x시작"+startX);
+        System.out.println("y"+startY);
+        System.out.println("너비 높이"+width+height);
+
 
         // PDFBox 인식 페이지 크기
         float pdfBoxPageWidth = 595;
@@ -175,10 +178,9 @@ public class PdfMetadataService {
         float requestPageWidth = 590;
         float requestPageHeight = 680;
 
-        // 위치 및 크기 조정을 위한 스케일 계산
-        float scaleX = pdfBoxPageWidth / requestPageWidth;
-        float scaleY = pdfBoxPageHeight / requestPageHeight;
-
+        // 잘린 부분의 크기
+        float cutOff = pdfBoxPageHeight - requestPageHeight;
+        System.out.println("cutOff ="+ cutOff);
         // Check if the page exists in the database
         Page page = pageRepository.findByBidAndPageNumber(bid, pageNumber)
                 .orElseThrow(() -> new RuntimeException("Page number: " + pageNumber + " for book with ID: " + bid + " not found."));
@@ -190,16 +192,16 @@ public class PdfMetadataService {
 
         // Load the PDF document
         PDDocument document = PDDocument.load(new ByteArrayInputStream(bytes));
-
+        System.out.println("pdf 가져옴");
         // Create a new instance of PDFTextStripperByArea
         PDFTextStripperByArea stripper = new PDFTextStripperByArea();
 
-        // Define a rectangle area with the given startX, startY, width, and height
-        // 위치 및 크기를 스케일에 맞게 조정
-        Rectangle2D.Float rect = new Rectangle2D.Float(startX * scaleX, startY * scaleY, width * scaleX, height * scaleY);
+        Rectangle2D.Float rect = new Rectangle2D.Float(startX, startY+cutOff, width, height);
+
 
         // Add the defined area to the stripper
         stripper.addRegion("region", rect);
+
 
         // Extract the text from the defined area
         stripper.extractRegions(document.getPage(pageNumber - 1));
@@ -209,72 +211,37 @@ public class PdfMetadataService {
         // but without an actual PDF and logic to calculate the row number, this is not possible
         // So for now, let's set them to some arbitrary values
         int rowNumber = 1;
-        float y = startY;
-
-        System.out.println(y);
-        // Check if the row exists in the database
-        /*RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
+        float y = startY+cutOff;
+        System.out.println(startY);
+        // If the extracted text is empty, whitespace, or newline characters, find the nearest y row and extract the text from that row
+        float deltaY = 1.0f;  // The amount by which to change y
+        while (text.isBlank() || text.equals("\r\n")) {
+            y += deltaY;  // Change y
+            Rectangle2D.Float nearestRect = new Rectangle2D.Float(startX, y, width, height);
+            stripper.addRegion("nearestRegion", nearestRect);
+            stripper.extractRegions(document.getPage(pageNumber - 1));
+            text = stripper.getTextForRegion("nearestRegion");
+        }
+        RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
         System.out.println(upperRow.getRowY());
         RowNum lowerRow = rowNumRepository.findFirstByPidAndRowYLessThanOrderByRowYDesc(page.getPid(), y);
-        System.out.println(lowerRow.getRowY());*/
-
-        RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
-        if (upperRow != null) {
-            System.out.println("Upper Row Y: " + upperRow.getRowY());
-            Rectangle2D.Float upperRect = new Rectangle2D.Float(0, upperRow.getRowY() * scaleY, pdfBoxPageWidth, 1);
-            stripper.addRegion("upperRegion", upperRect);
-            stripper.extractRegions(document.getPage(pageNumber - 1));
-            String upperText = stripper.getTextForRegion("upperRegion");
-            System.out.println("Upper Row Text: " + upperText);
-        } else {
-            System.out.println("upperRow is null");
-        }
-
-        RowNum lowerRow = rowNumRepository.findFirstByPidAndRowYLessThanOrderByRowYDesc(page.getPid(), y);
-        if (lowerRow != null) {
-            System.out.println("Lower Row Y: " + lowerRow.getRowY());
-            Rectangle2D.Float lowerRect = new Rectangle2D.Float(0, lowerRow.getRowY() * scaleY, pdfBoxPageWidth, 1);
-            stripper.addRegion("lowerRegion", lowerRect);
-            stripper.extractRegions(document.getPage(pageNumber - 1));
-            String lowerText = stripper.getTextForRegion("lowerRegion");
-            System.out.println("Lower Row Text: " + lowerText);
-        } else {
-            System.out.println("lowerRow is null");
-        }
-
-        // If the extracted text is empty, whitespace, or newline characters, find the nearest y row and extract the text from that row
-        if (text.isBlank() || text.contains("\r\n")) {
-            // Find the nearest non-empty row
-            String nearestText = "\r\n";
-            boolean hasNonEmptyRow = false;
-            float deltaY = 1.0f;  // The amount by which to change y
-            while (!hasNonEmptyRow) {
-                y += deltaY;  // Change y
-                Rectangle2D.Float nearestRect = new Rectangle2D.Float(startX * scaleX, y * scaleY, width * scaleX, height * scaleY);
-                stripper.addRegion("nearestRegion", nearestRect);
-                stripper.extractRegions(document.getPage(pageNumber - 1));
-                nearestText = stripper.getTextForRegion("nearestRegion");
-                if (!nearestText.trim().isEmpty() && !nearestText.matches("\r\n")) {
-                    hasNonEmptyRow = true;
-                }
-            }
-            text = nearestText;
-        }
-
-
+        System.out.println(lowerRow.getRowY());
 
         RowNum rowNum;
         if (upperRow == null) {
             rowNum = lowerRow;
+            System.out.println("upperRow == null"+rowNum);
         } else if (lowerRow == null) {
             rowNum = upperRow;
+            System.out.println("lowerRow == null"+rowNum);
         } else {
             rowNum = Math.abs(upperRow.getRowY() - y) < Math.abs(lowerRow.getRowY() - y) ? upperRow : lowerRow;
+            System.out.println("else"+rowNum);
         }
 
         ExtractedTextInfo extractedTextInfo = new ExtractedTextInfo();
         extractedTextInfo.setText(text);
-        extractedTextInfo.setRowNumber(rowNum.getRowNumber());  // Now we get the row number from the database
+        extractedTextInfo.setRowNumber(rowNum.getRowNumber());  // 사용하지 않음
         extractedTextInfo.setYPosition(y);
 
         document.close();

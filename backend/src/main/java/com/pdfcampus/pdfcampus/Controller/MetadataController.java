@@ -66,7 +66,7 @@ public class MetadataController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "apiStatus", Map.of(
-                            "errorMessage", e.getMessage(),
+                            "errorMessage", e.getMessage() == null ? "Unknown server error" : e.getMessage(),
                             "errorCode", "E500"
                     )
             ));
