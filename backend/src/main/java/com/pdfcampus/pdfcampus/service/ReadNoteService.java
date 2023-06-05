@@ -1,9 +1,6 @@
 package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
-import com.pdfcampus.pdfcampus.entity.Book;
-import com.pdfcampus.pdfcampus.entity.Note;
-import com.pdfcampus.pdfcampus.entity.Page;
-import com.pdfcampus.pdfcampus.entity.User;
+import com.pdfcampus.pdfcampus.entity.*;
 import com.pdfcampus.pdfcampus.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +33,9 @@ public class ReadNoteService {
     @Autowired
     private PageRepository pageRepository;
 
+    @Autowired
+    private NotePageRepository notePageRepository;
+
     public String getBookId(String noteId) {
         Integer nidInt = Integer.parseInt(noteId);
         Note note = detailNoteRepository.findByNid(nidInt).orElseThrow(() -> new NullPointerException("Note not found"));
@@ -54,9 +54,9 @@ public class ReadNoteService {
         Note note = noteRepository.findById(Integer.valueOf(noteId))
                 .orElseThrow(() -> new EntityNotFoundException("Note not found with id " + noteId));
         // noteTitle로 pdf url 생성(presigned)
-        List<Page> pages = pageRepository.findByNid(note.getNid());
+        List<NotePage> pages = notePageRepository.findByNid(note.getNid());
         List<String> pageUrls = new ArrayList<>();
-        for (Page page : pages) {
+        for (NotePage page : pages) {
             pageUrls.add(page.getPageUrl());
         }
 
