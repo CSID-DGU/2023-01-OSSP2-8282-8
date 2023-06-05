@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-public class AssignDeleteDto {
+public class MynoteAssignDto {
     private int userId;
     private int noteId;
 }
