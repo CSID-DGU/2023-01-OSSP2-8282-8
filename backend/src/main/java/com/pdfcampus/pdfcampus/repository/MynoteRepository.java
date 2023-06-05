@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MynoteRepository extends JpaRepository<Note, Integer> {
     List<Note> findByUserUid(Integer uid);
+
+    void deleteByNid(Integer noteId);
 }

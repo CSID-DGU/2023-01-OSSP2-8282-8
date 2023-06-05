@@ -31,7 +31,7 @@ const GotoLibraryButton = ({ press }) => {
 	return (
 		<TouchableOpacity onPress={press}>
 			<ButtonWrapper>
-				<ButtonTypo>나의 서재로 가기</ButtonTypo>
+				<ButtonTypo>나의 서재에서 확인하기</ButtonTypo>
 			</ButtonWrapper>
 		</TouchableOpacity>
 	);

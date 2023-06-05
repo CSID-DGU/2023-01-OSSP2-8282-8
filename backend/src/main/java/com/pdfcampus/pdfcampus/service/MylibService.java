@@ -9,7 +9,9 @@ import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.repository.BookRepository;
 import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
+import com.pdfcampus.pdfcampus.service.ReadBookService;
 
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,22 +24,18 @@ public class MylibService {
     private final MylibRepository mylibRepository;
     private final NoteRepository noteRepository;
     private final BookRepository bookRepository;
+    private final ReadBookService readBookService;
 
-    public MylibService(MylibRepository mylibRepository, NoteRepository noteRepository, BookRepository bookRepository) {
+    public MylibService(MylibRepository mylibRepository, NoteRepository noteRepository, BookRepository bookRepository, ReadBookService readBookService) {
         this.mylibRepository = mylibRepository;
         this.noteRepository = noteRepository;
         this.bookRepository = bookRepository;
+        this.readBookService = readBookService;
     }
 
     public MylibDto getMylibData(String uid) {
         Integer uidInt = Integer.parseInt(uid);
         Mylib[] mylibArray = mylibRepository.findByUid(uidInt).toArray(new Mylib[0]);
-        /*for (Mylib mylib : mylibArray) {
-            System.out.println("mid: " + mylib.getMid());
-            System.out.println("uid: " + mylib.getUid());
-            System.out.println("nid: " + mylib.getNid());
-            System.out.println("bid: " + mylib.getBid());
-        } 테스트용 */
         Arrays.sort(mylibArray, Comparator.comparing(Mylib::getMid).reversed());
 
         MylibDto mylibData = new MylibDto();
@@ -48,7 +46,13 @@ public class MylibService {
                 .map(mylib -> {
                     Note note = noteRepository.findByNid(mylib.getNid()).get(0);
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    return new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover());
+                    String bookCoverUrl = null;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl);
                 })
                 .toArray(MylibNoteDto[]::new);
         for (MylibNoteDto note : noteArray) {
@@ -62,7 +66,13 @@ public class MylibService {
                 .filter(mylib -> mylib.getNid() == null && mylib.getBid() != null)
                 .map(mylib -> {
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    return new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover());
+                    String bookCoverUrl = null;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl);
                 })
                 .toArray(MylibBookDto[]::new);
 
@@ -78,7 +88,13 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() != null && mylib.getBid() != null) {
                 Note note = noteRepository.findByNid(mylib.getNid()).get(0);
-                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), note.getBook().getBookCover()));
+                String bookCoverUrl = null;
+                try {
+                    bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+                noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl));
             }
         }
         Collections.sort(noteList, Comparator.comparing(MylibNoteDto::getNoteId).reversed());
@@ -92,7 +108,13 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() == null && mylib.getBid() != null) {
                 Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), book.getBookCover()));
+                String bookCoverUrl = null;
+                try {
+                    bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+                bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl));
             }
         }
         Collections.sort(bookList, Comparator.comparing(MylibBookDto::getBookId).reversed());

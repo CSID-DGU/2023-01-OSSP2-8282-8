@@ -1,9 +1,6 @@
 package com.pdfcampus.pdfcampus.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name = "book")
 public class Book {
     @Id
@@ -32,8 +30,6 @@ public class Book {
 
     @Column(name = "bookCover")
     @Lob
-    private byte[] bookCover;
+    private String bookCover;
 
-    public Book(Integer bid, String bookTitle, byte[] bookCover) {
-    }
 }

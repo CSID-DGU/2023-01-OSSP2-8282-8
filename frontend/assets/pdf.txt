@@ -1,0 +1,125 @@
+/*import React from "react";
+import { StyleSheet, Dimensions, View, Text } from "react-native";
+import Pdf from "react-native-pdf";
+
+import Header from "../organisms/Header";
+
+const PDF = ({ navigation }) => {
+	const source = {
+		uri: "http://samples.leanpub.com/thereactnativebook-sample.pdf",
+		cache: true,
+	};
+	console.log("src:", source);
+
+	return (
+		<View>
+			<Header navigation={navigation} />
+			<Text>this is pdf</Text>
+			{ <Pdf
+				source={source}
+				onLoadComplete={(numberOfPages, filePath) => {
+					console.log(`Number of pages: ${numberOfPages}`);
+				}}
+				onPageChanged={(page, numberOfPages) => {
+					console.log(`Current page: ${page}`);
+				}}
+				onError={(error) => {
+					console.log(error);
+				}}
+				onPressLink={(uri) => {
+					console.log(`Link pressed: ${uri}`);
+				}}
+			/> }
+		</View>
+	);
+};
+
+export default PDF;*/
+/*import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Asset } from 'expo-asset';
+import { Document, Page } from 'react-pdf';
+
+const PDF = () => {
+  const [pdfUri, setPdfUri] = useState(null);
+  const [numPages, setNumPages] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    // PDF 파일을 로드합니다. 예시로 'sample.pdf' 파일을 사용합니다.
+    (async () => {
+      const pdfAsset = Asset.fromModule(require('../../assets/sample.pdf'));
+      await pdfAsset.downloadAsync();
+      setPdfUri(pdfAsset.localUri);
+    })();
+  }, []);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
+
+  const onNextPage = () => {
+    if (currentPage < numPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const onPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <StatusBar style="auto" />
+      {pdfUri ? (
+        <View style={{ flex: 1 }}>
+          <Document
+            style={{ flex: 1 }}
+            file={pdfUri}
+            onLoadSuccess={onDocumentLoadSuccess}
+          >
+            <Page
+              pageNumber={currentPage}
+              style={{ flex: 1 }}
+              scale={1.0}
+              minScale={1.0}
+              maxScale={1.0}
+              width={300}
+            />
+          </Document>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 10,
+            }}
+          >
+            <Text
+              onPress={onPrevPage}
+              style={{ marginRight: 20, fontSize: 20, color: 'blue' }}
+            >
+              Prev
+            </Text>
+            <Text style={{ fontSize: 20 }}>
+              Page {currentPage} of {numPages}
+            </Text>
+            <Text
+              onPress={onNextPage}
+              style={{ marginLeft: 20, fontSize: 20, color: 'blue' }}
+            >
+              Next
+            </Text>
+          </View>
+        </View>
+      ) : (
+        <Text>Loading PDF...</Text>
+      )}
+    </View>
+  );
+};
+
+export default PDF;*/

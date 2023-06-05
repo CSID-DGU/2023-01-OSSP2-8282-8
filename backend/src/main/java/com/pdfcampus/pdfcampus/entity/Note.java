@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.*;
-import java.util.List;
+//import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -43,7 +43,7 @@ public class Note {
     @Column(name = "modifiedAt", nullable = false)
     private LocalDate modifiedAt;
 
-    public Note(Integer nid, String noteTitle, byte[] bookCover) {
+    public Note(Integer nid, String noteTitle, String bookCover) {
     }
 
     //public boolean isSale() {

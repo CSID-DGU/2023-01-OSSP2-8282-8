@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { View, Alert } from "react-native";
 
 import Header from "../organisms/Header";
 import UpperDetail from "../organisms/UpperDetail";
 import LowerDetail from "../organisms/LowerDetail";
+import getBookDetail from "../../api/getBookDetail";
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import postAddBook from "../../api/postAddBook";
+import Modal from "../organisms/Modal";
 
 const Container = styled.View`
 	width: 100%;
@@ -40,43 +45,60 @@ const DetailInfoDivider = styled.View`
 	margin-bottom: 17px;
 `;
 
-const BookInfo = {
-	bookTitle: "운영체제",
-	bookCover: "https://image.yes24.com/goods/89496122/XL",
-	isStored: false,
-	publicationDate: "0000년 0월 0일 오후 00:00",
-	modifiedDate: "0000년 0월 0일 오후 00:00",
-	DetailInfo: "상세정보입니다~~~~~",
-};
+const BookDetail = ({ navigation, route }) => {
+	const userId = useRecoilValue(UserInfoState).userId;
+	const { id } = route.params;
 
-const Move2Library = () => {
-	return Alert.alert("나의 서재로 이동");
-};
+	const [bookDetail, setBookDetail] = useState({});
+	const handleBookDetail = (detail) => {
+		setBookDetail(detail);
+	};
 
-const AddBookLibrary = () => {
-	return Alert.alert("나의 서재에 추가");
-};
+	const handleAddBook = () => {
+		setModalVisible(true);
+	};
 
-const BookDetail = () => {
+	const Move2Library = () => {
+		navigation.navigate("MyLibrary");
+	};
+
+	const AddBookLibrary = () => {
+		postAddBook(id, userId, handleAddBook);
+	};
+
+	useEffect(() => {
+		getBookDetail(id, userId, handleBookDetail);
+	}, []);
+
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleModal = () => {
+		setModalVisible(false);
+	};
 	return (
 		<Container>
-			<Header />
+			<Modal
+				typo="도서가 추가되었습니다."
+				buttonTypo1="확인"
+				visible={modalVisible}
+				handleModal={handleModal}
+			/>
+			<Header navigation={navigation} />
 			<BookTitleContainer>
-				<BookTitleTypo>{BookInfo.bookTitle}</BookTitleTypo>
+				<BookTitleTypo>{bookDetail.bookTitle}</BookTitleTypo>
 			</BookTitleContainer>
 			<ContentContainer>
 				<UpperDetail
-					contentInfo={BookInfo}
+					contentInfo={bookDetail}
 					truepress={Move2Library}
 					falsepress={AddBookLibrary}
 					isBook={true}
 				/>
 				<DetailInfoDivider />
 				<LowerDetail
-					img1={BookInfo.bookCover}
-					img2={BookInfo.bookCover}
-					img3={BookInfo.bookCover}
-					bookDetailContent={BookInfo.DetailInfo}
+					img1={bookDetail.bookCover}
+					img2={bookDetail.bookCover}
+					img3={bookDetail.bookCover}
+					bookDetailContent={bookDetail.DetailInfo}
 				/>
 			</ContentContainer>
 		</Container>

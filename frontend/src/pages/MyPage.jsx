@@ -105,7 +105,17 @@ const SubOnClick = () => {
 	Alert.alert("구독하러");
 };
 
-const MyPage = () => {
+const UserInfo = {
+	name: "이현정",
+	userIntro: "안녕하세요 자기소개입니다",
+	isSubscribed: true,
+	startDate: "2023-01-01",
+	subDate: "2023-05-01",
+	subItem: "6개월",
+	period: "160일",
+};
+
+const MyPage = ({ navigation }) => {
 	const userId = useRecoilValue(UserInfoState).userId;
 	const handleSubscribeInfo = (subscribed, subscribeInfo, userInfo) => {
 		setSubscribed(subscribed);
@@ -122,7 +132,7 @@ const MyPage = () => {
 
 	return (
 		<>
-			<Header />
+			<Header navigation={navigation} />
 			<Container>
 				<MyPageTypo>마이페이지</MyPageTypo>
 				<UserInfoContainer>
