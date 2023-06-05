@@ -1,10 +1,11 @@
 import { Axios } from "./axios";
 
-export default getBookDetail = async (highlighted, handleMetadata) => {
+export default getBookDetail = async (bookId, highlighted, handleMetadata) => {
 	try {
-		const res = await Axios.post(`/note/metadata`, highlighted);
+		const res = await Axios.post(`/note/metadata/${bookId}`, highlighted);
 		const data = res.data.data;
-		// handleMetadata
+		console.log("data", data);
+		handleMetadata(data);
 	} catch (e) {
 		console.log(e);
 	}
