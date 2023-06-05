@@ -25,6 +25,9 @@ public class Page {
     @Column(name = "bid", nullable = false)
     private Integer bid;
 
+    @Column(name = "nid", nullable = false)
+    private Integer nid;
+
     @Column(name = "pageNumber")
     private Integer pageNumber;
 

@@ -17,5 +17,7 @@ public interface PageRepository extends JpaRepository<Page, Integer> {
 
     List<Page> findByBid(Integer bid);
 
+    List<Page> findByNid(Integer nid);
+
     Optional<Page> findByBidAndPageNumber(int bid, int i);
 }
