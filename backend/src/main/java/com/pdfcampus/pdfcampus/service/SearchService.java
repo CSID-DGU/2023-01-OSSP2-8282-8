@@ -8,9 +8,11 @@ import com.pdfcampus.pdfcampus.entity.Sale;
 import com.pdfcampus.pdfcampus.repository.DetailBookRepository;
 import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
 import com.pdfcampus.pdfcampus.repository.SaleRepository;
+import com.pdfcampus.pdfcampus.service.ReadBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,31 +23,36 @@ public class SearchService {
     private final SaleRepository saleRepository;
     private final MylibService mylibService;
     private final DetailService detailService;
+    private final ReadBookService readBookService;
+
 
     @Autowired
-    public SearchService(DetailBookRepository detailBookRepository,
-                         DetailNoteRepository detailNoteRepository,
-                         SaleRepository saleRepository,
-                         DetailService detailService,
-                         MylibService mylibService) {
+    public SearchService(DetailBookRepository detailBookRepository, DetailNoteRepository detailNoteRepository, SaleRepository saleRepository, DetailService detailService, MylibService mylibService, ReadBookService readBookService) {
         this.detailBookRepository = detailBookRepository;
         this.detailNoteRepository = detailNoteRepository;
         this.saleRepository = saleRepository;
         this.mylibService = mylibService;
         this.detailService = detailService;
+        this.readBookService = readBookService;
     }
 
     public List<DetailBookDto> searchBooks(String keyword, String userId) {
         List<Book> books = detailBookRepository.findByBookTitleContainingIgnoreCase(keyword);
         return books.stream()
                 .map(book -> {
+                    String bookCoverUrl;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(String.valueOf(book.getBid())).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
                     DetailBookDto detailBookDto = new DetailBookDto(
                             book.getBid(),
                             book.getBookTitle(),
                             book.getAuthor(),
                             book.getPublisher(),
                             book.getPublicationYear(),
-                            book.getBookCover(),
+                            bookCoverUrl,
                             detailService.isStored(userId, String.valueOf(book.getBid()))
                     );
                     return detailBookDto;
@@ -59,6 +66,12 @@ public class SearchService {
         return sales.stream()
                 .map(sale -> {
                     Note note = sale.getNote();
+                    String bookCoverUrl;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(String.valueOf(note.getBook().getBid())).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
                     return new DetailNoteDto(
                             note.getNid(),
                             note.getNoteTitle(),
@@ -71,7 +84,7 @@ public class SearchService {
                             note.getUser().getUid(),
                             note.getBook().getPublisher(),
                             note.getBook().getPublicationYear(),
-                            note.getBook().getBookCover());
+                            bookCoverUrl);
                 })
                 .collect(Collectors.toList());
     }

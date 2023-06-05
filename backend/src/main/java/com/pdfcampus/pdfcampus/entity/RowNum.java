@@ -1,9 +1,5 @@
 package com.pdfcampus.pdfcampus.entity;
 
-import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,21 +7,24 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "text")
-public class Text {
+@Table(name = "RowNum")
+public class RowNum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tid;
+    private Integer rid;
 
-    @ManyToOne
-    @JoinColumn(name="pid", nullable=false)
-    private Page page;
+    @Column(name = "pid", nullable = false)
+    private Integer pid;
 
-    @Column(name = "position")
-    private String position;
+    @Column(name = "rowNumber", nullable = false)
+    private Integer rowNumber;
+
+    @Column(name = "rowY", nullable = false)
+    private Float rowY;
+
 }

@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -30,10 +32,9 @@ public class ReadBookController {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
 
-            //String bookCoverUrl = readBookService.getBookCoverUrl(bookId).toString();
-            String bookPDFUrl = readBookService.getBookPdfUrl(bookId).toString();
+            List<String> bookPageUrls = readBookService.getBookPdfUrls(bookId);
 
-            data.put("bookPDFUrl", bookPDFUrl);
+            data.put("pages", bookPageUrls);
             response.put("data", data);
 
             Map<String, String> apiStatus = new HashMap<>();

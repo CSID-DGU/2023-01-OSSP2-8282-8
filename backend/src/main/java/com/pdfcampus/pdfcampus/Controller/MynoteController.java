@@ -90,6 +90,8 @@ public class MynoteController {
             // 데이터 삭제
             boolean deleted = mynoteService.deleteNote(userId, noteId);
 
+            //aws s3 8282note 버킷에서 데이터 삭제
+
             if (deleted) {
                 //정상적으로 삭제
                 apiStatus.put("errorMessage", "Note content deletion completed");

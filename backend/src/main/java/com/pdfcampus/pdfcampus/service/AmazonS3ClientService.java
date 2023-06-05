@@ -36,8 +36,8 @@ public class AmazonS3ClientService {
     }
 
     public void downloadAndProcessPdf(String bucketName, String keyName) {
-        String bookTitle = keyName.replace(".pdf", "");
-        Book book = detailBookRepository.findByBookTitle(bookTitle).orElseThrow(() -> new NullPointerException("Note not found"));
+        String bookId = keyName.replace(".pdf", "");
+        Book book = detailBookRepository.findByBid(Integer.valueOf(bookId)).orElseThrow(() -> new NullPointerException("Not found"));
 
         S3Object s3object = s3client.getObject(bucketName, keyName);
         S3ObjectInputStream inputStream = s3object.getObjectContent();
