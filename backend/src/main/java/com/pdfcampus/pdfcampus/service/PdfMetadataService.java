@@ -179,7 +179,7 @@ public class PdfMetadataService {
         float requestPageHeight = 680;
 
         // 잘린 부분의 크기
-        float cutOff = pdfBoxPageHeight - requestPageHeight;
+        float cutOff = pdfBoxPageHeight - requestPageHeight - 85;
         System.out.println("cutOff ="+ cutOff);
         // Check if the page exists in the database
         Page page = pageRepository.findByBidAndPageNumber(bid, pageNumber)
