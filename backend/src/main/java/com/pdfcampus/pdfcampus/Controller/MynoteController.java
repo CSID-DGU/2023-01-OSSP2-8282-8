@@ -31,42 +31,26 @@ public class MynoteController {
     public ResponseEntity<Map<String, Object>> mynoteAssign(@RequestBody MynoteAssignDto mynoteAssignDto)
     {
         try {
-            List<MynoteDto> mynoteDataList = mynoteService.getMynoteByUserId(userId);
+            Map<String, Object> apiStatus = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
+            if(mynoteService.existsByNid(mynoteAssignDto.getNoteId())) { // 중복되는 노트 아이디
+                apiStatus.put("errorMessage", "이미 등록된 노트");
+                apiStatus.put("errorCode", "E400");
 
-            List<Map<String, Object>> noteList = new ArrayList<>();
-            for (MynoteDto mynoteDto : mynoteDataList) {
-                Map<String, Object> noteMap = new LinkedHashMap<>();
-                noteMap.put("noteId", mynoteDto.getNoteId());
-                noteMap.put("noteTitle", mynoteDto.getNoteTitle());
-
-                noteMap.put("createdAt", mynoteDto.getCreatedAt());
-                noteMap.put("modifiedAt", mynoteDto.getModifiedAt());
-                noteMap.put("isSale", mynoteDto.isSale());
-
-                Map<String, Object> bookInfoMap = new LinkedHashMap<>();
-                bookInfoMap.put("author", mynoteDto.getBookInfo().getAuthor());
-                bookInfoMap.put("publisher", mynoteDto.getBookInfo().getPublisher());
-                bookInfoMap.put("publicationYear", mynoteDto.getBookInfo().getPublicationYear());
-                bookInfoMap.put("bookCover", mynoteDto.getBookInfo().getBookCover());
-
-                noteMap.put("bookInfo", bookInfoMap);
-                noteList.add(noteMap);
+                response.put("apiStatus", apiStatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
-            Map<String, Object> responseBody = new LinkedHashMap<>();
-            responseBody.put("data", Map.of("noteList", noteList));
+            mynoteService.assignNote(mynoteAssignDto); //중복이 안된다면 해당 노트를 등록
 
-            Map<String, String> apiStatus = new LinkedHashMap<>();
-            apiStatus.put("errorMessage", "");
+            apiStatus.put("errorMessage", "Sales registration completed");
             apiStatus.put("errorCode", "N200");
-            responseBody.put("apiStatus", apiStatus);
+            response.put("apiStatus", apiStatus);
 
             // HTTP 상태 코드 200 OK와 함께 responseBody 맵 객체를 반환함
-            return ResponseEntity.ok(responseBody);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> responseBody = new LinkedHashMap<>();
-            responseBody.putIfAbsent("data", Map.of("noteList", List.of()));
-
             Map<String, String> apiStatus = new HashMap<>();
             apiStatus.put("errorMessage", e.getMessage());
             apiStatus.put("errorCode", "N400");

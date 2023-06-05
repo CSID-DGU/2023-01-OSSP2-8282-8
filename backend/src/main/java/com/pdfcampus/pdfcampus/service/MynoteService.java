@@ -1,15 +1,21 @@
 package com.pdfcampus.pdfcampus.service;
 
 import com.pdfcampus.pdfcampus.dto.BookDto;
+import com.pdfcampus.pdfcampus.dto.MynoteAssignDto;
 import com.pdfcampus.pdfcampus.dto.MynoteDto;
+import com.pdfcampus.pdfcampus.dto.SignupDto;
 import com.pdfcampus.pdfcampus.entity.Mylib;
 import com.pdfcampus.pdfcampus.entity.Note;
+import com.pdfcampus.pdfcampus.entity.Sale;
+import com.pdfcampus.pdfcampus.entity.User;
+import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
 import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.MynoteRepository;
 import com.pdfcampus.pdfcampus.repository.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -27,13 +33,15 @@ public class MynoteService {
     private final MylibRepository mylibRepository;
     private final SaleRepository saleRepository;
     private final ReadBookService readBookService;
+    private final DetailNoteRepository detailNoteRepository;
 
     @Autowired
-    public MynoteService(MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService) {
+    public MynoteService(MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService, DetailNoteRepository detailNoteRepository) {
         this.mynoteRepository = mynoteRepository;
         this.saleRepository = saleRepository;
         this.mylibRepository = mylibRepository;
         this.readBookService = readBookService;
+        this.detailNoteRepository = detailNoteRepository;
     }
 
     public boolean deleteNote(String uid, String nid) {
@@ -47,6 +55,21 @@ public class MynoteService {
         }
 
         return false;
+    }
+
+    public boolean existsByNid(String noteId) {
+        Integer nidInt = Integer.parseInt(noteId);
+        return saleRepository.existsByNoteNid(nidInt);
+    }
+
+    public Sale assignNote(MynoteAssignDto mynoteAssignDto) {
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Note note = detailNoteRepository.findByNid(nidInt)
+                .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
+
+        Sale sale = mynoteAssignDto.toEntity(note, mynoteAssignDto.getPrice());
+
+        return saleRepository.save(sale);
     }
 
     public List<MynoteDto> getMynoteByUserId(String userId) {
