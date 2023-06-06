@@ -176,7 +176,6 @@ public class PdfMetadataService {
 
         // 잘린 부분의 크기
         float cutOff = pdfBoxPageHeight - requestPageHeight -85;
-        System.out.println(cutOff);
 
         // pageNumber 체크
         Page page = pageRepository.findByBidAndPageNumber(bid, pageNumber)
@@ -256,7 +255,7 @@ public class PdfMetadataService {
             for (RowNum rowNum : rowNums){
                 Map<String, Float> rowMap = new HashMap<>();
                 rowMap.put("rowNum", Float.valueOf(rowNum.getRowNumber()));
-                rowMap.put("rowY", rowNum.getRowY());
+                rowMap.put("rowY", rowNum.getRowY()-76);
                 rowNumbers.add(rowMap);
             }
             pageRowNumbers.put(page.getPageNumber(), rowNumbers);
