@@ -245,16 +245,16 @@ public class PdfMetadataService {
         return extractedTextInfo;
     }
 
-    public Map<Integer, List<Map<String, Float>>> getAllRowNumbers(Integer bookId) {
+    public Map<Integer, List<Map<String, Object>>> getAllRowNumbers(Integer bookId) {
         List<Page> pages = pageRepository.findByBid(bookId);
-        Map<Integer, List<Map<String, Float>>> pageRowNumbers = new HashMap<>();
+        Map<Integer, List<Map<String, Object>>> pageRowNumbers = new HashMap<>();
 
         for (Page page : pages) {
-            List<Map<String, Float>> rowNumbers = new ArrayList<>();
+            List<Map<String, Object>> rowNumbers = new ArrayList<>();
             List<RowNum> rowNums = rowNumRepository.findByPid(page.getPid());
             for (RowNum rowNum : rowNums){
-                Map<String, Float> rowMap = new HashMap<>();
-                rowMap.put("rowNum", Float.valueOf(rowNum.getRowNumber()));
+                Map<String, Object> rowMap = new HashMap<>();
+                rowMap.put("rowNum", rowNum.getRowNumber());
                 rowMap.put("rowY", rowNum.getRowY()-76);
                 rowNumbers.add(rowMap);
             }
