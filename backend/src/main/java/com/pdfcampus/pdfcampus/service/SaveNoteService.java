@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class SaveNoteService {
@@ -26,26 +28,31 @@ public class SaveNoteService {
     }
 
     @Transactional
-    public boolean saveNote(Long userId, Long bookId, Map<String, Object> note) {
+    public boolean saveNote(String userId, String bookId) {
         try {
-            User user = userRepository.findById(userId.intValue()).orElseThrow();
-            Book book = bookRepository.findById(bookId.intValue()).orElseThrow();
+            User user = (User) userRepository.findByUid(Integer.valueOf(userId));
+            List<Book> books = bookRepository.findByBid(Integer.valueOf(bookId)); //어쩔 수 없이 List 사용
+            if (!books.isEmpty()) {
+                Book book = books.get(0);
 
-            note.forEach((pageNumber, imageUrl) -> {
                 Note newNote = new Note();
                 newNote.setUser(user);
                 newNote.setBook(book);
-                newNote.setNoteTitle(book.getBookTitle()+"NOTE");
+                newNote.setNoteTitle(book.getBookTitle() + "NOTE");
                 newNote.setAuthor(user.getUsername());
                 newNote.setCreatedAt(LocalDate.now());
                 newNote.setModifiedAt(LocalDate.now());
 
                 noteRepository.save(newNote);
-            });
 
-            return true;
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
+
 }
