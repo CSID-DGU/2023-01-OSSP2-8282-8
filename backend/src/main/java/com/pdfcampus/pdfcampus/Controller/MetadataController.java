@@ -63,15 +63,15 @@ public class MetadataController {
                 metadata.put(pageNumber, pageInfo);
             }
 
-            Map<Integer, List<Map<String, Float>>> allRowNumbers = pdfMetadataService.getAllRowNumbers(bookId);
+            Map<Integer, List<Map<String, Object>>> allRowNumbers = pdfMetadataService.getAllRowNumbers(bookId);
 
-            for (Map.Entry<Integer, List<Map<String, Float>>> entry : allRowNumbers.entrySet()) {
+            for (Map.Entry<Integer, List<Map<String, Object>>> entry : allRowNumbers.entrySet()) {
                 Integer pageNum = entry.getKey();
-                List<Map<String, Float>> rows = entry.getValue();
+                List<Map<String, Object>> rows = entry.getValue();
 
-                for (Map<String, Float> rowMap : rows) {
-                    Float rowNum = rowMap.get("rowNum");
-                    Float rowY = rowMap.get("rowY");
+                for (Map<String, Object> rowMap : rows) {
+                    Integer rowNum = (Integer) rowMap.get("rowNum");
+                    Float rowY = (Float) rowMap.get("rowY");
                 }
             }
 
