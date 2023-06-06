@@ -115,6 +115,7 @@ const MyLibrary = ({ navigation }) => {
 							navigation={navigation}
 							products={notes}
 							type="note"
+							isMyLib={true}
 						/>
 					</ListWrapper>
 					<ViewAllButtonWrapper>

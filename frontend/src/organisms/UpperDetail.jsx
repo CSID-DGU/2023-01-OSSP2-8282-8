@@ -24,7 +24,7 @@ const UpperDetail = ({ contentInfo, truepress, falsepress, isBook, price }) => {
 	return (
 		<Container>
 			<InfoWrapper>
-				<ImageBlock img="https://pdfampus.s3.ap-northeast-2.amazonaws.com/4.jpg" />
+				<ImageBlock img={bookCover} />
 				<DateBlock
 					info1={publicationYear}
 					info2={modifiedDate}

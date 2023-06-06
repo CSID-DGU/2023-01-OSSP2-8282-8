@@ -12,11 +12,10 @@ import NoteDetail from "./src/pages/NoteDetail";
 import MyNotes from "./src/pages/MyNotes";
 import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
-import BookContentReader from "./src/pages/BookContentReader";
+import ContentReader from "./src/pages/ContentReader";
+import CanvasComponent from "./src/organisms/CanvasComponent";
 
 const Stack = createNativeStackNavigator();
-//<Stack.Screen name="LogIn" component={LogIn} />
-//<Stack.Screen name="SignUp" component={SignUp} />
 
 export default function App() {
 	return (
@@ -44,10 +43,9 @@ export default function App() {
 					<Stack.Screen name="NoteAll">
 						{(props) => <ContentsAll {...props} />}
 					</Stack.Screen>
-					<Stack.Screen
-						name="BookContentReader"
-						component={BookContentReader}
-					/>
+					<Stack.Screen name="ContentReader">
+						{(props) => <ContentReader {...props} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</RecoilRoot>
