@@ -1,6 +1,8 @@
 package com.pdfcampus.pdfcampus.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
@@ -11,19 +13,20 @@ import com.pdfcampus.pdfcampus.repository.NotePageRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
 import com.pdfcampus.pdfcampus.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class SaveNoteService {
@@ -59,31 +62,32 @@ public class SaveNoteService {
 
                 noteRepository.save(newNote);
 
-                // Loop over the notes and save them in the database and to the S3 bucket
                 for (Map.Entry<String, String> entry : notes.entrySet()) {
                     String noteImageId = entry.getKey();
-                    String noteImageUrl = entry.getValue();
+                    String base64Image = entry.getValue();
 
-                    // 1. Download the image from the URL
-                    BufferedImage image = ImageIO.read(new URL(noteImageUrl));
+                    // 프리픽스 제거 data:image/png;base64,
+                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
 
-                    // 2. Save the image to a temporary file
-                    File imageFile = new File(noteImageId + ".jpg");
-                    ImageIO.write(image, "jpg", imageFile);
+                    byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
-                    // 3. Upload the file to S3
-                    s3client.putObject(new PutObjectRequest("8282note", "8282note/" + noteImageId, imageFile));
+                    // Convert to PNG
+                    BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    ImageIO.write(img, "png", outputStream);
+                    imageBytes = outputStream.toByteArray();
 
-                    // 4. Delete the temporary file
-                    imageFile.delete();
+                    InputStream inputStream = new ByteArrayInputStream(imageBytes);
 
-                    // 5. Save the note in the database
+                    // 업로드
+                    s3client.putObject(new PutObjectRequest("8282note", newNote.getNoteTitle()+"/" + noteImageId + ".png", inputStream, new ObjectMetadata()));
+
+                    // DB에 추가
                     NotePage notePage = new NotePage();
-                    notePage.setNid(newNote.getNid());  // Assuming you have a getter for the ID in the Note entity
+                    notePage.setNid(newNote.getNid());
                     notePage.setNotepageNumber(Integer.valueOf(noteImageId));
-                    notePage.setNotepageUrl("s3://" + "8282note" + "/8282note/" + noteImageId);
+                    notePage.setNotepageUrl("s3://" + "8282note" + newNote.getNoteTitle() + noteImageId + ".png");
                     notePageRepository.save(notePage);
-
                 }
 
                 return true;
