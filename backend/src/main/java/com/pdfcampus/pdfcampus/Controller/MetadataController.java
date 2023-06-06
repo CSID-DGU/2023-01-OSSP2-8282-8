@@ -1,6 +1,7 @@
 package com.pdfcampus.pdfcampus.Controller;
 import com.pdfcampus.pdfcampus.dto.ExtractedTextInfo;
 import com.pdfcampus.pdfcampus.service.PdfMetadataService;
+import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +44,18 @@ public class MetadataController {
 
                     ExtractedTextInfo extractedTextInfo = pdfMetadataService.extractTextFromLocation(bookId, Integer.parseInt(pageNumber), startX, y, width, height);
                     String extractedText = extractedTextInfo.getText();
+                    String textrowNumber = String.valueOf(extractedTextInfo.getRowNumber());
+                    String textyPosition = String.valueOf(extractedTextInfo.getYPosition());
 
                     Map<String, Object> itemMetadata = new HashMap<>();
                     itemMetadata.put("positionInfo", item);
-                    itemMetadata.put("extractedText", extractedText);
+
+                    Map<String, Object> textInfo = new HashMap<>();
+                    textInfo.put("extractedText", extractedText);
+                    textInfo.put("rowNumber", textrowNumber);
+                    textInfo.put("yPosition", textyPosition);
+
+                    itemMetadata.put("textInfo", textInfo);
 
                     pageInfo.add(itemMetadata);
                 }
@@ -54,11 +63,20 @@ public class MetadataController {
                 metadata.put(pageNumber, pageInfo);
             }
 
+            Map<Integer, List<Map<String, Float>>> allRowNumbers = pdfMetadataService.getAllRowNumbers(bookId);
 
-            List<Integer> allPages = pdfMetadataService.getAllPages(bookId);
+            for (Map.Entry<Integer, List<Map<String, Float>>> entry : allRowNumbers.entrySet()) {
+                Integer pageNum = entry.getKey();
+                List<Map<String, Float>> rows = entry.getValue();
+
+                for (Map<String, Float> rowMap : rows) {
+                    Float rowNum = rowMap.get("rowNum");
+                    Float rowY = rowMap.get("rowY");
+                }
+            }
 
             response.put("metadata", metadata);
-            response.put("pages", allPages);
+            response.put("pageRowNumbers", allRowNumbers);
             response.put("apiStatus", Map.of("errorMessage", "", "errorCode", "N200"));
 
             return ResponseEntity.ok(response);
