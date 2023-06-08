@@ -6,10 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import com.fasterxml.jackson.databind.*;
 
 @RestController
@@ -39,10 +37,16 @@ public class MetadataController {
                     float y = ((Number) item.get(2)).floatValue();
 
                     float width = endX - startX;
-                    float height = 1;
+                    float height = 5;
 
                     ExtractedTextInfo extractedTextInfo = pdfMetadataService.extractTextFromLocation(bookId, Integer.parseInt(pageNumber), startX, y, width, height);
                     String extractedText = extractedTextInfo.getText();
+
+                    // Trim the text to at most 5 words
+                    String[] words = extractedText.split(" ");
+                    if (words.length > 5) {
+                        extractedText = String.join(" ", Arrays.copyOfRange(words, 0, 5));
+                    }
 
                     Map<String, Object> itemMetadata = new HashMap<>();
                     itemMetadata.put("positionInfo", item);
@@ -50,6 +54,7 @@ public class MetadataController {
 
                     pageInfo.add(itemMetadata);
                 }
+
 
                 metadata.put(pageNumber, pageInfo);
             }

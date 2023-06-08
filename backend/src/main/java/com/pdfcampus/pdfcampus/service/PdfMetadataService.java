@@ -177,10 +177,6 @@ public class PdfMetadataService {
 
     }
     public ExtractedTextInfo extractTextFromLocation(Integer bid, Integer pageNumber, float startX, float startY, float width, float height) throws IOException {
-        System.out.println("x시작"+startX);
-        System.out.println("y"+startY);
-        System.out.println("너비 높이"+width+height);
-
 
         // PDFBox 인식 페이지 크기
         float pdfBoxPageWidth = 595;
@@ -242,10 +238,8 @@ public class PdfMetadataService {
         RowNum rowNum;
         if (upperRow == null) {
             rowNum = lowerRow;
-            System.out.println("upperRow == null"+rowNum);
         } else if (lowerRow == null) {
             rowNum = upperRow;
-            System.out.println("lowerRow == null"+rowNum);
         } else {
             rowNum = Math.abs(upperRow.getRowY() - y) < Math.abs(lowerRow.getRowY() - y) ? upperRow : lowerRow;
         }
