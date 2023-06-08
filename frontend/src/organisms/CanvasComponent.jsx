@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import Canvas from "react-native-canvas";
+import Canvas, { Image as CanvasImage } from "react-native-canvas";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import {
 	Alert,
@@ -278,7 +278,6 @@ const CanvasComponent = ({
 					? [position[0] - 590, position[1] - 590, position[2]]
 					: position
 			);
-			console.log("md:", md);
 			setMeta({ ...meta, ...md });
 		});
 	};
@@ -286,11 +285,14 @@ const CanvasComponent = ({
 	useEffect(() => {
 		setTotalPath([]);
 		setMeta([]);
+		setMetadata({});
+		setRowNums({});
+		setImg({});
 		if (touchRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
 			ctx.lineWidth = 2;
-			const widthval = 1500;
-			const heightval = 1000;
+			const widthval = 1180;
+			const heightval = 680;
 			if (ctx) {
 				canvasRef.current.width = widthval;
 				canvasRef.current.height = heightval;
@@ -301,23 +303,80 @@ const CanvasComponent = ({
 
 	const [path, setPath] = useState([]);
 	const [meta, setMeta] = useState({});
+	const [rowNums, setRowNums] = useState({});
+
+	const handleRowNums = (data) => {
+		setRowNums(data);
+	};
 
 	const [metadata, setMetadata] = useState();
 	const handleMetadata = (data) => {
 		setMetadata(data);
 	};
 
-	const downloadOnClick = () => {
-		console.log("meta:", meta);
-		postMetadata(
+	const downloadOnClick = async () => {
+		const { metadatas, rowNums } = await postMetadata(
 			bookId,
 			{
 				data: {
 					metadata: meta,
 				},
 			},
-			handleMetadata
+			handleMetadata,
+			handleRowNums
 		);
+		const getBase64img = async (imgUrl, metadata, rowNums) => {
+			console.log("start upload,,,");
+			ctx.clearRect(0, 0, 1180, 680);
+
+			console.log("row nums:", rowNums);
+
+			ctx.font = "8px Arial";
+
+			rowNums[0].map((r) => {
+				const { rowNum, rowY } = r;
+				ctx.fillText(rowNum, 10, rowY);
+			});
+			rowNums[1]?.map((r) => {
+				const { rowNum, rowY } = r;
+				ctx.fillText(rowNum, 600, rowY);
+			});
+
+			metadata[0]?.map((m) => {
+				ctx.fillText(
+					m.textInfo.extractedText,
+					m.positionInfo[0],
+					m.positionInfo[2]
+				);
+			});
+			metadata[1]?.map((m) => {
+				ctx.fillText(
+					m.textInfo.extractedText,
+					m.positionInfo[0] + 590,
+					m.positionInfo[2]
+				);
+			});
+
+			// const uploadedImg1 = new CanvasImage(canvasRef.current);
+			// uploadedImg.src = imgUrl[0];
+			// ctx.drawImage(uploadedImg1, 0, 0, 590, 680);
+			// const uploadedImg2 = new CanvasImage(canvasRef.current);
+			// uploadedImg.src = imgUrl[1];
+			// ctx.drawImage(uploadedImg2, 590, 0, 590, 680);
+
+			console.log("start urling,,,");
+			const newUrl = await canvasRef.current.toDataURL("image/png");
+			console.log("new url:", newUrl);
+			ctx.clearRect(0, 0, 1180, 680);
+		};
+		console.log("content length:", content.length);
+		for (let i = 1; i <= Math.floor(content.length / 2) + 1; i++) {
+			getBase64img(
+				[img[[2 * i - 1]], img[[2 * i]]],
+				[metadatas[[2 * i - 1]], metadatas[[2 * i]]],
+				[rowNums[[2 * i - 1]], rowNums[[2 * i]]]
+			);
+		}
 	};
 
 	return (
