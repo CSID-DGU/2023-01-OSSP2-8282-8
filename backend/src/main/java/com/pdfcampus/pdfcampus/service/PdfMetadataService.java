@@ -148,21 +148,22 @@ public class PdfMetadataService {
 
 
         private void saveRow(String text, float startX, float endX, float y) {
+            // TextPosition은 문자열이 없는 경우에도, 빈 공간을 만들어낸다. 이것을 한 번 더 걸러준다.
             if (text.trim().isEmpty()) {
                 return;
             }
-            // PDFBox 인식 페이지 크기
-            float pdfBoxPageWidth = 595;
-            float pdfBoxPageHeight = 841;
 
-            // 요청받는 PDF 페이지 크기
-            float requestPageWidth = 590;
-            float requestPageHeight = 680;
+            // 이전에 저장된 rowY 값을 가져옴
+            Optional<RowNum> lastRowEntityOpt = rowNumRepository.findTopByPidOrderByRowYDesc(associatedPage.getPid());
+            float lastRowY = lastRowEntityOpt.isPresent() ? lastRowEntityOpt.get().getRowY() : -1.0f;
 
-            // 잘린 부분의 크기
-            // float cutOff = pdfBoxPageHeight - requestPageHeight;
+            float tolerance = 5.0f; // 이 범위 내에는 같은 행 (미세)
+            if (Math.abs(y - lastRowY) < tolerance) {
+                System.out.println("Skipping row due to duplicate Y values.");
+                return;
+            }
 
-            // Check if a RowNum already exists for this page and row number
+            // 이미 존재하는지 확인
             RowNum rowNumEntity = rowNumRepository.findByPidAndRowNumber(associatedPage.getPid(), rowNumber)
                     .orElse(new RowNum());
 
@@ -173,6 +174,7 @@ public class PdfMetadataService {
             rowNumRepository.save(rowNumEntity);
             System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
         }
+
     }
     public ExtractedTextInfo extractTextFromLocation(Integer bid, Integer pageNumber, float startX, float startY, float width, float height) throws IOException {
         System.out.println("x시작"+startX);
@@ -246,7 +248,6 @@ public class PdfMetadataService {
             System.out.println("lowerRow == null"+rowNum);
         } else {
             rowNum = Math.abs(upperRow.getRowY() - y) < Math.abs(lowerRow.getRowY() - y) ? upperRow : lowerRow;
-            System.out.println("else"+rowNum);
         }
 
         ExtractedTextInfo extractedTextInfo = new ExtractedTextInfo();
