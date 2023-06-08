@@ -52,7 +52,8 @@ public class AmazonS3ClientService {
 
     public void deleteS3Note(String bucketName, String nid) {
         // 객체 삭제
-        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, nid);
+
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, "Book GNOTE1.png");
         s3client.deleteObject(deleteObjectRequest);
     }
 
