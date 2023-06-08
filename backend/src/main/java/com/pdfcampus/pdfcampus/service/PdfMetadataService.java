@@ -68,7 +68,7 @@ public class PdfMetadataService {
             float[] dimensions = GetPDFDimensions.getPageDimensions(document, pageNumber);
             System.out.println("Page Width: " + dimensions[0] + ", Page Height: " + dimensions[1]);
 
-            // Render the page to an image and save it to S3
+
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 300);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(bim, "png", os);
@@ -107,6 +107,7 @@ public class PdfMetadataService {
             super();
             this.associatedPage = associatedPage;
             this.rowNumber = rowNumber;
+            setSortByPosition(true);
         }
 
         @Override
@@ -119,28 +120,37 @@ public class PdfMetadataService {
                         startX = textPosition.getX();
                         y = textPosition.getY();
                     }
-                    fullTextBuilder.append(textPosition.getUnicode());
-                    endX = textPosition.getEndX();
-                    lastY = y;
+
+                    // pdfBoxPageHeight == 841
+                    if (y >= 70 && y <= (841 - 110)) {
+                        fullTextBuilder.append(textPosition.getUnicode());
+                        endX = textPosition.getEndX();
+                        lastY = y;
+                    }
                 } else {
-
                     saveRow(fullTextBuilder.toString(), startX, endX, lastY);
-
                     startX = textPosition.getX();
                     y = textPosition.getY();
                     endX = textPosition.getEndX();
                     fullTextBuilder.setLength(0);
-                    fullTextBuilder.append(textPosition.getUnicode());
-                    lastY = y;
+
+                    if (y >= 70 && y <= (841 - 110)) {
+                        fullTextBuilder.append(textPosition.getUnicode());
+                        lastY = y;
+                    }
                 }
             }
 
-            if (fullTextBuilder.length() > 0) {
+            if (fullTextBuilder.length() > 1 && lastY <= (841-110)) {
                 saveRow(fullTextBuilder.toString(), startX, endX, lastY);
             }
         }
 
+
         private void saveRow(String text, float startX, float endX, float y) {
+            if (text.trim().isEmpty()) {
+                return;
+            }
             // PDFBox 인식 페이지 크기
             float pdfBoxPageWidth = 595;
             float pdfBoxPageHeight = 841;
