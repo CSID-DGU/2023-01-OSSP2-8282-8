@@ -44,6 +44,8 @@ public class MynoteController {
 
             mynoteService.assignNote(mynoteAssignDto); //중복이 안된다면 해당 노트를 등록
 
+            amazonS3ClientService.copyS3Object("8282note", mynoteAssignDto.getNoteId(), "8282sale");
+
             apiStatus.put("errorMessage", "Sales registration completed");
             apiStatus.put("errorCode", "N200");
             response.put("apiStatus", apiStatus);
