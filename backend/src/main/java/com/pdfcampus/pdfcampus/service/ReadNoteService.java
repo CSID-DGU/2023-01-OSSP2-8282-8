@@ -57,7 +57,7 @@ public class ReadNoteService {
         List<NotePage> pages = notePageRepository.findByNid(note.getNid());
         List<String> pageUrls = new ArrayList<>();
         for (NotePage page : pages) {
-            pageUrls.add(page.getPageUrl());
+            pageUrls.add(page.getNotepageUrl());
         }
 
         return pageUrls;

@@ -27,6 +27,7 @@ public class MynoteController {
         this.amazonS3ClientService = amazonS3ClientService;
     }
 
+    //사용자의 노트를 판매하기
     @PostMapping("/mynote/assign")
     public ResponseEntity<Map<String, Object>> mynoteAssign(@RequestBody MynoteAssignDto mynoteAssignDto)
     {
@@ -47,7 +48,6 @@ public class MynoteController {
             apiStatus.put("errorCode", "N200");
             response.put("apiStatus", apiStatus);
 
-            // HTTP 상태 코드 200 OK와 함께 responseBody 맵 객체를 반환함
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> responseBody = new LinkedHashMap<>();
@@ -61,6 +61,7 @@ public class MynoteController {
         }
     }
 
+    //판매중이지 않은 노트를 삭제
     @DeleteMapping("/mynote/delete")
     public ResponseEntity<Map<String, Object>> deleteData(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
         Map<String, Object> errorResponse = new HashMap<>();

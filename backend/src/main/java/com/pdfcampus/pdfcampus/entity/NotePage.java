@@ -1,15 +1,13 @@
 package com.pdfcampus.pdfcampus.entity;
 
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -20,14 +18,15 @@ import javax.persistence.*;
 public class NotePage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer pid;
+    @Column(name = "npid")
+    private int npid;
 
-    @Column(name = "nid", nullable = false)
-    private Integer nid;
+    @Column(name = "nid")
+    private int nid;
 
-    @Column(name = "pageNumber")
-    private Integer pageNumber;
+    @Column(name = "notepageNumber")
+    private Integer notepageNumber;
 
-    @Column(name = "pageUrl")
-    private String pageUrl;
+    @Column(name = "notepageUrl", length = 1023)
+    private String notepageUrl;
 }
