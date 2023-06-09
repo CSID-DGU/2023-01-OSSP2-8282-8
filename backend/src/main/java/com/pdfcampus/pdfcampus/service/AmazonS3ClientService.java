@@ -1,7 +1,6 @@
 package com.pdfcampus.pdfcampus.service;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
@@ -49,5 +48,24 @@ public class AmazonS3ClientService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to download content from S3", e);
         }
+    }
+
+    public void deleteS3Note(String bucketName, String nid) {
+        // 객체 삭제
+
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, "Book GNOTE1.png");
+        s3client.deleteObject(deleteObjectRequest);
+    }
+
+    public void copyS3Object(String sourceBucketName, String sourceObjectKey, String destinationBucketName) {
+        // 원본 객체의 키를 대상 객체의 키로 사용
+        String destinationObjectKey = sourceObjectKey;
+
+        // 객체 복사
+        CopyObjectRequest copyObjectRequest = new CopyObjectRequest(sourceBucketName, sourceObjectKey, destinationBucketName, destinationObjectKey);
+        CopyObjectResult copyObjectResult = s3client.copyObject(copyObjectRequest);
+
+        // 복사 작업 결과 확인
+        System.out.println("Object copied successfully. ETag: " + copyObjectResult.getETag());
     }
 }

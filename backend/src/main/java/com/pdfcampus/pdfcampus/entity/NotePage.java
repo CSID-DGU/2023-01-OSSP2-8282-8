@@ -1,5 +1,7 @@
 package com.pdfcampus.pdfcampus.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
