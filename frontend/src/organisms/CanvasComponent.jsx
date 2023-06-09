@@ -13,6 +13,10 @@ import prev_page from "../../assets/prev_page.png";
 import next_page from "../../assets/next_page.png";
 import postMetadata from "../../api/postMetadata";
 
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import postSaveNote from "../../api/postSaveNote";
+
 const UpperContainer = styled.View`
 	display: flex;
 	flex-direction: row;
@@ -201,6 +205,8 @@ const CanvasComponent = ({
 	const touchRef = useRef();
 	const canvasRef = useRef();
 
+	const userId = useRecoilValue(UserInfoState).userId;
+
 	const [totalPath, setTotalPath] = useState([]);
 
 	const [ctx, setCtx] = useState();
@@ -380,7 +386,7 @@ const CanvasComponent = ({
 				ctx.fillText(2 * index, 1160, 660);
 
 				const newURL = await canvasRef.current.toDataURL("image/png");
-				newUrl[[index]] = newURL;
+				newUrl[[index.toString()]] = newURL;
 
 				await ctx.clearRect(
 					0,
@@ -432,7 +438,7 @@ const CanvasComponent = ({
 			ctx.fillText(2 * index, 1160, 660);
 
 			const newURL = await canvasRef.current.toDataURL("image/png");
-			newUrl[[index]] = newURL;
+			newUrl[[index.toString()]] = newURL;
 			await ctx.clearRect(
 				0,
 				0,
@@ -450,7 +456,14 @@ const CanvasComponent = ({
 				i
 			);
 		}
-		console.log("new url:", newUrl);
+
+		const noteSaveDTO = {
+			userId: userId,
+			bookId: bookId,
+			note: newUrl,
+		};
+		console.log("note save dto:", noteSaveDTO);
+		postSaveNote(noteSaveDTO);
 	};
 
 	return (
