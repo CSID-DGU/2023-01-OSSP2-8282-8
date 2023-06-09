@@ -11,4 +11,6 @@ public interface MynoteRepository extends JpaRepository<Note, Integer> {
     List<Note> findByUserUid(Integer uid);
 
     void deleteByNid(Integer noteId);
+
+    boolean existsByNid(Integer nid);
 }

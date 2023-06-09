@@ -82,6 +82,7 @@ public class MylibService {
 
     }
     public List<MylibNoteDto> getMylibNoteData(String uid) {
+
         Integer uidInt = Integer.parseInt(uid);
         List<Mylib> mylibList = mylibRepository.findByUid(uidInt);
         List<MylibNoteDto> noteList = new ArrayList<>();
@@ -90,8 +91,10 @@ public class MylibService {
                 Note note = noteRepository.findByNid(mylib.getNid()).get(0);
                 String bookCoverUrl = null;
                 try {
+
                     bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
                 } catch (MalformedURLException e) {
+
                     throw new RuntimeException(e);
                 }
                 noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl));
