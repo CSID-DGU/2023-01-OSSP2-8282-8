@@ -8,10 +8,7 @@ import com.pdfcampus.pdfcampus.entity.Mylib;
 import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.entity.Sale;
 import com.pdfcampus.pdfcampus.entity.User;
-import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
-import com.pdfcampus.pdfcampus.repository.MylibRepository;
-import com.pdfcampus.pdfcampus.repository.MynoteRepository;
-import com.pdfcampus.pdfcampus.repository.SaleRepository;
+import com.pdfcampus.pdfcampus.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,31 +31,50 @@ public class MynoteService {
     private final SaleRepository saleRepository;
     private final ReadBookService readBookService;
     private final DetailNoteRepository detailNoteRepository;
+    private final NotePageRepository notePageRepository;
 
     @Autowired
-    public MynoteService(MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService, DetailNoteRepository detailNoteRepository) {
+    public MynoteService(NotePageRepository notePageRepository, MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService, DetailNoteRepository detailNoteRepository) {
         this.mynoteRepository = mynoteRepository;
         this.saleRepository = saleRepository;
         this.mylibRepository = mylibRepository;
         this.readBookService = readBookService;
         this.detailNoteRepository = detailNoteRepository;
+        this.notePageRepository = notePageRepository;
     }
 
     public boolean deleteNote(String uid, String nid) {
         Integer userId = Integer.parseInt(uid);
         Integer noteId = Integer.parseInt(nid);
-        Optional<Mylib> dataOptional = mylibRepository.findByUidAndNid(userId, noteId);
+        boolean isNotePresent = mynoteRepository.existsByNid(noteId);
+        boolean isMylibPresent = mylibRepository.existsByUidAndNid(userId, noteId);
 
-        if (dataOptional.isPresent()) {
+        if (isMylibPresent) { // 나의 서재에서도 삭제
+            mylibRepository.deleteByUidAndNid(userId, noteId);
+        }
+
+        if (isNotePresent) { // Note db에서 데이터를 찾고 있으면 지워버림 없으면 에러 반환
             mynoteRepository.deleteByNid(noteId);
+        }
+        else{
+            throw new EntityNotFoundException("Note not found in mynoteRepository with id " + noteId);
+        }
+        /*if (notePageRepository.existsByNid(noteId)) {
+            notePageRepository.deleteByNid(noteId);
             return true;
         }
+        else{
+            throw new EntityNotFoundException("Note not found in notePageRepository with id " + noteId);
+        }*/
+        if (isNotePresent)
+            return true;
 
         return false;
     }
 
     public boolean existsByNid(String noteId) {
         Integer nidInt = Integer.parseInt(noteId);
+
         return saleRepository.existsByNoteNid(nidInt);
     }
 
@@ -110,4 +126,5 @@ public class MynoteService {
 
         return mynoteDtoList;
     }
+
 }

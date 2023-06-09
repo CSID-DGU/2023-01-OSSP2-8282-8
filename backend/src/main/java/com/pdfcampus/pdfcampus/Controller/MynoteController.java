@@ -1,6 +1,5 @@
 package com.pdfcampus.pdfcampus.Controller;
 
-
 import com.pdfcampus.pdfcampus.dto.MynoteAssignDto;
 import com.pdfcampus.pdfcampus.dto.MynoteDto;
 import com.pdfcampus.pdfcampus.service.AmazonS3ClientService;
@@ -44,7 +43,7 @@ public class MynoteController {
 
             mynoteService.assignNote(mynoteAssignDto); //중복이 안된다면 해당 노트를 등록
 
-            amazonS3ClientService.copyS3Object("8282note", mynoteAssignDto.getNoteId(), "8282sale");
+            //amazonS3ClientService.copyS3Object("8282note", mynoteAssignDto.getNoteId(), "8282sale");
 
             apiStatus.put("errorMessage", "Sales registration completed");
             apiStatus.put("errorCode", "N200");
@@ -69,8 +68,9 @@ public class MynoteController {
         Map<String, Object> errorResponse = new HashMap<>();
         Map<String, String> apiStatus = new HashMap<>();
         try {
+
             //이미 판매중인 노트는 판매불가
-            if(detailService.isBought(userId, noteId)) {
+            if(mynoteService.existsByNid(noteId)) {
                 apiStatus.put("errorMessage", "Note already on sale cannot be deleted");
                 apiStatus.put("errorCode", "E400");
                 errorResponse.put("apiStatus", apiStatus);
@@ -81,7 +81,7 @@ public class MynoteController {
             boolean deleted = mynoteService.deleteNote(userId, noteId);
 
             //aws s3 8282note 버킷에서 데이터 삭제
-            amazonS3ClientService.deleteS3Note("8282note", noteId);
+            //amazonS3ClientService.deleteS3Note("8282note", noteId);
 
             if (deleted) {
                 //정상적으로 삭제

@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface NotePageRepository extends JpaRepository<NotePage, Integer> {
     List<NotePage> findByNid(Integer nid);
+
+    void deleteByNid(Integer nid);
+
+    boolean existsByNid(Integer nid);
 }
