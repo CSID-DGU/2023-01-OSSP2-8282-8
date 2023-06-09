@@ -32,12 +32,12 @@ public class ReadNoteController {
 
             if(readNoteService.isUserSubscribed(userId)) { //만약 사용자가 구독을 했다면 book도 같이 전송
                 String bookId = readNoteService.getBookId(noteId);
-                String bookPDFUrl = readNoteService.getBookPdfUrl(bookId).toString();
-                data.put("bookPDFUrl", bookPDFUrl);
+                List<String> bookPageUrls = readNoteService.getBookPdfUrls(bookId);
+                data.put("pages", bookPageUrls);
             }
 
-            String notePDFUrl = readNoteService.getNotePdfUrl(noteId).toString();
-            data.put("notePDFUrl", notePDFUrl);
+            List<String> notePageUrls = readNoteService.getNotePdfUrls(noteId);
+            data.put("notePageUrls", notePageUrls);
 
             response.put("data", data);
 
