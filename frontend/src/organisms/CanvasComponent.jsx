@@ -1,13 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import Canvas, { Image as CanvasImage } from "react-native-canvas";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
-import {
-	Alert,
-	TouchableOpacity,
-	View,
-	useWindowDimensions,
-	Dimensions,
-} from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import { Image } from "react-native";
 
 import styled from "styled-components";
@@ -219,6 +213,7 @@ const CanvasComponent = ({
 		const url = await canvasRef.current.toDataURL("image/png");
 		setImg({ ...img, [currentPage + 1]: url });
 
+		setTotalPath([]);
 		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
@@ -228,6 +223,7 @@ const CanvasComponent = ({
 		const url = await canvasRef.current.toDataURL("image/png");
 		setImg({ ...img, [currentPage + 1]: url });
 
+		setTotalPath([]);
 		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
@@ -278,6 +274,7 @@ const CanvasComponent = ({
 					? [position[0] - 590, position[1] - 590, position[2]]
 					: position
 			);
+
 			setMeta({ ...meta, ...md });
 		});
 	};
@@ -325,21 +322,82 @@ const CanvasComponent = ({
 			handleMetadata,
 			handleRowNums
 		);
-		const getBase64img = async (imgUrl, metadata, rowNums) => {
-			console.log("start upload,,,");
-			ctx.clearRect(0, 0, 1180, 680);
-
-			console.log("row nums:", rowNums);
+		let newUrl = {};
+		const getBase64img = async (imgUrl, metadata, rowNums, index) => {
+			await ctx.clearRect(
+				0,
+				0,
+				canvasRef.current.width,
+				canvasRef.current.height
+			);
 
 			ctx.font = "8px Arial";
 
+			let img = new CanvasImage(canvasRef.current);
+			img.src = imgUrl?.slice(1, -1);
+
+			img.addEventListener("load", async () => {
+				ctx.drawImage(img, 0, 0, 1180, 680);
+
+				rowNums[0].map((r) => {
+					const { rowNum, rowY } = r;
+					ctx.fillText(rowNum - 1, 10, rowY);
+				});
+				rowNums[1]?.map((r) => {
+					const { rowNum, rowY } = r;
+					ctx.fillText(rowNum - 1, 600, rowY);
+				});
+
+				metadata[0]?.map((m) => {
+					ctx.fillText(
+						m.textInfo.extractedText,
+						m.positionInfo[0],
+						m.positionInfo[2]
+					);
+					ctx.fillStyle = "#666";
+					ctx.fillText(
+						2 * index - 1 + "쪽 " + m.textInfo.rowNumber + "행",
+						m.positionInfo[0],
+						m.positionInfo[2] - 15
+					);
+					ctx.fillStyle = "#000";
+				});
+				metadata[1]?.map((m) => {
+					ctx.fillText(
+						m.textInfo.extractedText,
+						m.positionInfo[0] + 590,
+						m.positionInfo[2]
+					);
+					ctx.fillStyle = "#666";
+					ctx.fillText(
+						2 * index + "쪽 " + m.textInfo.rowNumber + "행",
+						m.positionInfo[0] + 590,
+						m.positionInfo[2] - 15
+					);
+					ctx.fillStyle = "#000";
+				});
+				ctx.fillText(2 * index - 1, 20, 660);
+				ctx.fillText(2 * index, 1160, 660);
+
+				const newURL = await canvasRef.current.toDataURL("image/png");
+				newUrl[[index]] = newURL;
+
+				await ctx.clearRect(
+					0,
+					0,
+					canvasRef.current.width,
+					canvasRef.current.height
+				);
+
+				return;
+			});
 			rowNums[0].map((r) => {
 				const { rowNum, rowY } = r;
-				ctx.fillText(rowNum, 10, rowY);
+				ctx.fillText(rowNum - 1, 10, rowY);
 			});
 			rowNums[1]?.map((r) => {
 				const { rowNum, rowY } = r;
-				ctx.fillText(rowNum, 600, rowY);
+				ctx.fillText(rowNum - 1, 600, rowY);
 			});
 
 			metadata[0]?.map((m) => {
@@ -348,6 +406,13 @@ const CanvasComponent = ({
 					m.positionInfo[0],
 					m.positionInfo[2]
 				);
+				ctx.fillStyle = "#666";
+				ctx.fillText(
+					2 * index - 1 + "쪽 " + m.textInfo.rowNumber + "행",
+					m.positionInfo[0],
+					m.positionInfo[2] - 15
+				);
+				ctx.fillStyle = "#000";
 			});
 			metadata[1]?.map((m) => {
 				ctx.fillText(
@@ -355,28 +420,37 @@ const CanvasComponent = ({
 					m.positionInfo[0] + 590,
 					m.positionInfo[2]
 				);
+				ctx.fillStyle = "#666";
+				ctx.fillText(
+					2 * index + "쪽 " + m.textInfo.rowNumber + "행",
+					m.positionInfo[0] + 590,
+					m.positionInfo[2] - 15
+				);
+				ctx.fillStyle = "#000";
 			});
+			ctx.fillText(2 * index - 1, 20, 660);
+			ctx.fillText(2 * index, 1160, 660);
 
-			// const uploadedImg1 = new CanvasImage(canvasRef.current);
-			// uploadedImg.src = imgUrl[0];
-			// ctx.drawImage(uploadedImg1, 0, 0, 590, 680);
-			// const uploadedImg2 = new CanvasImage(canvasRef.current);
-			// uploadedImg.src = imgUrl[1];
-			// ctx.drawImage(uploadedImg2, 590, 0, 590, 680);
-
-			console.log("start urling,,,");
-			const newUrl = await canvasRef.current.toDataURL("image/png");
-			console.log("new url:", newUrl);
-			ctx.clearRect(0, 0, 1180, 680);
+			const newURL = await canvasRef.current.toDataURL("image/png");
+			newUrl[[index]] = newURL;
+			await ctx.clearRect(
+				0,
+				0,
+				canvasRef.current.width,
+				canvasRef.current.height
+			);
 		};
-		console.log("content length:", content.length);
-		for (let i = 1; i <= Math.floor(content.length / 2) + 1; i++) {
-			getBase64img(
-				[img[[2 * i - 1]], img[[2 * i]]],
-				[metadatas[[2 * i - 1]], metadatas[[2 * i]]],
-				[rowNums[[2 * i - 1]], rowNums[[2 * i]]]
+		const len = Math.floor(content.length / 2) + 1;
+
+		for (let i = 1; i <= len; i++) {
+			await getBase64img(
+				img[[2 * i - 1]],
+				metadatas ? [metadatas[[2 * i - 1]], metadatas[[2 * i]]] : null,
+				[rowNums[[2 * i - 1]], rowNums[[2 * i]]],
+				i
 			);
 		}
+		console.log("new url:", newUrl);
 	};
 
 	return (
@@ -433,7 +507,9 @@ const CanvasComponent = ({
 					}}
 				>
 					<Image
-						source={{ uri: content[currentPage] }}
+						source={{
+							uri: content[currentPage],
+						}}
 						style={{
 							width: 590,
 							height: 680,
