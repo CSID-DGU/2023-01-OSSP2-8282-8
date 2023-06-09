@@ -20,4 +20,7 @@ public interface RowNumRepository extends JpaRepository<RowNum, Integer> {
     RowNum findFirstByPidAndRowYLessThanEqualOrderByRowYDesc(Integer pid, float v);
 
     List<RowNum> findByPid(Integer pid);
+
+
+    Optional<RowNum> findTopByPidOrderByRowYDesc(Integer pid);
 }
