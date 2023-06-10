@@ -61,11 +61,24 @@ public class AmazonS3ClientService {
         // 원본 객체의 키를 대상 객체의 키로 사용
         String destinationObjectKey = sourceObjectKey;
 
-        // 객체 복사
-        CopyObjectRequest copyObjectRequest = new CopyObjectRequest(sourceBucketName, sourceObjectKey, destinationBucketName, destinationObjectKey);
-        CopyObjectResult copyObjectResult = s3client.copyObject(copyObjectRequest);
+        // 폴더 객체 복사
+        CopyObjectRequest folderCopyRequest = new CopyObjectRequest(sourceBucketName, sourceObjectKey, destinationBucketName, destinationObjectKey);
+        CopyObjectResult folderCopyResult = s3client.copyObject(folderCopyRequest);
+
+        ObjectListing objectListing = s3client.listObjects("8282note", sourceObjectKey);
+        do {
+            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+                String sourceKey = objectSummary.getKey();
+                String destinationKey = sourceKey.replace(sourceObjectKey, destinationObjectKey);
+
+                CopyObjectRequest objectCopyRequest = new CopyObjectRequest(sourceBucketName, sourceKey, destinationBucketName, destinationKey);
+                s3client.copyObject(objectCopyRequest);
+            }
+
+            objectListing = s3client.listNextBatchOfObjects(objectListing);
+        } while (objectListing.isTruncated());
 
         // 복사 작업 결과 확인
-        System.out.println("Object copied successfully. ETag: " + copyObjectResult.getETag());
+        System.out.println("Folder copied successfully. ETag: " + folderCopyResult.getETag());
     }
 }
