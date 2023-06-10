@@ -89,24 +89,24 @@ const OnSale = () => {
 	return Alert.alert("판매 등록");
 };
 
-const MyNotesList = ({ notes, handleModal1 }) => {
+const MyNotesList = ({ notes, handleModal1, readNote }) => {
 	return notes.map((note, i) => (
 		<NoteHandle
 			key={note.noteId}
 			id={note.noteId}
-			// img={note.bookInfo.bookCover}
-			img={`https://pdfampus.s3.ap-northeast-2.amazonaws.com/${i + 1}.jpg`}
+			img={note.bookInfo.bookCover}
 			bookTitle={note.noteTitle}
 			isSaled={note.isSale}
 			PublicationDate={note.bookInfo.publicationYear}
 			ModifiedDate={note.modifiedAt}
 			onPress1={OnSale}
 			onPress2={handleModal1}
+			onPress={readNote}
 		/>
 	));
 };
 
-const MyNotes = () => {
+const MyNotes = ({ navigation }) => {
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
 	const [notes, setNotes] = useState([]);
@@ -126,6 +126,13 @@ const MyNotes = () => {
 	const DeleteNote = () => {
 		setModalVisible1(false), setModalVisible2(true);
 		postDeleteNote({ userId, selectedNote });
+	};
+
+	const readNote = (noteId) => {
+		navigation.navigate("ContentReader", {
+			type: "note",
+			contentId: noteId,
+		});
 	};
 
 	useEffect(() => {
@@ -162,14 +169,18 @@ const MyNotes = () => {
 					</Block>
 				</ModalContiner>
 			</Modal>
-			<Header />
+			<Header navigation={navigation} />
 			<ScrollView>
 				<BookTitleContainer>
 					<BookTitleTypo>나의 필기 관리</BookTitleTypo>
 				</BookTitleContainer>
 				<Container2>
 					<NoteListContiner>
-						<MyNotesList notes={notes} handleModal1={handleModal1} />
+						<MyNotesList
+							notes={notes}
+							handleModal1={handleModal1}
+							readNote={readNote}
+						/>
 					</NoteListContiner>
 				</Container2>
 			</ScrollView>

@@ -1,13 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import Canvas from "react-native-canvas";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
-import {
-	Alert,
-	TouchableOpacity,
-	View,
-	useWindowDimensions,
-	Dimensions,
-} from "react-native";
+import Canvas, { Image as CanvasImage } from "react-native-canvas";
+import { useEffect, useRef, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import { Image } from "react-native";
 
 import styled from "styled-components";
@@ -18,6 +12,12 @@ import highlight_image from "../../assets/highlight_image.png";
 import prev_page from "../../assets/prev_page.png";
 import next_page from "../../assets/next_page.png";
 import postMetadata from "../../api/postMetadata";
+
+import { useRecoilValue } from "recoil";
+import { UserInfoState } from "../../state/UserInfoState";
+import postSaveNote from "../../api/postSaveNote";
+
+import CustomedModal from "./Modal";
 
 const UpperContainer = styled.View`
 	display: flex;
@@ -122,7 +122,7 @@ const Tool = ({ ctx, props, onClick }) => {
 	);
 };
 
-const ToolKit = ({ ctx }) => {
+const ToolKit = ({ hidden, ctx }) => {
 	const tools = [
 		{
 			color: ["rgb(249,96,96)", "rgba(249,96,96,0.05)"],
@@ -158,7 +158,9 @@ const ToolKit = ({ ctx }) => {
 		ctx.lineWidth = type == "pen" ? 2 : type == "highlight" ? 15 : 30;
 	};
 	return (
-		<ToolKitContainer>
+		<ToolKitContainer
+			style={{ opacity: hidden ? 0 : null, height: hidden ? 0 : 56 }}
+		>
 			{tools.map((tool) => (
 				<Tool ctx={ctx} props={tool} onClick={toolOnClick} />
 			))}
@@ -166,9 +168,12 @@ const ToolKit = ({ ctx }) => {
 	);
 };
 
-const DownLoadButton = ({ onClick }) => {
+const DownLoadButton = ({ hidden, onClick }) => {
 	return (
-		<DownLoadButtonStyle onPress={onClick}>
+		<DownLoadButtonStyle
+			style={{ opacity: hidden ? 0 : null, height: hidden ? 0 : 35 }}
+			onPress={onClick}
+		>
 			<DownLoadTypo>필기 다운로드</DownLoadTypo>
 		</DownLoadButtonStyle>
 	);
@@ -203,9 +208,12 @@ const CanvasComponent = ({
 	prevOnClick,
 	nextOnClick,
 	currentPage,
+	isNote,
 }) => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
+
+	const userId = useRecoilValue(UserInfoState).userId;
 
 	const [totalPath, setTotalPath] = useState([]);
 
@@ -219,6 +227,7 @@ const CanvasComponent = ({
 		const url = await canvasRef.current.toDataURL("image/png");
 		setImg({ ...img, [currentPage + 1]: url });
 
+		setTotalPath([]);
 		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
@@ -228,6 +237,7 @@ const CanvasComponent = ({
 		const url = await canvasRef.current.toDataURL("image/png");
 		setImg({ ...img, [currentPage + 1]: url });
 
+		setTotalPath([]);
 		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
@@ -278,7 +288,7 @@ const CanvasComponent = ({
 					? [position[0] - 590, position[1] - 590, position[2]]
 					: position
 			);
-			console.log("md:", md);
+
 			setMeta({ ...meta, ...md });
 		});
 	};
@@ -286,11 +296,12 @@ const CanvasComponent = ({
 	useEffect(() => {
 		setTotalPath([]);
 		setMeta([]);
+		setImg({});
 		if (touchRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
 			ctx.lineWidth = 2;
-			const widthval = 1500;
-			const heightval = 1000;
+			const widthval = 1180;
+			const heightval = 680;
 			if (ctx) {
 				canvasRef.current.width = widthval;
 				canvasRef.current.height = heightval;
@@ -302,28 +313,164 @@ const CanvasComponent = ({
 	const [path, setPath] = useState([]);
 	const [meta, setMeta] = useState({});
 
-	const [metadata, setMetadata] = useState();
-	const handleMetadata = (data) => {
-		setMetadata(data);
-	};
-
-	const downloadOnClick = () => {
-		console.log("meta:", meta);
-		postMetadata(
-			bookId,
-			{
-				data: {
-					metadata: meta,
-				},
+	const downloadOnClick = async () => {
+		const { metadatas, rowNums } = await postMetadata(bookId, {
+			data: {
+				metadata: meta,
 			},
-			handleMetadata
-		);
+		});
+		let newUrl = {};
+		const getBase64img = async (imgUrl, metadata, rowNums, index) => {
+			await ctx.clearRect(
+				0,
+				0,
+				canvasRef.current.width,
+				canvasRef.current.height
+			);
+
+			ctx.font = "8px Arial";
+
+			let img = new CanvasImage(canvasRef.current);
+			img.src = imgUrl?.slice(1, -1);
+
+			img.addEventListener("load", async () => {
+				ctx.drawImage(img, 0, 0, 1180, 680);
+
+				rowNums[0].map((r) => {
+					const { rowNum, rowY } = r;
+					ctx.fillText(rowNum - 1, 10, rowY);
+				});
+				rowNums[1]?.map((r) => {
+					const { rowNum, rowY } = r;
+					ctx.fillText(rowNum - 1, 600, rowY);
+				});
+
+				metadata[0]?.map((m) => {
+					ctx.fillText(
+						m.textInfo.extractedText,
+						m.positionInfo[0],
+						m.positionInfo[2]
+					);
+					ctx.fillStyle = "#666";
+					ctx.fillText(
+						2 * index - 1 + "쪽 " + m.textInfo.rowNumber + "행",
+						m.positionInfo[0],
+						m.positionInfo[2] - 15
+					);
+					ctx.fillStyle = "#000";
+				});
+				metadata[1]?.map((m) => {
+					ctx.fillText(
+						m.textInfo.extractedText,
+						m.positionInfo[0] + 590,
+						m.positionInfo[2]
+					);
+					ctx.fillStyle = "#666";
+					ctx.fillText(
+						2 * index + "쪽 " + m.textInfo.rowNumber + "행",
+						m.positionInfo[0] + 590,
+						m.positionInfo[2] - 15
+					);
+					ctx.fillStyle = "#000";
+				});
+				ctx.fillText(2 * index - 1, 20, 660);
+				ctx.fillText(2 * index, 1160, 660);
+
+				const newURL = await canvasRef.current.toDataURL("image/png");
+				newUrl[[index]] = newURL.slice(1, -1);
+
+				await ctx.clearRect(
+					0,
+					0,
+					canvasRef.current.width,
+					canvasRef.current.height
+				);
+
+				return;
+			});
+			rowNums[0].map((r) => {
+				const { rowNum, rowY } = r;
+				ctx.fillText(rowNum - 1, 10, rowY);
+			});
+			rowNums[1]?.map((r) => {
+				const { rowNum, rowY } = r;
+				ctx.fillText(rowNum - 1, 600, rowY);
+			});
+
+			metadata[0]?.map((m) => {
+				ctx.fillText(
+					m.textInfo.extractedText,
+					m.positionInfo[0],
+					m.positionInfo[2]
+				);
+				ctx.fillStyle = "#666";
+				ctx.fillText(
+					2 * index - 1 + "쪽 " + m.textInfo.rowNumber + "행",
+					m.positionInfo[0],
+					m.positionInfo[2] - 15
+				);
+				ctx.fillStyle = "#000";
+			});
+			metadata[1]?.map((m) => {
+				ctx.fillText(
+					m.textInfo.extractedText,
+					m.positionInfo[0] + 590,
+					m.positionInfo[2]
+				);
+				ctx.fillStyle = "#666";
+				ctx.fillText(
+					2 * index + "쪽 " + m.textInfo.rowNumber + "행",
+					m.positionInfo[0] + 590,
+					m.positionInfo[2] - 15
+				);
+				ctx.fillStyle = "#000";
+			});
+			ctx.fillText(2 * index - 1, 20, 660);
+			ctx.fillText(2 * index, 1160, 660);
+
+			const newURL = await canvasRef.current.toDataURL("image/png");
+			newUrl[[index]] = newURL.slice(1, -1);
+			await ctx.clearRect(
+				0,
+				0,
+				canvasRef.current.width,
+				canvasRef.current.height
+			);
+		};
+		const len = Math.floor(content.length / 2) + 1;
+
+		for (let i = 1; i <= len; i++) {
+			await getBase64img(
+				img[[2 * i - 1]],
+				metadatas ? [metadatas[[2 * i - 1]], metadatas[[2 * i]]] : null,
+				[rowNums[[2 * i - 1]], rowNums[[2 * i]]],
+				i
+			);
+		}
+
+		const noteSaveDTO = {
+			userId: userId.toString(),
+			bookId: bookId.toString(),
+			note: newUrl,
+		};
+		const successed = await postSaveNote(noteSaveDTO);
+		setModalVisible(successed);
 	};
 
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleModal = () => {
+		setModalVisible(false);
+	};
 	return (
 		<>
+			<CustomedModal
+				typo="필기가 저장되었습니다."
+				buttonTypo1="확인"
+				visible={modalVisible}
+				handleModal={handleModal}
+			/>
 			<UpperContainer>
-				<ToolKit ctx={ctx} />
+				<ToolKit hidden={isNote} ctx={ctx} />
 				<View
 					style={{
 						display: "flex",
@@ -331,40 +478,45 @@ const CanvasComponent = ({
 						alignItems: "flex-end",
 					}}
 				>
-					<DownLoadButton onClick={downloadOnClick} />
-					<PageNumber number={currentPage + 1} totalPage={content.length} />
+					<DownLoadButton hidden={isNote} onClick={downloadOnClick} />
+					<PageNumber
+						number={currentPage + 1}
+						totalPage={isNote ? content.length * 2 : content.length}
+					/>
 					<PageButton prevOnClick={handlePrev} nextOnClick={handleNext} />
 				</View>
 			</UpperContainer>
 			<View style={{ position: "relative", zIndex: 1 }}>
-				<View
-					ref={touchRef}
-					style={{
-						backgroundColor: "transparent",
-						width: "100%",
-						height: "100%",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						borderStyle: "solid",
-						borderWidth: "1px",
-						borderColor: "#D9D9D9",
-						borderRadius: "15",
-						boxSizing: "border-box",
-					}}
-					onTouchStart={handleTouchStart}
-					onTouchMove={handleTouchMove}
-					onTouchEnd={handleTouchEnd}
-				>
-					<Canvas
-						ref={canvasRef}
+				{!isNote ? (
+					<View
+						ref={touchRef}
 						style={{
+							backgroundColor: "transparent",
 							width: "100%",
 							height: "100%",
-							backgroundColor: "transparent",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							borderStyle: "solid",
+							borderWidth: "1px",
+							borderColor: "#D9D9D9",
+							borderRadius: "15",
+							boxSizing: "border-box",
 						}}
-					/>
-				</View>
+						onTouchStart={handleTouchStart}
+						onTouchMove={handleTouchMove}
+						onTouchEnd={handleTouchEnd}
+					>
+						<Canvas
+							ref={canvasRef}
+							style={{
+								width: "100%",
+								height: "100%",
+								backgroundColor: "transparent",
+							}}
+						/>
+					</View>
+				) : null}
 				<View
 					style={{
 						display: "flex",
@@ -374,13 +526,17 @@ const CanvasComponent = ({
 					}}
 				>
 					<Image
-						source={{ uri: content[currentPage] }}
+						source={{
+							uri: isNote
+								? content[Math.floor(currentPage / 2)]
+								: content[currentPage],
+						}}
 						style={{
-							width: 590,
+							width: isNote ? 1180 : 590,
 							height: 680,
 						}}
 					/>
-					{currentPage + 1 < content.length ? (
+					{currentPage + 1 < content.length && !isNote ? (
 						<Image
 							source={{
 								uri: content[currentPage + 1],
