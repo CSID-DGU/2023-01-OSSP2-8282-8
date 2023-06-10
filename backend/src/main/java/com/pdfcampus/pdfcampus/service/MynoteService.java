@@ -1,5 +1,7 @@
 package com.pdfcampus.pdfcampus.service;
 
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.pdfcampus.pdfcampus.dto.BookDto;
 import com.pdfcampus.pdfcampus.dto.MynoteAssignDto;
 import com.pdfcampus.pdfcampus.dto.MynoteDto;
@@ -33,14 +35,17 @@ public class MynoteService {
     private final DetailNoteRepository detailNoteRepository;
     private final NotePageRepository notePageRepository;
 
+    private final AmazonS3ClientService amazonS3ClientService;
+
     @Autowired
-    public MynoteService(NotePageRepository notePageRepository, MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService, DetailNoteRepository detailNoteRepository) {
+    public MynoteService(AmazonS3ClientService amazonS3ClientService, NotePageRepository notePageRepository, MynoteRepository mynoteRepository, SaleRepository saleRepository, MylibRepository mylibRepository, ReadBookService readBookService, DetailNoteRepository detailNoteRepository) {
         this.mynoteRepository = mynoteRepository;
         this.saleRepository = saleRepository;
         this.mylibRepository = mylibRepository;
         this.readBookService = readBookService;
         this.detailNoteRepository = detailNoteRepository;
         this.notePageRepository = notePageRepository;
+        this.amazonS3ClientService = amazonS3ClientService;
     }
 
     public boolean deleteNote(String uid, String nid) {
@@ -78,12 +83,29 @@ public class MynoteService {
         return saleRepository.existsByNoteNid(nidInt);
     }
 
-    public Sale assignNote(MynoteAssignDto mynoteAssignDto) {
+    public void assignNote(MynoteAssignDto mynoteAssignDto) {
         Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
         Note note = detailNoteRepository.findByNid(nidInt)
                 .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
 
         Sale sale = mynoteAssignDto.toEntity(note, mynoteAssignDto.getPrice());
+
+        //sale 테이블에 데이터 추가
+        saleRepository.save(sale);
+
+        //s3 8282note에 있는 해당 객체를 8282sale로 복사
+        amazonS3ClientService.copyS3Object("8282note", mynoteAssignDto.getNoteId() + "/", "8282sale");
+    }
+
+    public Sale creatSale(MynoteAssignDto mynoteAssignDto) {
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Note note = detailNoteRepository.findByNid(nidInt)
+                .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
+
+        //sale 테이블에 데이터 추가
+        Sale sale = mynoteAssignDto.toEntity(note, mynoteAssignDto.getPrice());
+
+
 
         return saleRepository.save(sale);
     }

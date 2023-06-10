@@ -13,6 +13,7 @@ import MyNotes from "./src/pages/MyNotes";
 import SearchResult from "./src/pages/SearchResult";
 import ContentsAll from "./src/pages/contentsAll";
 import ContentReader from "./src/pages/ContentReader";
+import CanvasComponent from "./src/organisms/CanvasComponent";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +43,9 @@ export default function App() {
 					<Stack.Screen name="NoteAll">
 						{(props) => <ContentsAll {...props} />}
 					</Stack.Screen>
-					<Stack.Screen name="ContentReader" component={ContentReader} />
+					<Stack.Screen name="ContentReader">
+						{(props) => <ContentReader {...props} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</RecoilRoot>

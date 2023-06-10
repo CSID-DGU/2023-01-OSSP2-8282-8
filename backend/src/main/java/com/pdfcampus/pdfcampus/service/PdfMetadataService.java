@@ -17,6 +17,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
+import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PdfMetadataService {
@@ -68,7 +68,7 @@ public class PdfMetadataService {
             float[] dimensions = GetPDFDimensions.getPageDimensions(document, pageNumber);
             System.out.println("Page Width: " + dimensions[0] + ", Page Height: " + dimensions[1]);
 
-            // Render the page to an image and save it to S3
+
             BufferedImage bim = pdfRenderer.renderImageWithDPI(pageNumber, 300);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(bim, "png", os);
@@ -107,6 +107,7 @@ public class PdfMetadataService {
             super();
             this.associatedPage = associatedPage;
             this.rowNumber = rowNumber;
+            setSortByPosition(true);
         }
 
         @Override
@@ -119,40 +120,50 @@ public class PdfMetadataService {
                         startX = textPosition.getX();
                         y = textPosition.getY();
                     }
-                    fullTextBuilder.append(textPosition.getUnicode());
-                    endX = textPosition.getEndX();
-                    lastY = y;
+
+                    // pdfBoxPageHeight == 841
+                    if (y >= 70 && y <= (841 - 110)) {
+                        fullTextBuilder.append(textPosition.getUnicode());
+                        endX = textPosition.getEndX();
+                        lastY = y;
+                    }
                 } else {
-
                     saveRow(fullTextBuilder.toString(), startX, endX, lastY);
-
                     startX = textPosition.getX();
                     y = textPosition.getY();
                     endX = textPosition.getEndX();
                     fullTextBuilder.setLength(0);
-                    fullTextBuilder.append(textPosition.getUnicode());
-                    lastY = y;
+
+                    if (y >= 70 && y <= (841 - 110)) {
+                        fullTextBuilder.append(textPosition.getUnicode());
+                        lastY = y;
+                    }
                 }
             }
 
-            if (fullTextBuilder.length() > 0) {
+            if (fullTextBuilder.length() > 1 && lastY <= (841-110)) {
                 saveRow(fullTextBuilder.toString(), startX, endX, lastY);
             }
         }
 
+
         private void saveRow(String text, float startX, float endX, float y) {
-            // PDFBox 인식 페이지 크기
-            float pdfBoxPageWidth = 595;
-            float pdfBoxPageHeight = 841;
+            // TextPosition은 문자열이 없는 경우에도, 빈 공간을 만들어낸다. 이것을 한 번 더 걸러준다.
+            if (text.trim().isEmpty()) {
+                return;
+            }
 
-            // 요청받는 PDF 페이지 크기
-            float requestPageWidth = 590;
-            float requestPageHeight = 680;
+            // 이전에 저장된 rowY 값을 가져옴
+            Optional<RowNum> lastRowEntityOpt = rowNumRepository.findTopByPidOrderByRowYDesc(associatedPage.getPid());
+            float lastRowY = lastRowEntityOpt.isPresent() ? lastRowEntityOpt.get().getRowY() : -1.0f;
 
-            // 잘린 부분의 크기
-            // float cutOff = pdfBoxPageHeight - requestPageHeight;
+            float tolerance = 5.0f; // 이 범위 내에는 같은 행 (미세)
+            if (Math.abs(y - lastRowY) < tolerance) {
+                System.out.println("Skipping row due to duplicate Y values.");
+                return;
+            }
 
-            // Check if a RowNum already exists for this page and row number
+            // 이미 존재하는지 확인
             RowNum rowNumEntity = rowNumRepository.findByPidAndRowNumber(associatedPage.getPid(), rowNumber)
                     .orElse(new RowNum());
 
@@ -163,12 +174,9 @@ public class PdfMetadataService {
             rowNumRepository.save(rowNumEntity);
             System.out.println("Row: [" + text + "], Position: [" + startX + ", " + endX + ", " + y + "]");
         }
+
     }
     public ExtractedTextInfo extractTextFromLocation(Integer bid, Integer pageNumber, float startX, float startY, float width, float height) throws IOException {
-        System.out.println("x시작"+startX);
-        System.out.println("y"+startY);
-        System.out.println("너비 높이"+width+height);
-
 
         // PDFBox 인식 페이지 크기
         float pdfBoxPageWidth = 595;
@@ -179,42 +187,37 @@ public class PdfMetadataService {
         float requestPageHeight = 680;
 
         // 잘린 부분의 크기
-        float cutOff = pdfBoxPageHeight - requestPageHeight;
-        System.out.println("cutOff ="+ cutOff);
-        // Check if the page exists in the database
+        float cutOff = pdfBoxPageHeight - requestPageHeight -85;
+
+        // pageNumber 체크
         Page page = pageRepository.findByBidAndPageNumber(bid, pageNumber)
                 .orElseThrow(() -> new RuntimeException("Page number: " + pageNumber + " for book with ID: " + bid + " not found."));
 
-        // Get the PDF from S3
+        // 버킷에서 PDF 가져오기
         S3Object s3Object = s3client.getObject("8282book", bid + ".pdf");
         InputStream objectData = s3Object.getObjectContent();
         byte[] bytes = IOUtils.toByteArray(objectData);
 
-        // Load the PDF document
+        // PDF 불러오기
         PDDocument document = PDDocument.load(new ByteArrayInputStream(bytes));
-        System.out.println("pdf 가져옴");
-        // Create a new instance of PDFTextStripperByArea
+
+        // PDF 면적 일치하도록 설정
         PDFTextStripperByArea stripper = new PDFTextStripperByArea();
 
         Rectangle2D.Float rect = new Rectangle2D.Float(startX, startY+cutOff, width, height);
-
-
-        // Add the defined area to the stripper
         stripper.addRegion("region", rect);
 
-
-        // Extract the text from the defined area
+        // text 추출
         stripper.extractRegions(document.getPage(pageNumber - 1));
         String text = stripper.getTextForRegion("region");
 
-        // Here we would typically determine the row number and y position
-        // but without an actual PDF and logic to calculate the row number, this is not possible
-        // So for now, let's set them to some arbitrary values
-        int rowNumber = 1;
+
+        // 받아오는 PDF는 상단이 일부 잘린 PDF이다. 따라서 cutOff를 더해줘서, 동일한 y값을 가지도록 한다.
         float y = startY+cutOff;
-        System.out.println(startY);
-        // If the extracted text is empty, whitespace, or newline characters, find the nearest y row and extract the text from that row
-        float deltaY = 1.0f;  // The amount by which to change y
+
+        // x,y 좌표가 정확하게 일치하지 않는 경우, text가 추출되지 않는다.
+        // 따라서 y값에 조금씩 변화를 주면서 유의미한 text가 나올 때까지 반복한다.
+        float deltaY = 1.0f;
         while (text.isBlank() || text.equals("\r\n")) {
             y += deltaY;  // Change y
             Rectangle2D.Float nearestRect = new Rectangle2D.Float(startX, y, width, height);
@@ -222,27 +225,28 @@ public class PdfMetadataService {
             stripper.extractRegions(document.getPage(pageNumber - 1));
             text = stripper.getTextForRegion("nearestRegion");
         }
+
+        // 텍스트의 rowNumber를 가져온다.
+        // 행이 정확하게 일치하는 경우는 거의 없어서, upperRow와 lowerRow를 설정한다.
         RowNum upperRow = rowNumRepository.findFirstByPidAndRowYGreaterThanEqualOrderByRowYAsc(page.getPid(), y);
         System.out.println(upperRow.getRowY());
         RowNum lowerRow = rowNumRepository.findFirstByPidAndRowYLessThanOrderByRowYDesc(page.getPid(), y);
         System.out.println(lowerRow.getRowY());
 
+        // rowNum에 값을 할당
         RowNum rowNum;
         if (upperRow == null) {
             rowNum = lowerRow;
-            System.out.println("upperRow == null"+rowNum);
         } else if (lowerRow == null) {
             rowNum = upperRow;
-            System.out.println("lowerRow == null"+rowNum);
-        } else {
+        } else { // upperRow와 lowerRow 중 y와의 거리가 더 가까운 행을 선택
             rowNum = Math.abs(upperRow.getRowY() - y) < Math.abs(lowerRow.getRowY() - y) ? upperRow : lowerRow;
-            System.out.println("else"+rowNum);
         }
 
         ExtractedTextInfo extractedTextInfo = new ExtractedTextInfo();
         extractedTextInfo.setText(text);
-        extractedTextInfo.setRowNumber(rowNum.getRowNumber());  // 사용하지 않음
-        extractedTextInfo.setYPosition(y);
+        extractedTextInfo.setRowNumber(rowNum.getRowNumber());
+        extractedTextInfo.setYPosition(y-cutOff);
 
         document.close();
         objectData.close();
@@ -250,15 +254,22 @@ public class PdfMetadataService {
         return extractedTextInfo;
     }
 
-    public List<Integer> getAllPages(Integer bookId) {
+    public Map<Integer, List<Map<String, Object>>> getAllRowNumbers(Integer bookId) {
         List<Page> pages = pageRepository.findByBid(bookId);
-        List<Integer> pageNumbers = new ArrayList<>();
+        Map<Integer, List<Map<String, Object>>> pageRowNumbers = new HashMap<>();
 
         for (Page page : pages) {
-            pageNumbers.add(page.getPageNumber());
+            List<Map<String, Object>> rowNumbers = new ArrayList<>();
+            List<RowNum> rowNums = rowNumRepository.findByPid(page.getPid());
+            for (RowNum rowNum : rowNums){
+                Map<String, Object> rowMap = new HashMap<>();
+                rowMap.put("rowNum", rowNum.getRowNumber());
+                rowMap.put("rowY", rowNum.getRowY()-76);
+                rowNumbers.add(rowMap);
+            }
+            pageRowNumbers.put(page.getPageNumber(), rowNumbers);
         }
 
-        return pageNumbers;
+        return pageRowNumbers;
     }
-
 }

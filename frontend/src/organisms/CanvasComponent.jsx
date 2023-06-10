@@ -15,6 +15,8 @@ import styled from "styled-components";
 import pen_image from "../../assets/pen_image.png";
 import eraser_image from "../../assets/eraser_image.png";
 import highlight_image from "../../assets/highlight_image.png";
+import prev_page from "../../assets/prev_page.png";
+import next_page from "../../assets/next_page.png";
 import postMetadata from "../../api/postMetadata";
 
 const UpperContainer = styled.View`
@@ -23,7 +25,7 @@ const UpperContainer = styled.View`
 	justify-content: space-between;
 	align-items: flex-end;
 	box-sizing: border-box;
-	margin: 0 0 13px 0;
+	margin: 13px 0 13px 0;
 `;
 
 const ToolKitContainer = styled.View`
@@ -66,12 +68,41 @@ const DownLoadTypo = styled.Text`
 	font-weight: 600;
 `;
 
+const PageButtonContainer = styled.TouchableOpacity`
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	margin: 0 0 -13px 0;
+`;
+
+const PageNumberWrapper = styled.View`
+	width: 71px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #d9d9d9;
+	box-sizing: border-box;
+	margin: 0 12px;
+	border-radius: 8px;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
+const PageNumberValue = styled.Text`
+	font-size: 16px;
+	font-weight: 600;
+	color: #ffffff;
+	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
 const Tool = ({ ctx, props, onClick }) => {
 	return (
 		<ToolIcon
-			style={{ backgroundColor: props.color }}
+			style={{ backgroundColor: props.color[0] }}
 			onPress={() => {
-				onClick(ctx, props.type, props.color);
+				onClick(ctx, props.type, props.color[1]);
 				props.type == "eraser"
 					? (ctx.globalCompositeOperation = "destination-out")
 					: (ctx.globalCompositeOperation = "source-over");
@@ -94,31 +125,31 @@ const Tool = ({ ctx, props, onClick }) => {
 const ToolKit = ({ ctx }) => {
 	const tools = [
 		{
-			color: "#F96060",
+			color: ["rgb(249,96,96)", "rgba(249,96,96,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#E1E440",
+			color: ["rgb(225,228,64)", "rgba(225,228,64,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#595FE5",
+			color: ["rgb(89,95,229)", "rgba(89,95,229,0.05)"],
 			type: "highlight",
 		},
 		{
-			color: "#333",
+			color: ["#333", "#333"],
 			type: "pen",
 		},
 		{
-			color: "#E12323",
+			color: ["#E12323", "#E12323"],
 			type: "pen",
 		},
 		{
-			color: "#1E25BB",
+			color: ["#1E25BB", "#1E25BB"],
 			type: "pen",
 		},
 		{
-			color: "white",
+			color: ["white", "white"],
 			type: "eraser",
 		},
 	];
@@ -143,7 +174,36 @@ const DownLoadButton = ({ onClick }) => {
 	);
 };
 
-const CanvasComponent = () => {
+const PageButton = ({ prevOnClick, nextOnClick }) => {
+	return (
+		<PageButtonContainer>
+			<TouchableOpacity onPress={prevOnClick}>
+				<Image source={prev_page} />
+			</TouchableOpacity>
+			<TouchableOpacity onPress={nextOnClick}>
+				<Image source={next_page} />
+			</TouchableOpacity>
+		</PageButtonContainer>
+	);
+};
+
+const PageNumber = ({ number, totalPage }) => {
+	return (
+		<PageNumberWrapper>
+			<PageNumberValue>
+				{number}/{totalPage}
+			</PageNumberValue>
+		</PageNumberWrapper>
+	);
+};
+
+const CanvasComponent = ({
+	bookId,
+	content,
+	prevOnClick,
+	nextOnClick,
+	currentPage,
+}) => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
 
@@ -151,8 +211,27 @@ const CanvasComponent = () => {
 
 	const [ctx, setCtx] = useState();
 
+	const [img, setImg] = useState({});
+
+	const handlePrev = async () => {
+		prevOnClick();
+
+		const url = await canvasRef.current.toDataURL("image/png");
+		setImg({ ...img, [currentPage + 1]: url });
+
+		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+	};
+
+	const handleNext = async () => {
+		nextOnClick();
+
+		const url = await canvasRef.current.toDataURL("image/png");
+		setImg({ ...img, [currentPage + 1]: url });
+
+		ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+	};
+
 	const handleTouchStart = (event) => {
-		// Start a new path when the user touches the canvas
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		ctx.beginPath();
@@ -164,7 +243,6 @@ const CanvasComponent = () => {
 	};
 
 	const handleTouchMove = (event) => {
-		// Update the path while the user moves their finger
 		const x = event.nativeEvent.locationX;
 		const y = event.nativeEvent.locationY;
 		ctx.lineTo(x, y);
@@ -175,11 +253,34 @@ const CanvasComponent = () => {
 	};
 
 	const handleTouchEnd = () => {
-		// Finish the path when the user releases their finger
+		let md = {};
+		const ttp = [...totalPath, path];
 		if (path.length > 0) {
 			setTotalPath((prev) => [...prev, path]);
 			setPath([]);
 		}
+		ttp.map((h) => {
+			const x_s = h.map((item) => item.x);
+			const y_s = h.map((item) => item.y);
+
+			const position = [
+				Math.min(...x_s),
+				Math.max(...x_s),
+				y_s.reduce((a, b) => a + b, 0) / y_s.length,
+			];
+			const idx = position[0] > 590 ? currentPage + 2 : currentPage + 1;
+			if (!md[[idx]]) {
+				md[[idx]] = [];
+			}
+
+			md[[idx]].push(
+				position[0] > 590
+					? [position[0] - 590, position[1] - 590, position[2]]
+					: position
+			);
+			console.log("md:", md);
+			setMeta({ ...meta, ...md });
+		});
 	};
 
 	useEffect(() => {
@@ -199,34 +300,43 @@ const CanvasComponent = () => {
 	}, []);
 
 	const [path, setPath] = useState([]);
-	const [meta, setMeta] = useState([]);
+	const [meta, setMeta] = useState({});
+
+	const [metadata, setMetadata] = useState();
+	const handleMetadata = (data) => {
+		setMetadata(data);
+	};
 
 	const downloadOnClick = () => {
-		totalPath.map((h) => {
-			x_s = h.map((item) => item.x);
-			y_s = h.map((item) => item.y);
-			console.log("x_s", x_s);
-			console.log("y_s", y_s);
-			setMeta((prev) => [
-				...prev,
-				[
-					Math.min(...x_s),
-					Math.max(...x_s),
-					y_s.reduce((a, b) => a + b, 0) / y_s.length,
-				],
-			]);
-		});
-		// postMetadata
-		console.log("meta", meta);
+		console.log("meta:", meta);
+		postMetadata(
+			bookId,
+			{
+				data: {
+					metadata: meta,
+				},
+			},
+			handleMetadata
+		);
 	};
 
 	return (
 		<>
-			<SafeAreaView style={{ flex: 1 }}>
-				<UpperContainer>
-					<ToolKit ctx={ctx} />
+			<UpperContainer>
+				<ToolKit ctx={ctx} />
+				<View
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						alignItems: "flex-end",
+					}}
+				>
 					<DownLoadButton onClick={downloadOnClick} />
-				</UpperContainer>
+					<PageNumber number={currentPage + 1} totalPage={content.length} />
+					<PageButton prevOnClick={handlePrev} nextOnClick={handleNext} />
+				</View>
+			</UpperContainer>
+			<View style={{ position: "relative", zIndex: 1 }}>
 				<View
 					ref={touchRef}
 					style={{
@@ -255,7 +365,34 @@ const CanvasComponent = () => {
 						}}
 					/>
 				</View>
-			</SafeAreaView>
+				<View
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						position: "absolute",
+						zIndex: -1,
+					}}
+				>
+					<Image
+						source={{ uri: content[currentPage] }}
+						style={{
+							width: 590,
+							height: 680,
+						}}
+					/>
+					{currentPage + 1 < content.length ? (
+						<Image
+							source={{
+								uri: content[currentPage + 1],
+							}}
+							style={{
+								width: 590,
+								height: 680,
+							}}
+						/>
+					) : null}
+				</View>
+			</View>
 		</>
 	);
 };
