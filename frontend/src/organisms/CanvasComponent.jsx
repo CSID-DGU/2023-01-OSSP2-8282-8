@@ -386,7 +386,7 @@ const CanvasComponent = ({
 				ctx.fillText(2 * index, 1160, 660);
 
 				const newURL = await canvasRef.current.toDataURL("image/png");
-				newUrl[[index.toString()]] = newURL;
+				newUrl[[index]] = newURL.slice(1, -1);
 
 				await ctx.clearRect(
 					0,
@@ -438,7 +438,7 @@ const CanvasComponent = ({
 			ctx.fillText(2 * index, 1160, 660);
 
 			const newURL = await canvasRef.current.toDataURL("image/png");
-			newUrl[[index.toString()]] = newURL;
+			newUrl[[index]] = newURL.slice(1, -1);
 			await ctx.clearRect(
 				0,
 				0,
@@ -458,8 +458,8 @@ const CanvasComponent = ({
 		}
 
 		const noteSaveDTO = {
-			userId: userId,
-			bookId: bookId,
+			userId: userId.toString(),
+			bookId: bookId.toString(),
 			note: newUrl,
 		};
 		console.log("note save dto:", noteSaveDTO);
