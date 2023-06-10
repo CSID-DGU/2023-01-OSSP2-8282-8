@@ -296,8 +296,6 @@ const CanvasComponent = ({
 	useEffect(() => {
 		setTotalPath([]);
 		setMeta([]);
-		setMetadata({});
-		setRowNums({});
 		setImg({});
 		if (touchRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
@@ -314,28 +312,13 @@ const CanvasComponent = ({
 
 	const [path, setPath] = useState([]);
 	const [meta, setMeta] = useState({});
-	const [rowNums, setRowNums] = useState({});
-
-	const handleRowNums = (data) => {
-		setRowNums(data);
-	};
-
-	const [metadata, setMetadata] = useState();
-	const handleMetadata = (data) => {
-		setMetadata(data);
-	};
 
 	const downloadOnClick = async () => {
-		const { metadatas, rowNums } = await postMetadata(
-			bookId,
-			{
-				data: {
-					metadata: meta,
-				},
+		const { metadatas, rowNums } = await postMetadata(bookId, {
+			data: {
+				metadata: meta,
 			},
-			handleMetadata,
-			handleRowNums
-		);
+		});
 		let newUrl = {};
 		const getBase64img = async (imgUrl, metadata, rowNums, index) => {
 			await ctx.clearRect(
