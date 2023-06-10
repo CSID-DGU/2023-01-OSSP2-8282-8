@@ -1,0 +1,4 @@
+aws:
+  accessKeyId:
+  secretAccessKey:
+  region: ap-northeast-2

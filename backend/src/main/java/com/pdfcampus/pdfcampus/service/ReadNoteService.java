@@ -1,16 +1,13 @@
 package com.pdfcampus.pdfcampus.service;
 import com.pdfcampus.pdfcampus.dto.DetailBookDto;
-import com.pdfcampus.pdfcampus.entity.Book;
-import com.pdfcampus.pdfcampus.entity.Note;
-import com.pdfcampus.pdfcampus.entity.User;
-import com.pdfcampus.pdfcampus.repository.DetailNoteRepository;
-import com.pdfcampus.pdfcampus.repository.NoteRepository;
-import com.pdfcampus.pdfcampus.repository.BookRepository;
-import com.pdfcampus.pdfcampus.repository.ReadRepository;
+import com.pdfcampus.pdfcampus.entity.*;
+import com.pdfcampus.pdfcampus.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -33,6 +30,12 @@ public class ReadNoteService {
     @Autowired
     private ReadRepository readRepository;
 
+    @Autowired
+    private PageRepository pageRepository;
+
+    @Autowired
+    private NotePageRepository notePageRepository;
+
     public String getBookId(String noteId) {
         Integer nidInt = Integer.parseInt(noteId);
         Note note = detailNoteRepository.findByNid(nidInt).orElseThrow(() -> new NullPointerException("Note not found"));
@@ -47,22 +50,30 @@ public class ReadNoteService {
         return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
     }
 
-    public URL getNotePdfUrl(String noteId) {
+    public List<String> getNotePdfUrls(String noteId) {
         Note note = noteRepository.findById(Integer.valueOf(noteId))
                 .orElseThrow(() -> new EntityNotFoundException("Note not found with id " + noteId));
         // noteTitle로 pdf url 생성(presigned)
-        String bucketName = "8282note";
-        String objectKey = note.getNoteTitle() + ".pdf";
-        return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
+        List<NotePage> pages = notePageRepository.findByNid(note.getNid());
+        List<String> pageUrls = new ArrayList<>();
+        for (NotePage page : pages) {
+            pageUrls.add(page.getPageUrl());
+        }
+
+        return pageUrls;
     }
 
-    public URL getBookPdfUrl(String bookId) {
+    public List<String> getBookPdfUrls(String bookId) {
         Book book = bookRepository.findById(Integer.valueOf(bookId))
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id " + bookId));
-        // bookTitle로 pdf url 생성(presigned)
-        String bucketName = "8282book";
-        String objectKey = book.getBookTitle() + ".pdf";
-        return s3PresignedURLService.generatePresignedUrl(bucketName, objectKey);
+
+        List<Page> pages = pageRepository.findByBid(book.getBid());
+        List<String> pageUrls = new ArrayList<>();
+        for (Page page : pages) {
+            pageUrls.add(page.getPageUrl());
+        }
+
+        return pageUrls;
     }
 
     public boolean isUserSubscribed(String id) {

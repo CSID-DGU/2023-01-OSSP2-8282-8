@@ -9,7 +9,9 @@ import com.pdfcampus.pdfcampus.entity.Note;
 import com.pdfcampus.pdfcampus.repository.BookRepository;
 import com.pdfcampus.pdfcampus.repository.MylibRepository;
 import com.pdfcampus.pdfcampus.repository.NoteRepository;
+import com.pdfcampus.pdfcampus.service.ReadBookService;
 
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,11 +24,13 @@ public class MylibService {
     private final MylibRepository mylibRepository;
     private final NoteRepository noteRepository;
     private final BookRepository bookRepository;
+    private final ReadBookService readBookService;
 
-    public MylibService(MylibRepository mylibRepository, NoteRepository noteRepository, BookRepository bookRepository) {
+    public MylibService(MylibRepository mylibRepository, NoteRepository noteRepository, BookRepository bookRepository, ReadBookService readBookService) {
         this.mylibRepository = mylibRepository;
         this.noteRepository = noteRepository;
         this.bookRepository = bookRepository;
+        this.readBookService = readBookService;
     }
 
     public MylibDto getMylibData(String uid) {
@@ -42,7 +46,12 @@ public class MylibService {
                 .map(mylib -> {
                     Note note = noteRepository.findByNid(mylib.getNid()).get(0);
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                    String bookCoverUrl = null;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
                     return new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl);
                 })
                 .toArray(MylibNoteDto[]::new);
@@ -57,7 +66,12 @@ public class MylibService {
                 .filter(mylib -> mylib.getNid() == null && mylib.getBid() != null)
                 .map(mylib -> {
                     Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                    String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                    String bookCoverUrl = null;
+                    try {
+                        bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
                     return new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl);
                 })
                 .toArray(MylibBookDto[]::new);
@@ -74,7 +88,12 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() != null && mylib.getBid() != null) {
                 Note note = noteRepository.findByNid(mylib.getNid()).get(0);
-                String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                String bookCoverUrl = null;
+                try {
+                    bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
                 noteList.add(new MylibNoteDto(note.getNid(), note.getNoteTitle(), bookCoverUrl));
             }
         }
@@ -89,7 +108,12 @@ public class MylibService {
         for (Mylib mylib : mylibList) {
             if (mylib.getNid() == null && mylib.getBid() != null) {
                 Book book = bookRepository.findByBid(mylib.getBid()).get(0);
-                String bookCoverUrl = "https://pdfampus.s3.ap-northeast-2.amazonaws.com/" + mylib.getBid() + ".jpg";
+                String bookCoverUrl = null;
+                try {
+                    bookCoverUrl = readBookService.getBookCoverUrl(mylib.getBid().toString()).toString();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
                 bookList.add(new MylibBookDto(book.getBid(), book.getBookTitle(), bookCoverUrl));
             }
         }
