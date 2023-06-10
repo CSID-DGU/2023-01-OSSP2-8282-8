@@ -49,7 +49,7 @@ const IsSaledBlock = styled.View`
 `;
 
 const TitleTypo = styled.Text`
-	font-size: 20px;
+	font-size: 16px;
 	justify-content: center;
 	margin-top: 0px;
 `;
@@ -88,7 +88,9 @@ const NoteHandle = ({
 						source={{ uri: img }}
 						style={{ width: 140, height: 190, resizeMode: "contain" }}
 					/>
-					<TitleTypo>{bookTitle}</TitleTypo>
+					<TitleTypo>
+						{bookTitle.length > 16 ? bookTitle.slice(0, 14) + "..." : bookTitle}
+					</TitleTypo>
 				</Block1>
 				<Block2>
 					<DateContainer>
