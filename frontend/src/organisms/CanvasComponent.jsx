@@ -122,7 +122,7 @@ const Tool = ({ ctx, props, onClick }) => {
 	);
 };
 
-const ToolKit = ({ ctx }) => {
+const ToolKit = ({ hidden, ctx }) => {
 	const tools = [
 		{
 			color: ["rgb(249,96,96)", "rgba(249,96,96,0.05)"],
@@ -158,7 +158,9 @@ const ToolKit = ({ ctx }) => {
 		ctx.lineWidth = type == "pen" ? 2 : type == "highlight" ? 15 : 30;
 	};
 	return (
-		<ToolKitContainer>
+		<ToolKitContainer
+			style={{ opacity: hidden ? 0 : null, height: hidden ? 0 : 56 }}
+		>
 			{tools.map((tool) => (
 				<Tool ctx={ctx} props={tool} onClick={toolOnClick} />
 			))}
@@ -166,9 +168,12 @@ const ToolKit = ({ ctx }) => {
 	);
 };
 
-const DownLoadButton = ({ onClick }) => {
+const DownLoadButton = ({ hidden, onClick }) => {
 	return (
-		<DownLoadButtonStyle onPress={onClick}>
+		<DownLoadButtonStyle
+			style={{ opacity: hidden ? 0 : null, height: hidden ? 0 : 35 }}
+			onPress={onClick}
+		>
 			<DownLoadTypo>필기 다운로드</DownLoadTypo>
 		</DownLoadButtonStyle>
 	);
@@ -203,6 +208,7 @@ const CanvasComponent = ({
 	prevOnClick,
 	nextOnClick,
 	currentPage,
+	isNote,
 }) => {
 	const touchRef = useRef();
 	const canvasRef = useRef();
@@ -480,9 +486,8 @@ const CanvasComponent = ({
 				visible={modalVisible}
 				handleModal={handleModal}
 			/>
-
 			<UpperContainer>
-				<ToolKit ctx={ctx} />
+				<ToolKit hidden={isNote} ctx={ctx} />
 				<View
 					style={{
 						display: "flex",
@@ -490,40 +495,45 @@ const CanvasComponent = ({
 						alignItems: "flex-end",
 					}}
 				>
-					<DownLoadButton onClick={downloadOnClick} />
-					<PageNumber number={currentPage + 1} totalPage={content.length} />
+					<DownLoadButton hidden={isNote} onClick={downloadOnClick} />
+					<PageNumber
+						number={currentPage + 1}
+						totalPage={isNote ? content.length * 2 : content.length}
+					/>
 					<PageButton prevOnClick={handlePrev} nextOnClick={handleNext} />
 				</View>
 			</UpperContainer>
 			<View style={{ position: "relative", zIndex: 1 }}>
-				<View
-					ref={touchRef}
-					style={{
-						backgroundColor: "transparent",
-						width: "100%",
-						height: "100%",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						borderStyle: "solid",
-						borderWidth: "1px",
-						borderColor: "#D9D9D9",
-						borderRadius: "15",
-						boxSizing: "border-box",
-					}}
-					onTouchStart={handleTouchStart}
-					onTouchMove={handleTouchMove}
-					onTouchEnd={handleTouchEnd}
-				>
-					<Canvas
-						ref={canvasRef}
+				{!isNote ? (
+					<View
+						ref={touchRef}
 						style={{
+							backgroundColor: "transparent",
 							width: "100%",
 							height: "100%",
-							backgroundColor: "transparent",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							borderStyle: "solid",
+							borderWidth: "1px",
+							borderColor: "#D9D9D9",
+							borderRadius: "15",
+							boxSizing: "border-box",
 						}}
-					/>
-				</View>
+						onTouchStart={handleTouchStart}
+						onTouchMove={handleTouchMove}
+						onTouchEnd={handleTouchEnd}
+					>
+						<Canvas
+							ref={canvasRef}
+							style={{
+								width: "100%",
+								height: "100%",
+								backgroundColor: "transparent",
+							}}
+						/>
+					</View>
+				) : null}
 				<View
 					style={{
 						display: "flex",
@@ -534,14 +544,16 @@ const CanvasComponent = ({
 				>
 					<Image
 						source={{
-							uri: content[currentPage],
+							uri: isNote
+								? content[Math.floor(currentPage / 2)]
+								: content[currentPage],
 						}}
 						style={{
-							width: 590,
+							width: isNote ? 1180 : 590,
 							height: 680,
 						}}
 					/>
-					{currentPage + 1 < content.length ? (
+					{currentPage + 1 < content.length && !isNote ? (
 						<Image
 							source={{
 								uri: content[currentPage + 1],

@@ -89,7 +89,7 @@ const OnSale = () => {
 	return Alert.alert("판매 등록");
 };
 
-const MyNotesList = ({ notes, handleModal1 }) => {
+const MyNotesList = ({ notes, handleModal1, readNote }) => {
 	return notes.map((note, i) => (
 		<NoteHandle
 			key={note.noteId}
@@ -101,6 +101,7 @@ const MyNotesList = ({ notes, handleModal1 }) => {
 			ModifiedDate={note.modifiedAt}
 			onPress1={OnSale}
 			onPress2={handleModal1}
+			onPress={readNote}
 		/>
 	));
 };
@@ -125,6 +126,13 @@ const MyNotes = ({ navigation }) => {
 	const DeleteNote = () => {
 		setModalVisible1(false), setModalVisible2(true);
 		postDeleteNote({ userId, selectedNote });
+	};
+
+	const readNote = (noteId) => {
+		navigation.navigate("ContentReader", {
+			type: "note",
+			contentId: noteId,
+		});
 	};
 
 	useEffect(() => {
@@ -168,7 +176,11 @@ const MyNotes = ({ navigation }) => {
 				</BookTitleContainer>
 				<Container2>
 					<NoteListContiner>
-						<MyNotesList notes={notes} handleModal1={handleModal1} />
+						<MyNotesList
+							notes={notes}
+							handleModal1={handleModal1}
+							readNote={readNote}
+						/>
 					</NoteListContiner>
 				</Container2>
 			</ScrollView>

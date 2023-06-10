@@ -30,7 +30,7 @@ const Img = styled.Image`
 	box-sizing: border-box;
 `;
 
-const Block1 = styled.View`
+const Block1 = styled.TouchableOpacity`
 	width: 20%;
 	display: flex;
 	align-items: center;
@@ -79,11 +79,12 @@ const NoteHandle = ({
 	ModifiedDate,
 	onPress1,
 	onPress2,
+	onPress,
 }) => {
 	return (
 		<>
 			<InfoContainer>
-				<Block1>
+				<Block1 onPress={() => onPress(id)}>
 					<Img
 						source={{ uri: img }}
 						style={{ width: 140, height: 190, resizeMode: "contain" }}
