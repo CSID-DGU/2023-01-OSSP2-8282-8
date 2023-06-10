@@ -94,8 +94,7 @@ const MyNotesList = ({ notes, handleModal1 }) => {
 		<NoteHandle
 			key={note.noteId}
 			id={note.noteId}
-			// img={note.bookInfo.bookCover}
-			img={`https://pdfampus.s3.ap-northeast-2.amazonaws.com/${i + 1}.jpg`}
+			img={note.bookInfo.bookCover}
 			bookTitle={note.noteTitle}
 			isSaled={note.isSale}
 			PublicationDate={note.bookInfo.publicationYear}
@@ -106,7 +105,7 @@ const MyNotesList = ({ notes, handleModal1 }) => {
 	));
 };
 
-const MyNotes = () => {
+const MyNotes = ({ navigation }) => {
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
 	const [notes, setNotes] = useState([]);
@@ -162,7 +161,7 @@ const MyNotes = () => {
 					</Block>
 				</ModalContiner>
 			</Modal>
-			<Header />
+			<Header navigation={navigation} />
 			<ScrollView>
 				<BookTitleContainer>
 					<BookTitleTypo>나의 필기 관리</BookTitleTypo>
