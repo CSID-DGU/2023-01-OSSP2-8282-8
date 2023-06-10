@@ -17,6 +17,8 @@ import { useRecoilValue } from "recoil";
 import { UserInfoState } from "../../state/UserInfoState";
 import postSaveNote from "../../api/postSaveNote";
 
+import CustomedModal from "./Modal";
+
 const UpperContainer = styled.View`
 	display: flex;
 	flex-direction: row;
@@ -462,12 +464,23 @@ const CanvasComponent = ({
 			bookId: bookId.toString(),
 			note: newUrl,
 		};
-		console.log("note save dto:", noteSaveDTO);
-		postSaveNote(noteSaveDTO);
+		const successed = await postSaveNote(noteSaveDTO);
+		setModalVisible(successed);
 	};
 
+	const [modalVisible, setModalVisible] = useState(false);
+	const handleModal = () => {
+		setModalVisible(false);
+	};
 	return (
 		<>
+			<CustomedModal
+				typo="필기가 저장되었습니다."
+				buttonTypo1="확인"
+				visible={modalVisible}
+				handleModal={handleModal}
+			/>
+
 			<UpperContainer>
 				<ToolKit ctx={ctx} />
 				<View
