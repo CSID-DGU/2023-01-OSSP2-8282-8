@@ -19,6 +19,11 @@ const ContentReader = ({ navigation, route }) => {
 	const [currentPage, setCurrentPage] = useState(0);
 	const [pages, setPages] = useState([]);
 
+	const [subContent, setSubContent] = useState({});
+	const handleSubContent = (data) => {
+		setSubContent(data);
+	};
+
 	const userId = useRecoilValue(UserInfoState).userId;
 
 	const prevOnClick = () => {
@@ -42,7 +47,7 @@ const ContentReader = ({ navigation, route }) => {
 		if (type == "book") {
 			getBookContent(contentId, handlePages);
 		} else {
-			getNoteContent(contentId, userId, handlePages);
+			getNoteContent(contentId, userId, handlePages, handleSubContent);
 		}
 	}, []);
 	return (

@@ -1,6 +1,11 @@
 import { Axios } from "./axios";
 
-const getNoteContent = async (contentId, userId, handlePages) => {
+const getNoteContent = async (
+	contentId,
+	userId,
+	handlePages,
+	handleSubContent
+) => {
 	try {
 		const res = await Axios.get(`read/note/`, {
 			params: {
@@ -9,6 +14,7 @@ const getNoteContent = async (contentId, userId, handlePages) => {
 			},
 		});
 		handlePages(res.data.data.notePageUrls);
+		handleSubContent();
 	} catch (e) {
 		console.log(e);
 	}
