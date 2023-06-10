@@ -1,7 +1,6 @@
 package com.pdfcampus.pdfcampus.service;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.pdfcampus.pdfcampus.entity.Book;
 import com.pdfcampus.pdfcampus.entity.Note;
@@ -49,5 +48,37 @@ public class AmazonS3ClientService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to download content from S3", e);
         }
+    }
+
+    public void deleteS3Note(String bucketName, String nid) {
+        // 객체 삭제
+
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, "Book GNOTE1.png");
+        s3client.deleteObject(deleteObjectRequest);
+    }
+
+    public void copyS3Object(String sourceBucketName, String sourceObjectKey, String destinationBucketName) {
+        // 원본 객체의 키를 대상 객체의 키로 사용
+        String destinationObjectKey = sourceObjectKey;
+
+        // 폴더 객체 복사
+        CopyObjectRequest folderCopyRequest = new CopyObjectRequest(sourceBucketName, sourceObjectKey, destinationBucketName, destinationObjectKey);
+        CopyObjectResult folderCopyResult = s3client.copyObject(folderCopyRequest);
+
+        ObjectListing objectListing = s3client.listObjects("8282note", sourceObjectKey);
+        do {
+            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+                String sourceKey = objectSummary.getKey();
+                String destinationKey = sourceKey.replace(sourceObjectKey, destinationObjectKey);
+
+                CopyObjectRequest objectCopyRequest = new CopyObjectRequest(sourceBucketName, sourceKey, destinationBucketName, destinationKey);
+                s3client.copyObject(objectCopyRequest);
+            }
+
+            objectListing = s3client.listNextBatchOfObjects(objectListing);
+        } while (objectListing.isTruncated());
+
+        // 복사 작업 결과 확인
+        System.out.println("Folder copied successfully. ETag: " + folderCopyResult.getETag());
     }
 }
