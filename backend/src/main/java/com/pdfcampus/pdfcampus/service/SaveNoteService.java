@@ -76,17 +76,21 @@ public class SaveNoteService {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     ImageIO.write(img, "png", outputStream);
                     imageBytes = outputStream.toByteArray();
-
                     InputStream inputStream = new ByteArrayInputStream(imageBytes);
 
+                    String bucketName = "8282note";
+                    String s3Key = newNote.getNoteTitle() + "/page" + noteImageId + ".png";
+
                     // 업로드
-                    s3client.putObject(new PutObjectRequest("8282note", newNote.getNoteTitle()+"/" + noteImageId + ".png", inputStream, new ObjectMetadata()));
+                    s3client.putObject(new PutObjectRequest(bucketName, s3Key, inputStream, new ObjectMetadata()));
 
                     // DB에 추가
                     NotePage notePage = new NotePage();
                     notePage.setNid(newNote.getNid());
                     notePage.setNotepageNumber(Integer.valueOf(noteImageId));
-                    notePage.setNotepageUrl("s3://" + "8282note" + newNote.getNoteTitle() + noteImageId + ".png");
+
+                    URL s3noteUrl = s3client.getUrl("8282note", s3Key);
+                    notePage.setNotepageUrl(s3noteUrl.toString());
                     notePageRepository.save(notePage);
                 }
 
