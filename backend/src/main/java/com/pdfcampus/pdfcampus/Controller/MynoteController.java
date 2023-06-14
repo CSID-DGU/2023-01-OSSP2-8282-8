@@ -33,7 +33,7 @@ public class MynoteController {
         try {
             Map<String, Object> apiStatus = new HashMap<>();
             Map<String, Object> response = new HashMap<>();
-            if(mynoteService.existsByNid(mynoteAssignDto.getNoteId())) { // 중복되는 노트 아이디
+            if(mynoteService.existsByNid(mynoteAssignDto.getNoteId().toString())) { // 중복되는 노트 아이디
                 apiStatus.put("errorMessage", "이미 등록된 노트");
                 apiStatus.put("errorCode", "E400");
 
@@ -62,13 +62,13 @@ public class MynoteController {
 
     //판매중이지 않은 노트를 삭제
     @DeleteMapping("/mynote/delete")
-    public ResponseEntity<Map<String, Object>> deleteData(@RequestParam("userId") String userId, @RequestParam("noteId") String noteId) {
+    public ResponseEntity<Map<String, Object>> deleteData(@RequestParam("userId") Integer userId, @RequestParam("noteId") Integer noteId) {
         Map<String, Object> errorResponse = new HashMap<>();
         Map<String, String> apiStatus = new HashMap<>();
         try {
 
             //이미 판매중인 노트는 판매불가
-            if(mynoteService.existsByNid(noteId)) {
+            if(mynoteService.existsByNid(noteId.toString())) {
                 apiStatus.put("errorMessage", "Note already on sale cannot be deleted");
                 apiStatus.put("errorCode", "E400");
                 errorResponse.put("apiStatus", apiStatus);
@@ -76,7 +76,7 @@ public class MynoteController {
             }
 
             // 데이터 삭제
-            boolean deleted = mynoteService.deleteNote(userId, noteId);
+            boolean deleted = mynoteService.deleteNote(userId.toString(), noteId.toString());
 
             //aws s3 8282note 버킷에서 데이터 삭제
             //amazonS3ClientService.deleteS3Note("8282note", noteId);
