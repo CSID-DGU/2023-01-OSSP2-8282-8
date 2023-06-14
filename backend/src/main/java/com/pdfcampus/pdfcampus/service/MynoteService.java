@@ -84,7 +84,7 @@ public class MynoteService {
     }
 
     public void assignNote(MynoteAssignDto mynoteAssignDto) {
-        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId().toString());
         Note note = detailNoteRepository.findByNid(nidInt)
                 .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
 
@@ -98,7 +98,7 @@ public class MynoteService {
     }
 
     public Sale creatSale(MynoteAssignDto mynoteAssignDto) {
-        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId().toString());
         Note note = detailNoteRepository.findByNid(nidInt)
                 .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
 
