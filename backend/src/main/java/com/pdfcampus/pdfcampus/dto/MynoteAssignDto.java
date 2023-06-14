@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @Getter
 public class MynoteAssignDto {
     private Integer sid;
-    private String userId;
-    private String noteId;
+    private Integer userId;
+    private Integer noteId;
     private Integer price;
 
     public Sale toEntity(Note note, Integer price) {

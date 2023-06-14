@@ -54,9 +54,9 @@ public class MynoteService {
         boolean isNotePresent = mynoteRepository.existsByNid(noteId);
         boolean isMylibPresent = mylibRepository.existsByUidAndNid(userId, noteId);
 
-        if (isMylibPresent) { // 나의 서재에서도 삭제
+        /*if (isMylibPresent) { // 나의 서재에서도 삭제
             mylibRepository.deleteByUidAndNid(userId, noteId);
-        }
+        }*/
 
         if (isNotePresent) { // Note db에서 데이터를 찾고 있으면 지워버림 없으면 에러 반환
             mynoteRepository.deleteByNid(noteId);
@@ -84,7 +84,7 @@ public class MynoteService {
     }
 
     public void assignNote(MynoteAssignDto mynoteAssignDto) {
-        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId().toString());
         Note note = detailNoteRepository.findByNid(nidInt)
                 .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
 
@@ -98,7 +98,7 @@ public class MynoteService {
     }
 
     public Sale creatSale(MynoteAssignDto mynoteAssignDto) {
-        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId());
+        Integer nidInt = Integer.parseInt(mynoteAssignDto.getNoteId().toString());
         Note note = detailNoteRepository.findByNid(nidInt)
                 .orElseThrow(() -> new EntityNotFoundException("note not found with id " + mynoteAssignDto.getNoteId()));
 
