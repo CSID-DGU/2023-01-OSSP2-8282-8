@@ -22,33 +22,27 @@
 * IntelliJ IDEA 2023.1
 * <code>Spring Boot v2.7.11</code> <code>MySQL workbench 8.0 CE</code> <code>Apache PDFBox 2.0.28</code> <code>POSTMAN</code>
 * Java 11
-## 3. 결과
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/8fa69258-89ef-4e24-8505-b78f7c4d86a2)
+## 3. 결과  
+1.<code>react-native-pdf</code>를 활용한 PDF뷰어 기능 개발
 
-필기 전 콘텐츠(1)
+![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/8fa69258-89ef-4e24-8505-b78f7c4d86a2) ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c24de104-0124-46c2-984f-a3d44f01b472)
 
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c24de104-0124-46c2-984f-a3d44f01b472)
+필기 전 콘텐츠
 
-필기 전 콘텐츠(2)  
-<code>react-native-pdf</code>를 활용한 PDF뷰어 기능 개발
 
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/51091a5d-7bf6-41eb-869d-2ff7789c3eb9)
 
-필기 후 콘텐츠(1)
+2.<code>react-native-canvas</code>를 활용한 필기 기능 개발
 
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/f53671a7-635e-462c-95b0-c9cc75d3f79d)
+![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/51091a5d-7bf6-41eb-869d-2ff7789c3eb9) ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/f53671a7-635e-462c-95b0-c9cc75d3f79d)
 
-필기 후 콘텐츠(2)  
-<code>react-native-canvas</code>를 활용한 필기 기능 개발
+필기 후 콘텐츠
 
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/945f29aa-c2cd-4be3-b7a8-df155751c607)
+3.메타데이터만 남겨 필기자료를 상품화  
 
-필기 상품(1)
+![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/945f29aa-c2cd-4be3-b7a8-df155751c607) ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c316b44e-9b52-4ab1-b72f-c65d16f9b874)
 
-![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c316b44e-9b52-4ab1-b72f-c65d16f9b874)
-
-필기 상품(2)  
-메타데이터만 남겨 필기자료를 상품화  
+필기 상품
+ 
 ## 4. 폴더 구조
 ├─frontend  
 │ ├─.expo  
