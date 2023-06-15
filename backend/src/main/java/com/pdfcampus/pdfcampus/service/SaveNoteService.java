@@ -79,7 +79,7 @@ public class SaveNoteService {
                     InputStream inputStream = new ByteArrayInputStream(imageBytes);
 
                     String bucketName = "8282note";
-                    String s3Key = newNote.getNoteTitle() + "/page" + noteImageId + ".png";
+                    String s3Key = newNote.getNid() + "/page" + noteImageId + ".png"; // nid를 key로
 
                     // 업로드
                     s3client.putObject(new PutObjectRequest(bucketName, s3Key, inputStream, new ObjectMetadata()));
