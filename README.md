@@ -47,3 +47,15 @@
 
 필기 상품(2)
 ## 4. 폴더 구조
+├─frontend
+│ ├─.expo
+│ ├─api
+│ ├─assets
+│ ├─node_modules
+│ ├─src
+│ │ ├─molecules
+│ │ ├─organisms
+│ │ └─pages
+│ ├─state
+│ ├─app.js
+│ └─package.json
