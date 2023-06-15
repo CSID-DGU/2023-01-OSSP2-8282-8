@@ -47,7 +47,7 @@
 
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c316b44e-9b52-4ab1-b72f-c65d16f9b874)
 
-필기 상품(2)
+필기 상품(2)  
 메타데이터만 남겨 필기자료를 상품화  
 ## 4. 폴더 구조
 ├─frontend  
