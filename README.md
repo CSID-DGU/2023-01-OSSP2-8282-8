@@ -29,7 +29,8 @@
 
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c24de104-0124-46c2-984f-a3d44f01b472)
 
-필기 전 콘텐츠(2)
+필기 전 콘텐츠(2)  
+<code>react-native-pdf</code>를 활용한 PDF뷰어 기능 개발
 
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/51091a5d-7bf6-41eb-869d-2ff7789c3eb9)
 
@@ -37,7 +38,8 @@
 
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/f53671a7-635e-462c-95b0-c9cc75d3f79d)
 
-필기 후 콘텐츠(2)
+필기 후 콘텐츠(2)  
+<code>react-native-canvas</code>를 활용한 필기 기능 개발
 
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/945f29aa-c2cd-4be3-b7a8-df155751c607)
 
@@ -46,6 +48,7 @@
 ![image](https://github.com/gouyeonch/PDFCampus/assets/73930285/c316b44e-9b52-4ab1-b72f-c65d16f9b874)
 
 필기 상품(2)
+메타데이터만 남겨 필기자료를 상품화  
 ## 4. 폴더 구조
 ├─frontend  
 │ ├─.expo  
