@@ -20,7 +20,7 @@
 * javascript
 ### 백엔드
 * IntelliJ IDEA 2023.1
-* <code>Spring Boot v2.7.11</code> <code>MySQL workbench 8.0 CE</code> <code>Apache PDFBox 2.0.28</code> <code>POSTMAN</code>
+* <code>Spring Boot v2.7.11</code> <code>MySQL workbench 8.0 CE</code> <code>Apache PDFBox 2.0.24</code> <code>POSTMAN</code>
 * Java 11
 ## 3. 결과  
 1.<code>react-native-pdf</code>를 활용한 PDF뷰어 기능 개발
